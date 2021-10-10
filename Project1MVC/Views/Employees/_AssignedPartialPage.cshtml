@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Project1MVC.Models.Equipment>
+
+<table>
+    <thead>
+        <tr><th>Equipments Assigned</th></tr>
+    </thead>
+    <tbody>
+        @foreach(var equipment in Model)
+            {
+            <tr><td>@equipment.EquipmentName</td></tr>
+            }
+    </tbody>
+</table>
