@@ -1,13 +1,17 @@
 ﻿@model IEnumerable<Project1MVC.Models.Equipment>
 
-<table>
-    <thead>
-        <tr><th>Equipments Assigned</th></tr>
-    </thead>
-    <tbody>
-        @foreach(var equipment in Model)
-            {
-            <tr><td>@equipment.EquipmentName</td></tr>
-            }
-    </tbody>
-</table>
+<dt>Equipments Assigned</dt>
+<dd>
+    <div style="width:10vw;">
+        <ol style="padding-left:13px;margin:0; border:0;">
+                @foreach (var equipment in Model)
+                {
+                    <li style="padding: 0;">@equipment.EquipmentName</li>
+                }
+        </ol>
+
+    </div>
+</dd>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/userscripts")

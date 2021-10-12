@@ -7,14 +7,14 @@ using System.Web;
 
 namespace Project1MVC.Models
 {
-    public class Employee
+    public class Employee : IUser
     {
         public Employee()
         {
             Id = Guid.NewGuid();
         }
 
-        public Employee(string firstName, string lastName, DateTime dateOfBirth, string email, string role, string employeeStatus, [Optional] ICollection<Equipment> equipments)
+        public Employee(string firstName, string lastName, DateTime dateOfBirth, string email, string role, string employeeStatus, [Optional] ICollection<Equipment> equipments, string password="")
         {
             Id = Guid.NewGuid();
             FirstName = firstName;
@@ -24,6 +24,7 @@ namespace Project1MVC.Models
             Role = role;
             EmployeeStatus = employeeStatus;
             Equipments = equipments ?? new List<Equipment>();
+            Password = password;
         }
 
         public Guid Id { get;}
@@ -44,9 +45,8 @@ namespace Project1MVC.Models
         [RegularExpression("Active|Inactive", ErrorMessage = "Invalid Status")]
         public string EmployeeStatus { get; set; }
         public int Age { get => Convert.ToInt32(DateTime.Now.Subtract(this.DateOfBirth).TotalDays / 365.2425); }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name is required")]
 
         public virtual ICollection<Equipment> Equipments { get; set; }
-
+        public string Password { get; set; }
     }
 }

@@ -65,10 +65,10 @@
         <dd>
             @Html.DisplayFor(model => model.Age)
         </dd>
+@Html.Partial("_AssignedPartialPage",Model.Equipments)
 
     </dl>
 </div>
-@Html.Partial("_AssignedPartialPage",Model.Equipments)
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

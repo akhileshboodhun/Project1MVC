@@ -1,0 +1,23 @@
+﻿@model List<Project1MVC.Models.Equipment>
+
+<div class="form-group">
+
+    <label class="control-label col-md-2">Equipments Assigned</label>
+    <div class="col-md-3">
+        <table class="table">
+            <tbody id="equipments-assigned">
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td>@Model[i].EquipmentName</td>
+                        <td><input type="button" name="delete-button" class="btn btn-danger" value="Delete" onclick="DeleteFromList(this)" /></td>
+                        <input type="hidden" name="EquipmentID[@i]" value="@Model[i].EquipmentId">
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/userscripts")

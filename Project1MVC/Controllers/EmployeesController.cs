@@ -76,17 +76,28 @@ namespace Project1MVC.Controllers
         // GET: Employees/Edit/5
         public ActionResult Edit(string id)
         {
+            ViewBag.Equipments = Data.LstEquipments;
+            List<SelectListItem> selectListItems = Data.LstEquipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList();
+            ViewBag.SelectListEquipments = selectListItems;
+            ViewBag.tempEquipments = new List<Equipment>() { };
             var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
             return View(employee);
         }
 
         // POST: Employees/Edit/5
         [HttpPost]
-        public ActionResult Edit(string id, FormCollection fc)
+        public ActionResult Edit(string id, FormCollection fc, List<string> EquipmentID)
         {
             try
             {
                 // TODO: Add update logic here
+                var equipments_assigned = new List<Equipment>() { };
+                EquipmentID.ForEach(equipId =>
+                    equipments_assigned.Add(
+                        Data.LstEquipments.FirstOrDefault(el => el.EquipmentId == Guid.Parse(equipId))
+                    )
+                );
+
                 var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
                 var index = Data.LstEmployees.FindIndex(el => el.Id == employee.Id);
                 employee.FirstName = fc["FirstName"];
@@ -95,6 +106,7 @@ namespace Project1MVC.Controllers
                 employee.Email = fc["Email"];
                 employee.Role = fc["Role"];
                 employee.EmployeeStatus = fc["EmployeeStatus"];
+                employee.Equipments = equipments_assigned;
 
                 Data.LstEmployees[index] = employee;
 
