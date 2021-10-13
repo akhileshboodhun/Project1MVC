@@ -4,25 +4,26 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Project1MVC.Models;
+using Project1MVC.Services;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeEmployee(Roles ="Admin")]
     public class EquipmentsController : Controller
     {
         // GET: Equipments
         public ActionResult Index()
         {
-            var lstEquipments = Data.LstEquipments;
-            return View(lstEquipments);
+            var db = InMemoryEquipments.GetInstance();
+            var equipments = db.GetAll();
+            return View(equipments);
         }
 
         // GET: Equipments/Details/5
         public ActionResult Details(string id)
         {
-            System.Diagnostics.Debug.WriteLine($"The id: {id}");
-            var lstEquipments = Data.LstEquipments;
-
-            var equipment = lstEquipments.FirstOrDefault<Equipment>(el => el.EquipmentId == new Guid(id));
+            var db = InMemoryEquipments.GetInstance();
+            var equipment = db.Get(Guid.Parse(id));
             return View(equipment);
         }
 
@@ -34,15 +35,17 @@ namespace Project1MVC.Controllers
 
         // POST: Equipments/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(string EquipmentName, int Quantity)
         {
             try
             {
                 // TODO: Add insert logic here
                 //if (ModelState.IsValid)
                 //{
-                    Equipment equipment = new Equipment(collection["EquipmentName"]);
-                    Data.LstEquipments.Add(equipment);
+
+                var equipment = new Equipment(EquipmentName, Quantity);
+                var db = InMemoryEquipments.GetInstance();
+                db.Add(equipment);
                 return RedirectToAction("Index");
                 //}
                 //return View();
@@ -57,26 +60,23 @@ namespace Project1MVC.Controllers
         // GET: Equipments/Edit/5
         public ActionResult Edit(string id)
         {
-            var lstEquipments = Data.LstEquipments;
-
-            var equipment = lstEquipments.FirstOrDefault<Equipment>(el => el.EquipmentId == new Guid(id));
+            var db = InMemoryEquipments.GetInstance();
+            var equipment = db.Get(Guid.Parse(id));
             return View(equipment);
         }
 
         // POST: Equipments/Edit/5
         [HttpPost]
-        public ActionResult Edit(string id, FormCollection collection)
+        public ActionResult Edit(string id, string EquipmentName, int Quantity)
         {
             try
             {
                 // TODO: Add update logic here
-                var lstEquipments = Data.LstEquipments;
-
-                var equipment = lstEquipments.FirstOrDefault<Equipment>(el => el.EquipmentId == new Guid(id));
-                var index = lstEquipments.FindIndex(e => e.EquipmentId == equipment.EquipmentId);
-                equipment.EquipmentName = collection["EquipmentName"].ToString();
-                lstEquipments[index] = equipment;
-                Data.LstEquipments = lstEquipments;
+                var db = InMemoryEquipments.GetInstance();
+                var equipment = db.Get(Guid.Parse(id));
+                equipment.EquipmentName = EquipmentName;
+                equipment.Quantity = Quantity;
+                db.Update(equipment);
 
                 return RedirectToAction("Index");
             }
@@ -89,9 +89,8 @@ namespace Project1MVC.Controllers
         // GET: Equipments/Delete/5
         public ActionResult Delete(string id)
         {
-            var lstEquipments = Data.LstEquipments;
-
-            var equipment = lstEquipments.FirstOrDefault<Equipment>(el => el.EquipmentId == new Guid(id));
+            var db = InMemoryEquipments.GetInstance();
+            var equipment = db.Get(Guid.Parse(id));
             return View(equipment);
         }
 
@@ -99,13 +98,12 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Delete(string id, FormCollection collection)
         {
-            var lstEquipments = Data.LstEquipments;
-
-            var equipment = lstEquipments.FirstOrDefault<Equipment>(el => el.EquipmentId == new Guid(id));
+            var db = InMemoryEquipments.GetInstance();
+            var equipment = db.Get(Guid.Parse(id));
             try
             {
                 // TODO: Add delete logic here
-                lstEquipments.Remove(equipment);
+                db.Delete(equipment);
                 return RedirectToAction("Index");
             }
             catch

@@ -1,11 +1,5 @@
 ﻿@model Project1MVC.Models.Equipment
 
-@{
-    ViewBag.Title = "Details";
-}
-
-<h2>Details</h2>
-
 <div>
     <h4>Equipment</h4>
     <hr />
@@ -16,6 +10,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.EquipmentName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
         </dd>
 
     </dl>

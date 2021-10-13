@@ -25,7 +25,11 @@ namespace Project1MVC.Services
 
         private static InMemoryEquipments _instance;
 
-        public static InMemoryEquipments GetInstance() => _instance ?? new InMemoryEquipments();
+        public static InMemoryEquipments GetInstance()
+        {
+            if(_instance is null) _instance = new InMemoryEquipments();
+            return _instance;
+        }
         public void Add(Equipment obj) => lstEquipments.Add(obj);
 
         public void Delete(Equipment obj) => lstEquipments.Remove(obj);

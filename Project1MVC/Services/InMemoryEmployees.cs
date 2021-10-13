@@ -22,7 +22,11 @@ namespace Project1MVC.Services
 
         private static InMemoryEmployees _instance;
 
-        public static InMemoryEmployees GetInstance() => _instance ?? new InMemoryEmployees();
+        public static InMemoryEmployees GetInstance()
+        {
+            if(_instance is null) _instance = new InMemoryEmployees();
+            return _instance;
+        }
 
         public void Add(Employee obj) => lstEmployees.Add(obj);
 

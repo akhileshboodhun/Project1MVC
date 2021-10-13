@@ -4,14 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace Project1MVC.Controllers
 {
     public class AuthController : Controller
     {
+        private static string GlobalReturnUrl { get; set; }
         // GET: Auth/Login
-        public ActionResult Login()
+        public ActionResult Login(string ReturnUrl)
         {
+            if (ReturnUrl != null) {
+                ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
+                GlobalReturnUrl = ReturnUrl;
+            }
             return View();
         }
 
@@ -25,9 +31,25 @@ namespace Project1MVC.Controllers
             {
                 // TODO: Add insert logic here
                 var employee = Data.LstEmployees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
-                Session["EmployeeFirstName"] = employee?.FirstName;
-                
-                return RedirectToAction("Index","Home");
+                if (!(employee is null))
+                {
+                    Session["EmployeeFirstName"] = employee?.FirstName;
+                    FormsAuthentication.SetAuthCookie(employee.Email, false);
+                    System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
+                    if (GlobalReturnUrl?.Length > 0)
+                    {
+                        var returnUrl = GlobalReturnUrl;
+                        GlobalReturnUrl = null;
+                        return Redirect(returnUrl);
+                    }
+                    return RedirectToAction("Index", "Home");
+
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid Credentials");
+                    return View();
+                }
             }
             catch
             {
@@ -35,48 +57,10 @@ namespace Project1MVC.Controllers
             }
         }
 
-        // GET: Auth/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Logout()
         {
-            return View();
-        }
-
-        // POST: Auth/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Auth/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Auth/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

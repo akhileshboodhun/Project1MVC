@@ -9,6 +9,7 @@ using System.Reflection;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeEmployee(Roles = "Admin,Technician")]
     public class EmployeesController : Controller
     {
         // GET: Employees
@@ -19,21 +20,26 @@ namespace Project1MVC.Controllers
         }
         public ActionResult Index()
         {
-            return View(Data.LstEmployees);
+            var db = InMemoryEmployees.GetInstance();
+            var employees = db.GetAll().ToList();
+            return View(employees);
         }
 
         // GET: Employees/Details/5
         public ActionResult Details(string id)
         {
-            var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
+            var db = InMemoryEmployees.GetInstance();
+            var employee = db.Get(Guid.Parse(id));
             return View(employee);
         }
 
         // GET: Employees/Create
         public ActionResult Create()
         {
-            ViewBag.Equipments = Data.LstEquipments;
-            List <SelectListItem> selectListItems = Data.LstEquipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList() ;
+            var db = InMemoryEquipments.GetInstance();
+            var equipments = db.GetAll().ToList();
+            ViewBag.Equipments = equipments;
+            List <SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList() ;
             ViewBag.SelectListEquipments = selectListItems;
             ViewBag.tempEquipments = new List<Equipment>() { };
             return View();
@@ -48,11 +54,13 @@ namespace Project1MVC.Controllers
             try
             {
                 // TODO: Add insert logic here
+                var db = InMemoryEquipments.GetInstance();
+                var equipments = db.GetAll().ToList();
+
                 var equipments_assigned = new List<Equipment>() { };
                 EquipmentId.ForEach(id => 
                     equipments_assigned.Add(
-                        Data.LstEquipments.FirstOrDefault(el => el.EquipmentId == Guid.Parse(id))
-                    )
+                        db.Get(Guid.Parse(id)))
                 );
 
                 var employee = new Employee(fc["FirstName"],
@@ -62,7 +70,8 @@ namespace Project1MVC.Controllers
                     fc["Role"],
                     fc["EmployeeStatus"])
                 { Equipments = equipments_assigned};
-                Data.LstEmployees.Add(employee);
+                var emp_db = InMemoryEmployees.GetInstance();
+                emp_db.Add(employee);
                 return RedirectToAction("Index");
             }
             catch(Exception e)
@@ -76,11 +85,14 @@ namespace Project1MVC.Controllers
         // GET: Employees/Edit/5
         public ActionResult Edit(string id)
         {
-            ViewBag.Equipments = Data.LstEquipments;
-            List<SelectListItem> selectListItems = Data.LstEquipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList();
+            var db = InMemoryEquipments.GetInstance();
+            var emp_db = InMemoryEmployees.GetInstance();
+            var equipments = db.GetAll().ToList();
+            ViewBag.Equipments = equipments;
+            List<SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList();
             ViewBag.SelectListEquipments = selectListItems;
             ViewBag.tempEquipments = new List<Equipment>() { };
-            var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
+            var employee = emp_db.Get(Guid.Parse(id));
             return View(employee);
         }
 
@@ -91,15 +103,17 @@ namespace Project1MVC.Controllers
             try
             {
                 // TODO: Add update logic here
+                var db = InMemoryEquipments.GetInstance();
+                var emp_db = InMemoryEmployees.GetInstance();
+                var equipments = db.GetAll().ToList();
                 var equipments_assigned = new List<Equipment>() { };
                 EquipmentID.ForEach(equipId =>
                     equipments_assigned.Add(
-                        Data.LstEquipments.FirstOrDefault(el => el.EquipmentId == Guid.Parse(equipId))
+                        db.Get(Guid.Parse(equipId))
                     )
                 );
 
-                var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
-                var index = Data.LstEmployees.FindIndex(el => el.Id == employee.Id);
+                var employee = emp_db.Get(Guid.Parse(id));
                 employee.FirstName = fc["FirstName"];
                 employee.LastName = fc["LastName"];
                 employee.DateOfBirth = new Utilities().getDate(fc["DateOfBirth"], "yyyy-MM-dd");
@@ -108,7 +122,7 @@ namespace Project1MVC.Controllers
                 employee.EmployeeStatus = fc["EmployeeStatus"];
                 employee.Equipments = equipments_assigned;
 
-                Data.LstEmployees[index] = employee;
+                emp_db.Update(employee);
 
                 return RedirectToAction("Index");
             }
@@ -122,7 +136,8 @@ namespace Project1MVC.Controllers
         // GET: Employees/Delete/5
         public ActionResult Delete(string id)
         {
-            var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
+            var emp_db = InMemoryEmployees.GetInstance();
+            var employee = emp_db.Get(Guid.Parse(id));
             return View(employee);
         }
 
@@ -133,8 +148,9 @@ namespace Project1MVC.Controllers
             try
             {
                 // TODO: Add delete logic here
-                var employee = Data.LstEmployees.FirstOrDefault(el => el.Id == Guid.Parse(id));
-                Data.LstEmployees.Remove(employee);
+                var emp_db = InMemoryEmployees.GetInstance();
+                var employee = emp_db.Get(Guid.Parse(id));
+                emp_db.Delete(employee);
                 return RedirectToAction("Index");
             }
             catch
