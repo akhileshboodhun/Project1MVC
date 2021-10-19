@@ -1,4 +1,5 @@
 ﻿using Project1MVC.Models;
+using Project1MVC.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,11 +31,13 @@ namespace Project1MVC.Controllers
             try
             {
                 // TODO: Add insert logic here
-                var employee = Data.LstEmployees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
+                var emp_db = InMemoryEmployees.GetInstance();
+                var employees = emp_db.GetAll();
+                var employee = employees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
                 if (!(employee is null))
                 {
                     Session["EmployeeFirstName"] = employee?.FirstName;
-                    FormsAuthentication.SetAuthCookie(employee.Email, false);
+                    FormsAuthentication.SetAuthCookie(employee.Email, true);
                     System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
                     if (GlobalReturnUrl?.Length > 0)
                     {
