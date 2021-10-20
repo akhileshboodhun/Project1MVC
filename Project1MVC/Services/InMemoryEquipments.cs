@@ -6,9 +6,9 @@ using System.Web;
 
 namespace Project1MVC.Services
 {
-    public class InMemoryEquipments : IManageEquipments
+    public class InMemoryEquipments
     {
-        List<Equipment> lstEquipments;
+  /*      List<Equipment> lstEquipments;
         private InMemoryEquipments()
         {
             lstEquipments = new List<Equipment> {
@@ -43,6 +43,6 @@ namespace Project1MVC.Services
         {
             var index = lstEquipments.FindIndex(el => el.EquipmentId == obj.EquipmentId);
             lstEquipments[index] = obj;
-        }
+        } */
     }
 }

@@ -14,7 +14,7 @@ namespace Project1MVC.Controllers
     {
         // GET: Employees
 
-        public PartialViewResult Assigned(IEnumerable<Equipment> equipments)
+    /*    public PartialViewResult Assigned(IEnumerable<Equipment> equipments)
         {
             return PartialView("_AssignedPartialPage", equipments);
         }
@@ -157,6 +157,6 @@ namespace Project1MVC.Controllers
             {
                 return View();
             }
-        }
+        } */
     }
 }

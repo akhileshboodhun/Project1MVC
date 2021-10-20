@@ -1,38 +1,63 @@
 ﻿@model IEnumerable<Project1MVC.Models.Equipment>
+
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Equipments</h2>
+<h2>Index</h2>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.EquipmentName)
+            @Html.DisplayNameFor(model => model.EquipId)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Quantity)
+            @Html.DisplayNameFor(model => model.Brand)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Model)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentStockCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReStockThreshold)
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipmentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.EquipmentId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.EquipmentId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.EquipmentId })
-            </td>
-        </tr>
-    }
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EquipId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Brand)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Model)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrentStockCount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReStockThreshold)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId}) |
+            @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
+        </td>
+    </tr>
+}
 
 </table>

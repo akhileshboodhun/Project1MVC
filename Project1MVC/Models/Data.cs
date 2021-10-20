@@ -9,7 +9,7 @@ namespace Project1MVC.Models
     public static class Data
     {
         public static List<Employee> LstEmployees = InMemoryEmployees.GetInstance().GetAll().ToList();
-        public static List<Equipment> LstEquipments = InMemoryEquipments.GetInstance().GetAll().ToList();
+        //public static List<Equipment> LstEquipments = InMemoryEquipments.GetInstance().GetAll().ToList();
         public static List<Role> LstRoles = InMemoryRoles.GetInstance().GetAll().ToList();
     }
 }

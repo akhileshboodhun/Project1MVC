@@ -12,6 +12,7 @@ namespace Project1MVC.Controllers
     {
         public ActionResult Index()
         {
+
             return View();
         }
 

@@ -3,27 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Project1MVC.DAL;
 using Project1MVC.Models;
 using Project1MVC.Services;
 
 namespace Project1MVC.Controllers
 {
-    [AuthorizeEmployee(Roles ="Admin")]
+    //[AuthorizeEmployee(Roles ="Admin")]
     public class EquipmentsController : Controller
     {
         // GET: Equipments
         public ActionResult Index()
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipments = db.GetAll();
+
+            var equipmentDB = new EquipmentDAL();
+            var equipments = equipmentDB.GetAll();
             return View(equipments);
         }
 
         // GET: Equipments/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int id)
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipment = db.Get(Guid.Parse(id));
+            var equipmentDB = new EquipmentDAL();
+            var equipment = equipmentDB.Get(id);
             return View(equipment);
         }
 
@@ -35,20 +37,13 @@ namespace Project1MVC.Controllers
 
         // POST: Equipments/Create
         [HttpPost]
-        public ActionResult Create(string EquipmentName, int Quantity)
+        public ActionResult Create(Equipment equipment)
         {
             try
             {
-                // TODO: Add insert logic here
-                //if (ModelState.IsValid)
-                //{
-
-                var equipment = new Equipment(EquipmentName, Quantity);
-                var db = InMemoryEquipments.GetInstance();
-                db.Add(equipment);
+                var equipmentDB = new EquipmentDAL();
+                equipmentDB.Add(equipment);
                 return RedirectToAction("Index");
-                //}
-                //return View();
 
             }
             catch
@@ -58,58 +53,53 @@ namespace Project1MVC.Controllers
         }
 
         // GET: Equipments/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id)
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipment = db.Get(Guid.Parse(id));
+            var equipmentDB = new EquipmentDAL();
+            var equipment = equipmentDB.Get(id);
             return View(equipment);
         }
 
         // POST: Equipments/Edit/5
         [HttpPost]
-        public ActionResult Edit(string id, string EquipmentName, int Quantity)
+        public ActionResult Edit(int id, Equipment equipment)
         {
+            var equipmentDB = new EquipmentDAL();
             try
             {
-                // TODO: Add update logic here
-                var db = InMemoryEquipments.GetInstance();
-                var equipment = db.Get(Guid.Parse(id));
-                equipment.EquipmentName = EquipmentName;
-                equipment.Quantity = Quantity;
-                db.Update(equipment);
-
+                equipmentDB.Update(equipment);
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                equipment = equipmentDB.Get(id);
+                return View(equipment);
             }
         }
 
         // GET: Equipments/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int id)
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipment = db.Get(Guid.Parse(id));
+            var equipmentDB = new EquipmentDAL();
+            var equipment = equipmentDB.Get(id);
             return View(equipment);
         }
 
         // POST: Equipments/Delete/5
         [HttpPost]
-        public ActionResult Delete(string id, FormCollection collection)
+        public ActionResult Delete(int id, FormCollection collection)
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipment = db.Get(Guid.Parse(id));
+            var equipmentDB = new EquipmentDAL();
+            var equipment = equipmentDB.Get(id);
             try
             {
-                // TODO: Add delete logic here
-                db.Delete(equipment);
+                equipmentDB.Delete(equipment);
                 return RedirectToAction("Index");
             }
             catch
             {
-
                 return View(equipment);
+               
             }
         }
     }

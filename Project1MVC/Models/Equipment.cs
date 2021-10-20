@@ -8,17 +8,39 @@ namespace Project1MVC.Models
 {
     public class Equipment
     {
-        public Equipment(string equipmentName, int quantity=100)
+
+        public Equipment() { }
+
+        public Equipment(string brand, string model, string description, double currentStockCount, double reStockThreshold)
         {
-            EquipmentId = Guid.NewGuid();
-            EquipmentName = equipmentName;
-            Quantity = quantity;
+            Brand = brand;
+            Model = model;
+            Description = description;
+            CurrentStockCount = currentStockCount;
+            ReStockThreshold = reStockThreshold;
         }
 
-        public Guid EquipmentId { get;}
-        [Required(AllowEmptyStrings =false, ErrorMessage ="Equipment Name is required")]
-        public string EquipmentName { get; set; }
-        [Range(5,int.MaxValue, ErrorMessage ="Quantity in Stock should be at least 5 units")]
-        public int Quantity { get; set; }
+        public Equipment(int? equipId, string brand, string model, string description, double currentStockCount, double reStockThreshold)
+        {
+            EquipId = equipId;
+            Brand = brand;
+            Model = model;
+            Description = description;
+            CurrentStockCount = currentStockCount;
+            ReStockThreshold = reStockThreshold;
+        }
+
+        public int? EquipId { get; set; }
+
+        public string Brand { get; set; }
+
+        public string Model { get; set; }
+
+        public string Description { get; set; }
+
+        public double CurrentStockCount { get; set; }
+
+        public double ReStockThreshold { get; set; }
+
     }
 }
