@@ -1,5 +1,6 @@
 ﻿using Project1MVC.DAL;
 using Project1MVC.Models;
+using Project1MVC.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,11 @@ namespace Project1MVC.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
+            var crypto = new CryptographyProcessor(size:10);
+            var salt = crypto.CreateSalt();
+            var pwd = "qwerty12345";
+            var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
+            var isEqual = crypto.AreEqual(pwd, storedSaltedHash);
             return View();
         }
 

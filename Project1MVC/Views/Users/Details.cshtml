@@ -1,0 +1,61 @@
+﻿@model Project1MVC.Models.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserRoleId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserRoleId)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("RoleName")
+        </dt>
+        <dd>
+            @{
+                var userRoleDB = new Project1MVC.DAL.UserRoleDAL();
+                Project1MVC.Models.UserRole userRole = userRoleDB.Get(Model.UserRoleId);
+            }
+            @userRole.RoleName
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

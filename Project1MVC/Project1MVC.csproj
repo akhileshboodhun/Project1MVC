@@ -127,8 +127,10 @@
     <Compile Include="Controllers\ManageStocksController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
+    <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -140,9 +142,11 @@
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthorizeEmployeeAttribute.cs" />
+    <Compile Include="Services\CryptographyProcessor.cs" />
     <Compile Include="Services\IManageDAL.cs" />
     <Compile Include="Services\IManageData.cs" />
     <Compile Include="Services\IManageEmployees.cs" />
@@ -10620,6 +10624,11 @@
     <Content Include="Views\UserRoles\Create.cshtml" />
     <Content Include="Views\UserRoles\Edit.cshtml" />
     <Content Include="Views\UserRoles\Delete.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
