@@ -73,6 +73,8 @@
                     <li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
                     <li>@Html.ActionLink("User Roles", "Index", "UserRoles")</li>
                     <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                    <li>@Html.ActionLink("Current Stock", "Index", "EquipmentsInStock")</li>
+                    <li>@Html.ActionLink("Future Stock", "Index", "FutureStock")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a>@HttpContext.Current.User.Identity.Name</a></li>

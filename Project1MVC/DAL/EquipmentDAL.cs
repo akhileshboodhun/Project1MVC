@@ -117,5 +117,44 @@ namespace Project1MVC.DAL
 
             return (i >= 1);
         }
+
+        public IEnumerable<Equipment> GetAllEquipmentsInStock()
+        {
+            List<Equipment> EquipmentsInStock = new List<Equipment>();
+
+            try
+            {
+                connection();
+
+                SqlCommand cmd = new SqlCommand("SELECT * FROM[dbo].[Equipment] WHERE CurrentStockCount > 0", con);
+                cmd.CommandType = CommandType.Text;
+                con.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var equipment = new Equipment();
+                    equipment.EquipId = Convert.ToInt32(reader["EquipId"]);
+                    equipment.Brand = reader["Brand"].ToString();
+                    equipment.Model = reader["Model"].ToString();
+                    equipment.Description = reader["Description"].ToString();
+                    equipment.CurrentStockCount = Convert.ToInt32(reader["CurrentStockCount"]);
+                    equipment.ReStockThreshold = Convert.ToInt32(reader["ReStockThreshold"]);
+                    EquipmentsInStock.Add(equipment);
+                }
+
+                return EquipmentsInStock;
+
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
+                return null;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
     }
 }
