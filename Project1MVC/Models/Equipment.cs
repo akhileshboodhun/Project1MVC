@@ -32,5 +32,10 @@ namespace Project1MVC.Models
         public int CurrentStockCount { get; set; }
 
         public int ReStockThreshold { get; set; }
+
+        public string DisplayName()
+        {
+            return $"{this.Type} - {this.Brand} - {this.Model}";
+        }
     }
 }
