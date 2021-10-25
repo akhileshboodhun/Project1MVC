@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
-namespace Project1MVC.DAL
+namespace Project1MVC.Services
 {
     public static class Logger
     {
