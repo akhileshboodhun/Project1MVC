@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Project1MVC.DAL
 {
@@ -10,7 +6,7 @@ namespace Project1MVC.DAL
     {
         bool Add(T obj);
         T Get(int id);
-        IEnumerable<T> GetAll();
+        List<T> GetAll();
         bool Update(T obj);
         bool Delete(int id);
     }
