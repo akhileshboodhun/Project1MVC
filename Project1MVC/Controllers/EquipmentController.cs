@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Project1MVC.Models;
 using Project1MVC.Services;
+using Project1MVC.DAL;
 
 namespace Project1MVC.Controllers
 {
@@ -14,8 +15,7 @@ namespace Project1MVC.Controllers
         // GET: Equipments
         public ActionResult Index()
         {
-            var db = InMemoryEquipments.GetInstance();
-            var equipments = db.GetAll();
+            var equipments = EquipmentDAL.Instance.GetAll();
             return View(equipments);
         }
 
@@ -28,13 +28,13 @@ namespace Project1MVC.Controllers
         //}
 
         // GET: Equipment/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
         // POST: Equipment/Create
-        [HttpPost]
+        //[HttpPost]
         //public ActionResult Create(string EquipmentName, int Quantity)
         //{
         //    try
@@ -67,24 +67,24 @@ namespace Project1MVC.Controllers
 
         // POST: Equipment/Edit/5
         //[HttpPost]
-        public ActionResult Edit(string id, string EquipmentName, int Quantity)
-        {
-            try
-            {
-                // TODO: Add update logic here
-                var db = InMemoryEquipments.GetInstance();
-                //var equipment = db.Get(Guid.Parse(id));
-                //equipment.EquipmentName = EquipmentName;
-                //equipment.Quantity = Quantity;
-                //db.Update(equipment);
+        //public ActionResult Edit(string id, string EquipmentName, int Quantity)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add update logic here
+        //        var db = InMemoryEquipments.GetInstance();
+        //        //var equipment = db.Get(Guid.Parse(id));
+        //        //equipment.EquipmentName = EquipmentName;
+        //        //equipment.Quantity = Quantity;
+        //        //db.Update(equipment);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: Equipment/Delete/5
         //public ActionResult Delete(string id)
