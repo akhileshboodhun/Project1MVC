@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - @BusinessLayer.ApplicationTitle</title>
+    <title>@ViewBag.Title - @BL.ApplicationTitle</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -16,14 +16,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(BusinessLayer.ApplicationTitle, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink(BL.ApplicationTitle, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Equipments", "Index", "Equipments")</li>
-                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
-                    <li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
+                    <li>@Html.ActionLink("Equipment", "Index", "Equipment")</li>
+                    <li>@Html.ActionLink("Employee", "Index", "Employee")</li>
+                    <li>@Html.ActionLink("Supplier", "Index", "Supplier")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a>@HttpContext.Current.User.Identity.Name</a></li>
@@ -44,7 +44,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - @BusinessLayer.ApplicationTitle</p>
+            <p>&copy; @DateTime.Now.Year - @BL.ApplicationTitle</p>
         </footer>
     </div>
 
