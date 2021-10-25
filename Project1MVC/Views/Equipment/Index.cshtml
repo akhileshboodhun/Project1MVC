@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Project1MVC.Models.Equipment>
+﻿@model List<Project1MVC.Models.Equipment>
 @{
     ViewBag.Title = "Index";
 }
@@ -10,29 +10,74 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Type)
+            @Html.ActionLink(linkText: "Id", actionName: "Index", controllerName: "Equipment")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CurrentStockCount)
+            @Html.ActionLink(linkText: "Type", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "Type" },
+                    htmlAttributes: null
+                )
+        </th>
+        <th>
+            @Html.ActionLink(linkText: "Brand", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "Brand" },
+                    htmlAttributes: null
+                )
+        </th>
+        <th>
+            @Html.ActionLink(linkText: "Model", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "Model" },
+                    htmlAttributes: null
+                )
+        </th>
+        <th>
+            @Html.DisplayNameFor(modelItem => modelItem[0].Description)
+        </th>
+        <th>
+            @Html.ActionLink(linkText: "Current Stock Count", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "CurrentStockCount" },
+                    htmlAttributes: null
+                )
+        </th>
+        <th>
+            @Html.ActionLink(linkText: "ReStock Treshold", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "threshold" },
+                    htmlAttributes: null
+                )
         </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentStockCount)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Type)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Brand)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Model)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CurrentStockCount)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReStockThreshold)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+    </td>
+</tr>
     }
 
 </table>

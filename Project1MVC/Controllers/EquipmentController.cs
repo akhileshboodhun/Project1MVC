@@ -13,9 +13,38 @@ namespace Project1MVC.Controllers
     public class EquipmentController : Controller
     {
         // GET: Equipments
-        public ActionResult Index()
+        public ActionResult Index(string orderBy)
         {
             var equipments = EquipmentDAL.Instance.GetAll();
+
+            if (orderBy == null)
+            {
+                return View(equipments);
+            }
+            else if (orderBy.ToLower() == "type")
+            {
+                equipments = equipments.OrderBy(i => i.Type).ToList();
+            }
+            else if (orderBy.ToLower() == "brand")
+            {
+                equipments = equipments.OrderBy(i => i.Brand).ToList();
+
+            }
+            else if (orderBy.ToLower() == "model")
+            {
+                equipments = equipments.OrderBy(i => i.Model).ToList();
+
+            }
+            else if (orderBy.Contains("currentstockcount"))
+            {
+                equipments = equipments.OrderBy(i => i.CurrentStockCount).ToList();
+
+            }
+            else if (orderBy.Contains("threshold"))
+            {
+                equipments = equipments.OrderBy(i => i.ReStockThreshold).ToList();
+            }
+
             return View(equipments);
         }
 
