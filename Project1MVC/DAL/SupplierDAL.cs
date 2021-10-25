@@ -56,7 +56,7 @@ namespace Project1MVC.DAL
             return new Supplier(Convert.ToInt32(fields["SupplierId"]), fields["Name"].ToString(), fields["PhoneNo"].ToString(), fields["Address"].ToString());
         }
 
-        public IEnumerable<Supplier> GetAll()
+        public List<Supplier> GetAll()
         {
             connection();
             List<Supplier> SupplierList = new List<Supplier>();
