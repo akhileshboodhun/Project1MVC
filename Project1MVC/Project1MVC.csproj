@@ -161,6 +161,7 @@
     <Compile Include="Services\EmployeeRoleProvider.cs" />
     <Compile Include="Services\InMemoryRoles.cs" />
     <Compile Include="Services\Utilities.cs" />
+    <Compile Include="Utils\DBConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
