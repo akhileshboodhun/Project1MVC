@@ -12,6 +12,6 @@ namespace Project1MVC.DAL
         T Get(int id);
         IEnumerable<T> GetAll();
         bool Update(T obj);
-        bool Delete(T obj);
+        bool Delete(int id);
     }
 }
