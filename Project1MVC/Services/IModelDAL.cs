@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project1MVC.Services
 {
-    interface IManageDAL<T>
+    interface IModelDAL<T>
     {
         bool Add(T obj);
         T Get(int id);
@@ -14,5 +14,4 @@ namespace Project1MVC.Services
         bool Update(T obj);
         bool Delete(T obj);
     }
-
 }
