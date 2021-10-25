@@ -12,18 +12,19 @@ namespace Project1MVC.Controllers
     {
         public ActionResult Index()
         {
+            EquipmentDAL.Instance.Add(new Equipment(0, "Diskette", "Blala", "HP", "Floppy disk"));
             return View();
         }
 
         public ActionResult About()
         {
-            var supplierDB = new SupplierDAL();
-            //supplierDB.Add(new Supplier("Dharmesh", "58108134", "Riv Du Poste"));
-            //System.Diagnostics.Debug.WriteLine(supplier.Name);
-            //var supplierList = supplierDB.GetAll().ToList();
-            var supplier = supplierDB.Get(1);
-            supplier.Address = "Port Louis";
-            supplierDB.Update(supplier);
+            //var supplierDB = new SupplierDAL();
+            ////supplierDB.Add(new Supplier("Dharmesh", "58108134", "Riv Du Poste"));
+            ////System.Diagnostics.Debug.WriteLine(supplier.Name);
+            ////var supplierList = supplierDB.GetAll().ToList();
+            //var supplier = supplierDB.Get(1);
+            //supplier.Address = "Port Louis";
+            //supplierDB.Update(supplier);
             ViewBag.Message = "Your application description page.";
 
             return View();

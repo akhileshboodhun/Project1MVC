@@ -39,9 +39,9 @@ namespace Project1MVC.Controllers
             var db = InMemoryEquipments.GetInstance();
             var equipments = db.GetAll().ToList();
             ViewBag.Equipments = equipments;
-            List <SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList() ;
-            ViewBag.SelectListEquipments = selectListItems;
-            ViewBag.tempEquipments = new List<Equipment>() { };
+            //List <SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList() ;
+            //ViewBag.SelectListEquipments = selectListItems;
+            //ViewBag.tempEquipments = new List<Equipment>() { };
             return View();
         }
 
@@ -58,10 +58,10 @@ namespace Project1MVC.Controllers
                 var equipments = db.GetAll().ToList();
 
                 var equipments_assigned = new List<Equipment>() { };
-                EquipmentId.ForEach(id => 
-                    equipments_assigned.Add(
-                        db.Get(Guid.Parse(id)))
-                );
+                //EquipmentId.ForEach(id => 
+                //    equipments_assigned.Add(
+                //        db.Get(Guid.Parse(id)))
+                //);
 
                 var employee = new Employee(fc["FirstName"],
                     fc["LastName"],
@@ -89,7 +89,7 @@ namespace Project1MVC.Controllers
             var emp_db = InMemoryEmployees.GetInstance();
             var equipments = db.GetAll().ToList();
             ViewBag.Equipments = equipments;
-            List<SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipmentId.ToString(), Text = el.EquipmentName }).ToList();
+            List<SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.Id.ToString(), Text = el.DisplayName() }).ToList();
             ViewBag.SelectListEquipments = selectListItems;
             ViewBag.tempEquipments = new List<Equipment>() { };
             var employee = emp_db.Get(Guid.Parse(id));
@@ -107,11 +107,11 @@ namespace Project1MVC.Controllers
                 var emp_db = InMemoryEmployees.GetInstance();
                 var equipments = db.GetAll().ToList();
                 var equipments_assigned = new List<Equipment>() { };
-                EquipmentID.ForEach(equipId =>
-                    equipments_assigned.Add(
-                        db.Get(Guid.Parse(equipId))
-                    )
-                );
+                //EquipmentID.ForEach(equipId =>
+                //    equipments_assigned.Add(
+                //        db.Get(Guid.Parse(equipId))
+                //    )
+                //);
 
                 var employee = emp_db.Get(Guid.Parse(id));
                 employee.FirstName = fc["FirstName"];

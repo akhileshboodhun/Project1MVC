@@ -6,20 +6,20 @@ using System.Web;
 
 namespace Project1MVC.Services
 {
-    public class InMemoryEquipments : IManageEquipments
+    public class InMemoryEquipments
     {
         List<Equipment> lstEquipments;
         private InMemoryEquipments()
         {
             lstEquipments = new List<Equipment> {
-            new Equipment("Desktop 520"),
-            new Equipment("Laptop P1"),
-            new Equipment("Laptop Standard"),
-            new Equipment("Monitor"),
-            new Equipment("Mouse"),
-            new Equipment("Keyboard"),
-            new Equipment("Docking Station"),
-            new Equipment("headset")
+            //new Equipment("Desktop 520"),
+            //new Equipment("Laptop P1"),
+            //new Equipment("Laptop Standard"),
+            //new Equipment("Monitor"),
+            //new Equipment("Mouse"),
+            //new Equipment("Keyboard"),
+            //new Equipment("Docking Station"),
+            //new Equipment("headset")
         };
         }
 
@@ -34,14 +34,14 @@ namespace Project1MVC.Services
 
         public void Delete(Equipment obj) => lstEquipments.Remove(obj);
 
-        public Equipment Get(Guid id) => lstEquipments.FirstOrDefault(el => el.EquipmentId == id);
+        public Equipment Get(int id) => lstEquipments.FirstOrDefault(el => el.Id == id);
 
         public IEnumerable<Equipment> GetAll() => lstEquipments;
 
 
         public void Update(Equipment obj)
         {
-            var index = lstEquipments.FindIndex(el => el.EquipmentId == obj.EquipmentId);
+            var index = lstEquipments.FindIndex(el => el.Id == obj.Id);
             lstEquipments[index] = obj;
         }
     }

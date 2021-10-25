@@ -10,7 +10,7 @@ using System.Web;
 
 namespace Project1MVC.DAL
 {
-    public class SupplierDAL : IManageDAL<Supplier>
+    public class SupplierDAL : IModelDAL<Supplier>
     {
         private SqlConnection con;
         private void connection()
@@ -101,13 +101,13 @@ namespace Project1MVC.DAL
             return (i >= 1);
         }
 
-        public bool Delete(Supplier supplier)
+        public bool Delete(int id)
         {
             connection();
             SqlCommand cmd = new SqlCommand("DeleteSupplier", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@SupplierId", supplier.SupplierId);
+            cmd.Parameters.AddWithValue("@SupplierId", id);
 
             con.Open();
             int i = cmd.ExecuteNonQuery();
