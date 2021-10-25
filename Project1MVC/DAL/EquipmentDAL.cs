@@ -78,9 +78,44 @@ namespace Project1MVC.DAL
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Equipment> GetAll()
+        public List<Equipment> GetAll()
         {
-            throw new NotImplementedException();
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select All";
+            List<Equipment> list = new List<Equipment>();
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "SELECT * FROM Equipment";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+        
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return list;
         }
 
         public bool Update(Equipment obj)
