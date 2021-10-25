@@ -8,17 +8,29 @@ namespace Project1MVC.Models
 {
     public class Equipment
     {
-        public Equipment(string equipmentName, int quantity=100)
+        public Equipment(int id, string type, string brand, string model, string description, int quantity, int reorderThreshold)
         {
-            EquipmentId = Guid.NewGuid();
-            EquipmentName = equipmentName;
-            Quantity = quantity;
+            this.Id = id;
+            this.Type = type;
+            this.Brand = brand;
+            this.Model = model;
+            this.Description = description;
+            this.Quantity = quantity;
+            this.ReorderThreshold = reorderThreshold;
         }
 
-        public Guid EquipmentId { get;}
-        [Required(AllowEmptyStrings =false, ErrorMessage ="Equipment Name is required")]
-        public string EquipmentName { get; set; }
-        [Range(5,int.MaxValue, ErrorMessage ="Quantity in Stock should be at least 5 units")]
+        public int Id { get; set; }
+
+        public string Type { get; set; }
+
+        public string Brand { get; set; }
+
+        public string Model { get; set; }
+
+        public string Description { get; set; }
+
         public int Quantity { get; set; }
+
+        public int ReorderThreshold { get; set; }
     }
 }
