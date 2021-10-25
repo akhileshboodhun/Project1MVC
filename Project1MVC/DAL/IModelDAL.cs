@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1MVC.Services
+namespace Project1MVC.DAL
 {
-    interface IModelDAL<T>
+    public interface IModelDAL<T>
     {
         bool Add(T obj);
         T Get(int id);
