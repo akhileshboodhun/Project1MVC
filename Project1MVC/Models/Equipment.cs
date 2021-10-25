@@ -8,15 +8,15 @@ namespace Project1MVC.Models
 {
     public class Equipment
     {
-        public Equipment(int id, string type, string brand, string model, string description, int quantity, int reorderThreshold)
+        public Equipment(int id, string type, string brand, string model, string description, int currentStockCount = 11, int reStockThreshold = 10)
         {
             this.Id = id;
             this.Type = type;
             this.Brand = brand;
             this.Model = model;
             this.Description = description;
-            this.Quantity = quantity;
-            this.ReorderThreshold = reorderThreshold;
+            this.CurrentStockCount = currentStockCount;
+            this.ReStockThreshold = reStockThreshold;
         }
 
         public int Id { get; set; }
@@ -29,8 +29,8 @@ namespace Project1MVC.Models
 
         public string Description { get; set; }
 
-        public int Quantity { get; set; }
+        public int CurrentStockCount { get; set; }
 
-        public int ReorderThreshold { get; set; }
+        public int ReStockThreshold { get; set; }
     }
 }
