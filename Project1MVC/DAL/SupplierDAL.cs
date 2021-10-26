@@ -35,7 +35,7 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "INSERT INTO Supplier (Name, PhoneNo, Address) " +
+                        "INSERT INTO [Supplier] ([Name], [PhoneNo], [Address]) " +
                         "VALUES (@Name, @PhoneNo, @Address);";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -75,7 +75,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "DELETE FROM Supplier WHERE SupplierId = @Id;";
+                    string sql = "DELETE FROM [Supplier] WHERE [SupplierId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -112,7 +112,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM Supplier WHERE SupplierId = @Id;";
+                    string sql = "SELECT * FROM [Supplier] WHERE [SupplierId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -153,7 +153,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM Supplier;";
+                    string sql = "SELECT * FROM [Supplier];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -194,9 +194,9 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "UPDATE Supplier " +
-                        "SET Name=@Name, PhoneNo=@PhoneNo, Address=@Address " +
-                        "WHERE SupplierId = @Id;";
+                        "UPDATE [Supplier] " +
+                        "SET [Name]=@Name, [PhoneNo]=@PhoneNo, [Address]=@Address " +
+                        "WHERE [SupplierId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", obj.SupplierId);
