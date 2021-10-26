@@ -126,7 +126,7 @@
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageStocksController.cs" />
-    <Compile Include="Controllers\SuppliersController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
