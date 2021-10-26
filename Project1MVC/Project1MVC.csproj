@@ -129,6 +129,7 @@
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
+    <Compile Include="DAL\OperationType.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
