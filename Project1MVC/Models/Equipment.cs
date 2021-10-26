@@ -30,6 +30,7 @@ namespace Project1MVC.Models
             ReStockThreshold = reStockThreshold;
         }
 
+        [Display(Name = "Equipment ID")]
         public int? EquipId { get; set; }
 
         public string Brand { get; set; }
@@ -38,8 +39,10 @@ namespace Project1MVC.Models
 
         public string Description { get; set; }
 
+        [Display(Name = "Current Stock Count")]
         public double CurrentStockCount { get; set; }
 
+        [Display(Name = "Re-stock Threshold")]
         public double ReStockThreshold { get; set; }
 
     }

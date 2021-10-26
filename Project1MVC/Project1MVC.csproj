@@ -123,12 +123,15 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EquipmentsController.cs" />
+    <Compile Include="Controllers\EquipmentsInStockController.cs" />
+    <Compile Include="Controllers\FutureStockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageStocksController.cs" />
     <Compile Include="Controllers\SuppliersController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
+    <Compile Include="DAL\FutureStockDAL.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\EquipmentStock.cs" />
+    <Compile Include="Models\FutureStock.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Supplier.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="Services\EmployeeRoleProvider.cs" />
     <Compile Include="Services\InMemoryRoles.cs" />
     <Compile Include="Services\Utilities.cs" />
+    <Compile Include="Utils\DBConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -10629,6 +10634,8 @@
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\EquipmentsInStock\Index.cshtml" />
+    <Content Include="Views\FutureStock\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

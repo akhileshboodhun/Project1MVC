@@ -4,11 +4,8 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Equipments</h2>
+<h2>Equipments In Stock</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -29,7 +26,6 @@
         <th>
             @Html.DisplayNameFor(model => model.ReStockThreshold)
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -51,11 +47,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ReStockThreshold)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId}) |
-            @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
         </td>
     </tr>
 }
