@@ -13,17 +13,22 @@ namespace Project1MVC.DAL
 {
     public class SupplierDAL : IManageDAL<Supplier>
     {
-       /* private SqlConnection con;
-        private void connection()
+        /* private SqlConnection con;
+         private void connection()
+         {
+             string constring = ConfigurationManager.ConnectionStrings["ItStocknew DBConnection()"].ToString();
+             con = new SqlConnection(constring);
+         }*/
+        private SqlConnection con { get; set; }
+
+        public SupplierDAL()
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
-            con = new SqlConnection(constring);
-        }*/
+            con = new DBConnection().GetConnection();
+        }
 
         // **************** ADD NEW SUPPLIER *********************
         public bool Add(Supplier supplier)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("AddSupplier", con);
@@ -51,7 +56,6 @@ namespace Project1MVC.DAL
 
         public Supplier Get(int supplierId)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("GetSupplier", con);
@@ -80,7 +84,6 @@ namespace Project1MVC.DAL
 
         public IEnumerable<Supplier> GetAll()
         {
-            var con = DBConnection.GetConnection();
             List<Supplier> SupplierList = new List<Supplier>();
             try
             {
@@ -116,7 +119,6 @@ namespace Project1MVC.DAL
 
         public bool Update(Supplier supplier)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("UpdateSupplier", con);
@@ -147,7 +149,6 @@ namespace Project1MVC.DAL
 
         public bool Delete(Supplier supplier)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("DeleteSupplier", con);

@@ -13,17 +13,24 @@ namespace Project1MVC.DAL
 {
     public class UserDAL : IManageDAL<User>
     {
-       /* private SqlConnection con;
-        private void connection()
+        private SqlConnection con { get; set; }
+        public UserDAL()
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
-            con = new SqlConnection(constring);
-        } */
+            con = new DBConnection().GetConnection();
+        }
+
+        /* private SqlConnection con;
+private void connection()
+{
+    string constring = ConfigurationManager.ConnectionStrings["ItStocknew DBConnection()"].ToString();
+    con = new SqlConnection(constring);
+} */
+
+
 
         // **************** ADD NEW SUPPLIER *********************
         public bool Add(User user)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("AddUser", con);
@@ -54,7 +61,6 @@ namespace Project1MVC.DAL
 
         public User Get(int userId)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("GetUser", con);
@@ -90,7 +96,6 @@ namespace Project1MVC.DAL
 
         public IEnumerable<User> GetAll()
         {
-            var con = DBConnection.GetConnection();
             List<User> UserList = new List<User>();
 
             try
@@ -134,7 +139,6 @@ namespace Project1MVC.DAL
 
         public bool Update(User user)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("UpdateUser", con);
@@ -165,7 +169,6 @@ namespace Project1MVC.DAL
 
         public bool Delete(User user)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("DeleteUser", con);

@@ -14,16 +14,20 @@ namespace Project1MVC.DAL
     public class UserRoleDAL : IManageDAL<UserRole>
     {
 
-      /*  private SqlConnection con;
-        private void connection()
+        /*  private SqlConnection con;
+          private void connection()
+          {
+              string constring = ConfigurationManager.ConnectionStrings["ItStocknew DBConnection()"].ToString();
+              con = new SqlConnection(constring);
+          } */
+        private SqlConnection con { get; set; }
+        public UserRoleDAL()
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
-            con = new SqlConnection(constring);
-        } */
+            con = new DBConnection().GetConnection();
+        }
 
         public bool Add(UserRole userRole)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("AddUserRole", con);
@@ -48,7 +52,6 @@ namespace Project1MVC.DAL
 
         public bool Delete(UserRole userRole)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("DeleteRole", con);
@@ -74,7 +77,6 @@ namespace Project1MVC.DAL
 
         public UserRole Get(int userRoleId)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("GetRole", con);
@@ -104,7 +106,6 @@ namespace Project1MVC.DAL
 
         public IEnumerable<UserRole> GetAll()
         {
-            var con = DBConnection.GetConnection();
             List<UserRole> UserRolesList = new List<UserRole>();
 
             try
@@ -140,7 +141,6 @@ namespace Project1MVC.DAL
 
         public bool Update(UserRole userRole)
         {
-            var con = DBConnection.GetConnection();
             try
             {
                 SqlCommand cmd = new SqlCommand("UpdateRole", con);

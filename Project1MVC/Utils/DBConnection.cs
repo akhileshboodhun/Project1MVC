@@ -7,9 +7,9 @@ using System.Web;
 
 namespace Project1MVC.Utils
 {
-    public static class DBConnection
+    public class DBConnection
     {
-        public static SqlConnection GetConnection()
+        public SqlConnection GetConnection()
         {
             string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
             SqlConnection connection;

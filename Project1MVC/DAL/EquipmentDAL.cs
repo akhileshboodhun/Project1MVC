@@ -13,16 +13,22 @@ namespace Project1MVC.DAL
 {
     public class EquipmentDAL : IManageDAL<Equipment>
     {
-       /* private SqlConnection con;
-        private void connection()
+        private SqlConnection con { get; set; }
+        public EquipmentDAL()
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
-            con = new SqlConnection(constring);
-        } */
+            con = new DBConnection().GetConnection();
+        }
+
+        /* private SqlConnection con;
+private void connection()
+{
+    string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
+    con = new SqlConnection(constring);
+} */
 
         public bool Add(Equipment equipment)
         {
-            var con = DBConnection.GetConnection();
+            
             try
             {
                 SqlCommand cmd = new SqlCommand("AddEquipment", con);
@@ -50,8 +56,6 @@ namespace Project1MVC.DAL
 
         public bool Delete(Equipment equipment)
         {
-            var con = DBConnection.GetConnection();
-
             try
             {
                 SqlCommand cmd = new SqlCommand("DeleteEquipment", con);
@@ -76,7 +80,6 @@ namespace Project1MVC.DAL
 
         public Equipment Get(int equipId)
         {
-            var con = DBConnection.GetConnection(); 
             try
             {
                 SqlCommand cmd = new SqlCommand("GetEquipment", con);
@@ -106,7 +109,6 @@ namespace Project1MVC.DAL
 
         public IEnumerable<Equipment> GetAll()
         {
-            var con = DBConnection.GetConnection();
             List<Equipment> EquipmentList = new List<Equipment>();
 
             try
@@ -144,8 +146,6 @@ namespace Project1MVC.DAL
 
         public bool Update(Equipment equipment)
         {
-            var con = DBConnection.GetConnection();
-
             try
             {
                 SqlCommand cmd = new SqlCommand("UpdateEquipment", con);
@@ -178,8 +178,6 @@ namespace Project1MVC.DAL
         {
             List<Equipment> EquipmentsInStock = new List<Equipment>();
             //SqlConnection con;
-            var con = DBConnection.GetConnection();
-
             try
             {
                 SqlCommand cmd = new SqlCommand("SELECT * FROM[dbo].[Equipment] WHERE CurrentStockCount > 0", con);

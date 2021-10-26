@@ -13,17 +13,25 @@ namespace Project1MVC.DAL
     public class FutureStockDAL
     {
 
+
         /*private SqlConnection con;
         private void connection()
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
+            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection()"].ToString();
             con = new SqlConnection(constring);
         }*/
+
+        private SqlConnection con { get; set; }
+
+        public FutureStockDAL()
+        {
+            con = new DBConnection().GetConnection();
+        }
 
         public IEnumerable<FutureStock> GetAll()
         {
             List<FutureStock> FutureStocksList = new List<FutureStock>();
-            var con = DBConnection.GetConnection();
+            var con = new DBConnection().GetConnection();
 
             try
             {
