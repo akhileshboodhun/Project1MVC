@@ -34,7 +34,7 @@ namespace Project1MVC.Controllers
                 // TODO: Add insert logic here
                 var userDB = new UserDAL();
                 var users = userDB.GetAll();
-                var crypto = new CryptographyProcessor(size: 5);
+                var crypto = new CryptographyProcessor(size: 10);
                 var user = users.FirstOrDefault(el => el.Email.Equals(Email) && crypto.AreEqual(plainTextInput: Password, saltedHashInput: el.HashedPassword));
                 if (!(user is null))
                 {

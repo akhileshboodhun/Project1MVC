@@ -48,7 +48,7 @@ namespace Project1MVC.Controllers
             {
                 // TODO: Add insert logic here
                 var userDB = new UserDAL();
-                var crypto = new CryptographyProcessor(size: 5);
+                var crypto = new CryptographyProcessor(size: 10);
                 var salt = crypto.CreateSalt();
                 var pwd = user.HashedPassword;
                 var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
@@ -89,7 +89,7 @@ namespace Project1MVC.Controllers
                 // TODO: Add update logic here
                 if (!String.IsNullOrEmpty(user.HashedPassword))
                 {
-                var crypto = new CryptographyProcessor(size: 5);
+                var crypto = new CryptographyProcessor(size: 10);
                 var salt = crypto.CreateSalt();
                 var pwd = user.HashedPassword;
                 var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
