@@ -8,21 +8,19 @@ using System.Web.Mvc;
 
 namespace Project1MVC.Controllers
 {
-    public class SuppliersController : Controller
+    public class SupplierController : Controller
     {
         // GET: Suppliers
         public ActionResult Index()
         {
-            var supplierDB = new SupplierDAL();
-            var supplierList = supplierDB.GetAll().ToList();
-            return View(supplierList);
+            var suppliers = SupplierDAL.Instance.GetAll();
+            return View(suppliers);
         }
 
         // GET: Suppliers/Details/5
         public ActionResult Details(int id)
         {
-            var supplierDB = new SupplierDAL();
-            var supplier = supplierDB.Get(id);
+            var supplier = SupplierDAL.Instance.Get(id);
             return View(supplier);
         }
 
@@ -36,52 +34,49 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Create(Supplier supplier)
         {
-            try
-            {
-                var supplierDB = new SupplierDAL();
-                supplierDB.Add(supplier);
-                
+            //try
+            //{
+            //    SupplierDAL.Instance.Add(supplier);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            //    return RedirectToAction("Index");
+            //}
+            //catch
+            //{
+            return View();
+            //}
         }
 
         // GET: Suppliers/Edit/5
         public ActionResult Edit(int id)
         {
-            var supplierDB = new SupplierDAL();
-            var supplier = supplierDB.Get(id);
-            return View(supplier);
+            //var supplierDB = new SupplierDAL();
+            //var supplier = supplierDB.Get(id);
+            return View();
         }
 
         // POST: Suppliers/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, Supplier supplier)
         {
-            var supplierDB = new SupplierDAL();
-            try
-            {
-                supplierDB.Update(supplier);
+            //var supplierDB = new SupplierDAL();
+            //try
+            //{
+            //    supplierDB.Update(supplier);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                supplier = supplierDB.Get(id);
-                return View(supplier);
-            }
+            //    return RedirectToAction("Index");
+            //}
+            //catch
+            //{
+            //    supplier = supplierDB.Get(id);
+            return View();
+            //}
         }
 
         // GET: Suppliers/Delete/5
         public ActionResult Delete(int id)
         {
-            var supplierDB = new SupplierDAL();
-            var supplier = supplierDB.Get(id);
-            return View(supplier);
+            SupplierDAL.Instance.Delete(id);
+            return View();
         }
 
         // POST: Suppliers/Delete/5

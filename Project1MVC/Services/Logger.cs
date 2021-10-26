@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using System.Threading;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Project1MVC.Services
 {
@@ -12,10 +15,12 @@ namespace Project1MVC.Services
         {
             Debug.WriteLine(message);
 
-            string logfilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
+            string filename = path + @"\log.txt";
+
             string text = $"[{DateTime.Now.ToString()}]: {message + Environment.NewLine}";
 
-            System.IO.File.AppendAllText(logfilePath + @"\log.txt", text);
+            File.AppendAllText(filename, text);
         }
     }
 }
