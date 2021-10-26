@@ -1,119 +1,229 @@
-﻿using Project1MVC.Models;
-using Project1MVC.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using Project1MVC.Models;
+using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public class SupplierDAL : IModelDAL<Supplier>
+    public sealed class SupplierDAL : IModelDAL<Supplier>
     {
-        private SqlConnection con;
-        private void connection()
+        private SupplierDAL() { }
+
+        public static SupplierDAL Instance { get { return Nested.instance; } }
+
+        private class Nested
         {
-            string constring = ConfigurationManager.ConnectionStrings["ItStockDBConnection"].ToString();
-            con = new SqlConnection(constring);
+            // Explicit static constructor to tell C# compiler not to lazily instantiate us
+            static Nested() { }
+
+            internal static readonly SupplierDAL instance = new SupplierDAL();
         }
 
-        // **************** ADD NEW SUPPLIER *********************
-        public bool Add(Supplier supplier)
+        public bool Add(Supplier obj)
         {
-            connection();
-            SqlCommand cmd = new SqlCommand("AddSupplier", con);
-            cmd.CommandType = CommandType.StoredProcedure;
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Insert";
+            bool status = false;
 
-            cmd.Parameters.AddWithValue("@Name", supplier.Name);
-            cmd.Parameters.AddWithValue("@PhoneNo", supplier.PhoneNo);
-            cmd.Parameters.AddWithValue("@Address", supplier.Address);
-
-            con.Open();
-            int i = cmd.ExecuteNonQuery();
-            con.Close();
-
-            return (i >= 1);
-        }
-
-
-        public Supplier Get(int supplierId)
-        {
-            connection();
-            SqlCommand cmd = new SqlCommand("GetSupplier", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@SupplierId", supplierId);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-
-            con.Open();
-            da.Fill(dt);
-            con.Close();
-            var fields = dt.Rows[0];
-            return new Supplier(Convert.ToInt32(fields["SupplierId"]), fields["Name"].ToString(), fields["PhoneNo"].ToString(), fields["Address"].ToString());
-        }
-
-        public List<Supplier> GetAll()
-        {
-            connection();
-            List<Supplier> SupplierList = new List<Supplier>();
-
-
-            SqlCommand cmd = new SqlCommand("GetAllSuppliers", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-
-            con.Open();
-            da.Fill(dt);
-            con.Close();
-            
-            foreach (DataRow dr in dt.Rows)
+            using (SqlConnection conn = DAL.GetConnection())
             {
+                if (conn != null)
+                {
+                    string sql =
+                        "INSERT INTO [Supplier] ([Name], [PhoneNo], [Address]) " +
+                        "VALUES (@Name, @PhoneNo, @Address);";
 
-                SupplierList.Add(
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Name", obj.Name);
+                    cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
+                    cmd.Parameters.AddWithValue("@Address", obj.Address);
 
-                    new Supplier(Convert.ToInt32(dr["SupplierId"]), dr["Name"].ToString(), dr["PhoneNo"].ToString(), dr["Address"].ToString())
-                    );
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
             }
 
-            return SupplierList;
-        }
-
-        public bool Update(Supplier supplier)
-        {
-            connection();
-            SqlCommand cmd = new SqlCommand("UpdateSupplier", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@SupplierId", supplier.SupplierId);
-            cmd.Parameters.AddWithValue("@Name", supplier.Name);
-            cmd.Parameters.AddWithValue("@PhoneNo", supplier.PhoneNo);
-            cmd.Parameters.AddWithValue("@Address", supplier.Address);
-
-            con.Open();
-            int i = cmd.ExecuteNonQuery();
-            con.Close();
-
-            return (i >= 1);
+            return status;
         }
 
         public bool Delete(int id)
         {
-            connection();
-            SqlCommand cmd = new SqlCommand("DeleteSupplier", con);
-            cmd.CommandType = CommandType.StoredProcedure;
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Delete";
+            bool status = false;
 
-            cmd.Parameters.AddWithValue("@SupplierId", id);
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "DELETE FROM [Supplier] WHERE [SupplierId] = @Id;";
 
-            con.Open();
-            int i = cmd.ExecuteNonQuery();
-            con.Close();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
 
-            return (i >= 1);
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return status;
+        }
+
+        public Supplier Get(int id)
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select";
+            Supplier Supplier = null;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "SELECT * FROM [Supplier] WHERE [SupplierId] = @Id;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                Supplier = new Supplier(reader["SupplierId"].ToInt(), reader["Name"].ToString(), reader["PhoneNo"].ToString(), reader["Address"].ToString());
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return Supplier;
+        }
+
+        public List<Supplier> GetAll()
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select All";
+            List<Supplier> list = new List<Supplier>();
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "SELECT * FROM [Supplier];";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                list.Add(new Supplier(reader["SupplierId"].ToInt(), reader["Name"].ToString(), reader["PhoneNo"].ToString(), reader["Address"].ToString()));
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return list;
+        }
+
+        public bool Update(Supplier obj)
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Update";
+            bool status = false;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql =
+                        "UPDATE [Supplier] " +
+                        "SET [Name]=@Name, [PhoneNo]=@PhoneNo, [Address]=@Address " +
+                        "WHERE [SupplierId] = @Id;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", obj.SupplierId);
+                    cmd.Parameters.AddWithValue("@Name", obj.Name);
+                    cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
+                    cmd.Parameters.AddWithValue("@Address", obj.Address);
+
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return status;
         }
     }
 }
