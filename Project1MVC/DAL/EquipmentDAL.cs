@@ -36,7 +36,7 @@ namespace Project1MVC.DAL
                 {
                     string sql =
                         "INSERT INTO Equipment (Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold) " +
-                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold)";
+                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);";
            
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
@@ -70,12 +70,80 @@ namespace Project1MVC.DAL
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Delete";
+            bool status = false;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "DELETE FROM Equipment WHERE EquipId = @Id;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return status;
         }
 
         public Equipment Get(int id)
         {
-            throw new NotImplementedException();
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select";
+            Equipment equipment = null;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "SELECT * FROM Equipment WHERE EquipId = @Id;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                equipment = new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt());
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return equipment;
         }
 
         public List<Equipment> GetAll()
@@ -88,7 +156,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM Equipment";
+                    string sql = "SELECT * FROM Equipment;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
         
@@ -120,7 +188,48 @@ namespace Project1MVC.DAL
 
         public bool Update(Equipment obj)
         {
-            throw new NotImplementedException();
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Update";
+            bool status = false;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = 
+                        "UPDATE Equipment " +
+                        "SET Type=@Type, Brand=@Brand, Model=@Model, Description=@Description, CurrentStockCount=@CurrentStockCount, ReStockThreshold=@ReStockThreshold " + 
+                        "WHERE EquipId = @Id;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", obj.Id);
+                    cmd.Parameters.AddWithValue("@Type", obj.Type);
+                    cmd.Parameters.AddWithValue("@Brand", obj.Brand);
+                    cmd.Parameters.AddWithValue("@Model", obj.Model);
+                    cmd.Parameters.AddWithValue("@Description", obj.Description);
+                    cmd.Parameters.AddWithValue("@CurrentStockCount", obj.CurrentStockCount);
+                    cmd.Parameters.AddWithValue("@ReStockTreshold", obj.ReStockThreshold);
+
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() == 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return status;
         }
     }
 }
