@@ -27,7 +27,7 @@ namespace Project1MVC.DAL
         public bool Add(Supplier obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
-            string opType = "Insert";
+            OperationType opType = OperationType.Add;
             bool status = false;
 
             using (SqlConnection conn = DAL.GetConnection())
@@ -70,7 +70,7 @@ namespace Project1MVC.DAL
         public bool Delete(int id)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
-            string opType = "Delete";
+            OperationType opType = OperationType.Delete;
             bool status = false;
 
             using (SqlConnection conn = DAL.GetConnection())
@@ -109,7 +109,7 @@ namespace Project1MVC.DAL
         public Supplier Get(int id)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
-            string opType = "Select";
+            OperationType opType = OperationType.Get;
             Supplier Supplier = null;
 
             using (SqlConnection conn = DAL.GetConnection())
@@ -152,7 +152,7 @@ namespace Project1MVC.DAL
         public List<Supplier> GetAll()
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
-            string opType = "Select All";
+            OperationType opType = OperationType.GetAll;
             List<Supplier> list = new List<Supplier>();
 
             using (SqlConnection conn = DAL.GetConnection())
@@ -194,7 +194,7 @@ namespace Project1MVC.DAL
         public bool Update(Supplier obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
-            string opType = "Update";
+            OperationType opType = OperationType.Update;
             bool status = false;
 
             using (SqlConnection conn = DAL.GetConnection())
