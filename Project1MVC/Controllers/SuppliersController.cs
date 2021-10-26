@@ -85,21 +85,21 @@ namespace Project1MVC.Controllers
         }
 
         // POST: Suppliers/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection fc)
-        {
-                var supplierDB = new SupplierDAL();
-                var supplier = supplierDB.Get(id);
-            try
-            {
-                // TODO: Add delete logic here
-                supplierDB.Delete(supplier);
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View(supplier);
-            }
-        }
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection fc)
+        //{
+        //        var supplierDB = new SupplierDAL();
+        //        var supplier = supplierDB.Get(id);
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
+        //        supplierDB.Delete(supplier);
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View(supplier);
+        //    }
+        //}
     }
 }
