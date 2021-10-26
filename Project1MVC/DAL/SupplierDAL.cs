@@ -50,14 +50,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -87,14 +89,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -128,14 +132,16 @@ namespace Project1MVC.DAL
                                 Supplier = new Supplier(reader["SupplierId"].ToInt(), reader["Name"].ToString(), reader["PhoneNo"].ToString(), reader["Address"].ToString());
                             }
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -168,14 +174,16 @@ namespace Project1MVC.DAL
                                 list.Add(new Supplier(reader["SupplierId"].ToInt(), reader["Name"].ToString(), reader["PhoneNo"].ToString(), reader["Address"].ToString()));
                             }
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -211,14 +219,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }

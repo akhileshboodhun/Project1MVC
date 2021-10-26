@@ -53,14 +53,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }         
@@ -90,14 +92,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -131,14 +135,16 @@ namespace Project1MVC.DAL
                                 equipment = new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt());
                             }
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -171,14 +177,16 @@ namespace Project1MVC.DAL
                                 list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
                             }
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -217,14 +225,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
