@@ -117,7 +117,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM Equipment WHERE EquipId = @Id;";
+                    string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment WHERE EquipId = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -159,7 +159,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM Equipment;";
+                    string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
         

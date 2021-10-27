@@ -9,9 +9,9 @@
 </p>
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.ActionLink(linkText: "Id", actionName: "Index", controllerName: "Equipment")
-        </th>
+        </th>*@
         <th>
             @Html.ActionLink(linkText: "Type", actionName: "Index", controllerName: "Equipment",
                     routeValues: new { orderBy = "Type" },
@@ -51,9 +51,9 @@
     @foreach (var item in Model)
     {
 <tr>
-    <td>
+    @*<td>
         @Html.DisplayFor(modelItem => item.Id)
-    </td>
+    </td>*@
     <td>
         @Html.DisplayFor(modelItem => item.Type)
     </td>
