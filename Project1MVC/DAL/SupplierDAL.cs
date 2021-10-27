@@ -114,7 +114,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM [Supplier] WHERE [SupplierId] = @Id;";
+                    string sql = "SELECT [Name], [PhoneNo], [Address] FROM [Supplier] WHERE [SupplierId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -156,7 +156,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM [Supplier];";
+                    string sql = "SELECT [Name], [PhoneNo], [Address] FROM [Supplier];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
