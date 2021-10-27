@@ -127,8 +127,12 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageStocksController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
+    <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Services\CryptographyProcessor.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
@@ -209,6 +213,11 @@
     <Content Include="Views\Suppliers\Details.cshtml" />
     <Content Include="Views\Suppliers\Edit.cshtml" />
     <Content Include="Views\Suppliers\Delete.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
