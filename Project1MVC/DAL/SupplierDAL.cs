@@ -58,7 +58,6 @@ namespace Project1MVC.DAL
                     }
                     finally
                     {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
                         conn.Close();
                     }
                 }
@@ -97,7 +96,6 @@ namespace Project1MVC.DAL
                     }
                     finally
                     {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
                         conn.Close();
                     }
                 }
@@ -125,7 +123,7 @@ namespace Project1MVC.DAL
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
 
                             while (reader.Read())
                             {
@@ -140,7 +138,6 @@ namespace Project1MVC.DAL
                     }
                     finally
                     {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
                         conn.Close();
                     }
                 }
@@ -167,7 +164,7 @@ namespace Project1MVC.DAL
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
 
                             while (reader.Read())
                             {
@@ -182,7 +179,6 @@ namespace Project1MVC.DAL
                     }
                     finally
                     {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
                         conn.Close();
                     }
                 }
@@ -227,7 +223,6 @@ namespace Project1MVC.DAL
                     }
                     finally
                     {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
                         conn.Close();
                     }
                 }
