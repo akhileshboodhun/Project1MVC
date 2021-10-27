@@ -115,7 +115,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM [User] WHERE [UserId] = @Id;";
+                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User] WHERE [UserId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -156,7 +156,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM [User];";
+                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
