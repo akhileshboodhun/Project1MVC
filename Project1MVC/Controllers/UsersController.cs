@@ -102,7 +102,9 @@ namespace Project1MVC.Controllers
                 }
                 else
                 {
-                    user.HashedPassword = userDB.Get(id).HashedPassword;
+                    var prevUser = userDB.Get(id);
+                    user.Salt = prevUser.Salt;
+                    user.HashedPassword = prevUser.HashedPassword;
                 }
                 userDB.Update(user);
 

@@ -10,13 +10,13 @@ namespace Project1MVC.DAL
 
         public static SqlConnection GetConnection()
         {
-            if (conn != null)
-            {
-                Logger.Log("Reusing current SqlConnection");
-                return conn;
-            }
-            else
-            {
+            //if (conn != null)
+            //{
+            //    Logger.Log("Reusing current SqlConnection");
+            //    return conn;
+            //}
+            //else
+            //{
                 string dbServerName = @"localhost\SQLEXPRESS";
                 string dbName = "ITStock";
                 //string dbUsername = "";
@@ -39,7 +39,7 @@ namespace Project1MVC.DAL
                     Logger.Log(ex.Message);
                     return null;
                 }
-            }
+            //}
         }
 
         private static void Conn_InfoMessage(object sender, SqlInfoMessageEventArgs e)

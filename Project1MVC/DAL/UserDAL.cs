@@ -59,6 +59,7 @@ namespace Project1MVC.DAL
                     }
                     catch (Exception ex)
                     {
+                        System.Diagnostics.Debug.WriteLine(ex.ToString());
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
