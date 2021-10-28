@@ -13,14 +13,14 @@ namespace Project1MVC.Services
     {
         public static void Log(string message)
         {
-            Debug.WriteLine(message);
+            //    Debug.WriteLine(message);
 
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
-            string filename = path + @"\log.txt";
+            //    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
+            //    string filename = path + @"\log.txt";
 
-            string text = $"[{DateTime.Now.ToString()}]: {message + Environment.NewLine}";
+            //    string text = $"[{DateTime.Now.ToString()}]: {message + Environment.NewLine}";
 
-            File.AppendAllText(filename, text);
+            //    File.AppendAllText(filename, text);
         }
     }
 }
