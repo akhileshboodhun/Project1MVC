@@ -145,7 +145,7 @@
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AuthorizeEmployeeAttribute.cs" />
-    <Compile Include="DAL\IModelDAL.cs" />
+    <Compile Include="DAL\IDataAccess.cs" />
     <Compile Include="Services\IManageData.cs" />
     <Compile Include="Services\IManageEmployees.cs" />
     <Compile Include="Services\IManageRoles.cs" />

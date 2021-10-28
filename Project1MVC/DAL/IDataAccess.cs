@@ -2,7 +2,7 @@
 
 namespace Project1MVC.DAL
 {
-    public interface IModelDAL<T>
+    public interface IDataAccess<T>
     {
         bool Add(T obj);
         T Get(int id);

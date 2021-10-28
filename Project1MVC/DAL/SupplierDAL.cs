@@ -10,7 +10,7 @@ using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class SupplierDAL : IModelDAL<Supplier>
+    public sealed class SupplierDAL : IDataAccess<Supplier>
     {
         private SupplierDAL() { }
 

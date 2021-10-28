@@ -10,7 +10,7 @@ using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class EquipmentDAL : IModelDAL<Equipment>
+    public sealed class EquipmentDAL : IDataAccess<Equipment>
     {
         private EquipmentDAL() { }
 
