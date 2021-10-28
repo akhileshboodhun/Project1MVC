@@ -50,11 +50,11 @@
             @Html.DisplayFor(modelItem => item.UserRoleId)
         </td>
         <td>
-            @*@{
-                var userRoleDB = new Project1MVC.DAL.UserRoleDAL();
+            @{
+                var userRoleDB = Project1MVC.DAL.UserRoleDAL.Instance;
                 Project1MVC.Models.UserRole userRole = userRoleDB.Get(item.UserRoleId);
             }
-                @userRole.RoleName*@
+                @userRole.RoleName
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) |

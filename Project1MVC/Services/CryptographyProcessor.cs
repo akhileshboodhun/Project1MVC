@@ -29,19 +29,18 @@ namespace Project1MVC.Services
             return Convert.ToBase64String(buff);
         }
 
-        public string GenerateSaltedHash(string input, string salt)
+        public string GenerateHash(string input, string salt)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input + salt);
             SHA256Managed sHA256ManagedString = new SHA256Managed();
             byte[] hash = sHA256ManagedString.ComputeHash(bytes);
-            return salt + Convert.ToBase64String(hash);
+            return Convert.ToBase64String(hash);
         }
 
-        public bool AreEqual(string plainTextInput, string saltedHashInput)
+        public bool AreEqual(string plainTextInput, string salt, string hashInput)
         {
-            string salt = saltedHashInput.Split('=')[0] + "==";
-            string newHashedPin = GenerateSaltedHash(plainTextInput, salt);
-            return newHashedPin.Equals(saltedHashInput);
+            string newHashedPin = GenerateHash(plainTextInput, salt);
+            return newHashedPin.Equals(hashInput);
         }
     }
 }

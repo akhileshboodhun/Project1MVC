@@ -54,9 +54,9 @@ namespace Project1MVC.Controllers
                 var crypto = new CryptographyProcessor(size: 10);
                 var salt = crypto.CreateSalt();
                 var pwd = user.HashedPassword;
-                var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
+                var storedHash = crypto.GenerateHash(pwd, salt);
                 user.Salt = salt;
-                user.HashedPassword = storedSaltedHash;
+                user.HashedPassword = storedHash;
                 userDB.Add(user);
 
                 return RedirectToAction("Index");
@@ -96,8 +96,9 @@ namespace Project1MVC.Controllers
                 var crypto = new CryptographyProcessor(size: 10);
                 var salt = crypto.CreateSalt();
                 var pwd = user.HashedPassword;
-                var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
-                user.HashedPassword = storedSaltedHash;
+                var storedHash = crypto.GenerateHash(pwd, salt);
+                user.Salt = salt;
+                user.HashedPassword = storedHash;
                 }
                 else
                 {

@@ -47,7 +47,7 @@
         </dt>
         <dd>
             @{
-                var userRoleDB = new Project1MVC.DAL.UserRoleDAL();
+                var userRoleDB = Project1MVC.DAL.UserRoleDAL.Instance;
                 Project1MVC.Models.UserRole userRole = userRoleDB.Get(Model.UserRoleId);
             }
             @userRole.RoleName
