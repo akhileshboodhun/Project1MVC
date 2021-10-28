@@ -4,7 +4,7 @@ using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public static class DAL
+    public static class DBManager
     {
         public static SqlConnection GetConnection()
         {

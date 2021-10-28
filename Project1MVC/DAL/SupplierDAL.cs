@@ -30,7 +30,7 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Add;
             bool status = false;
 
-            using (SqlConnection conn = DAL.GetConnection())
+            using (SqlConnection conn = DBManager.GetConnection())
             {
                 if (conn != null)
                 {
@@ -72,7 +72,7 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Delete;
             bool status = false;
 
-            using (SqlConnection conn = DAL.GetConnection())
+            using (SqlConnection conn = DBManager.GetConnection())
             {
                 if (conn != null)
                 {
@@ -110,7 +110,7 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Get;
             Supplier Supplier = null;
 
-            using (SqlConnection conn = DAL.GetConnection())
+            using (SqlConnection conn = DBManager.GetConnection())
             {
                 if (conn != null)
                 {
@@ -152,7 +152,7 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.GetAll;
             List<Supplier> list = new List<Supplier>();
 
-            using (SqlConnection conn = DAL.GetConnection())
+            using (SqlConnection conn = DBManager.GetConnection())
             {
                 if (conn != null)
                 {
@@ -193,7 +193,7 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Update;
             bool status = false;
 
-            using (SqlConnection conn = DAL.GetConnection())
+            using (SqlConnection conn = DBManager.GetConnection())
             {
                 if (conn != null)
                 {
