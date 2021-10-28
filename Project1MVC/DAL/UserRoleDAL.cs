@@ -1,30 +1,29 @@
-﻿using System;
+﻿using Project1MVC.Models;
+using Project1MVC.Services;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using Project1MVC.Models;
-using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class UserDAL : IModelDAL<User>
+    public sealed class UserRoleDAL : IModelDAL<UserRole>
     {
-        private UserDAL() { }
+        private UserRoleDAL() { }
 
-        public static UserDAL Instance { get { return Nested.instance; } }
+        public static UserRoleDAL Instance { get { return Nested.instance; } }
 
         private class Nested
         {
             // Explicit static constructor to tell C# compiler not to lazily instantiate us
             static Nested() { }
 
-            internal static readonly UserDAL instance = new UserDAL();
+            internal static readonly UserRoleDAL instance = new UserRoleDAL();
         }
 
-        public bool Add(User obj)
+        public bool Add(UserRole obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Insert";
@@ -35,16 +34,11 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "INSERT INTO [User] ([FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId]) " +
-                        "VALUES (@FName, @LName, @Email, @Salt, @HashedPassword, @UserRoleId);";
+                        "INSERT INTO [UserRole] ([RoleName]) " +
+                        "VALUES (@RoleName);";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@FName", obj.FName);
-                    cmd.Parameters.AddWithValue("@LName", obj.LName);
-                    cmd.Parameters.AddWithValue("@Email", obj.Email);
-                    cmd.Parameters.AddWithValue("@Salt", obj.Salt);
-                    cmd.Parameters.AddWithValue("@HashedPassword", obj.HashedPassword);
-                    cmd.Parameters.AddWithValue("@UserRoleId", obj.UserRoleId);
+                    cmd.Parameters.AddWithValue("@RoleName", obj.RoleName);
 
                     try
                     {
@@ -78,10 +72,10 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "DELETE FROM [User] WHERE [UserId] = @Id;";
+                    string sql = "DELETE FROM [UserRole] WHERE [UserRoleId] = @UserRoleId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@UserRoleId", id);
 
                     try
                     {
@@ -105,20 +99,20 @@ namespace Project1MVC.DAL
             return status;
         }
 
-        public User Get(int id)
+        public UserRole Get(int id)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Select";
-            User User = null;
+            UserRole UserRole = null;
 
             using (SqlConnection conn = DAL.GetConnection())
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User] WHERE [UserId] = @Id;";
+                    string sql = "SELECT [UserRoleId], [RoleName] FROM [UserRole] WHERE [UserRoleId] = @UserRoleId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@UserRoleId", id);
 
                     try
                     {
@@ -128,7 +122,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                User = new User(reader["UserId"].ToInt(),reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt());
+                                UserRole = new UserRole(reader["UserRoleId"].ToInt(), reader["RoleName"].ToString());
                             }
                         }
 
@@ -143,20 +137,21 @@ namespace Project1MVC.DAL
                 }
             }
 
-            return User;
+            return UserRole;
         }
 
-        public List<User> GetAll()
+        public List<UserRole> GetAll()
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Select All";
-            List<User> list = new List<User>();
+            List<UserRole> list = new List<UserRole>();
 
             using (SqlConnection conn = DAL.GetConnection())
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User];";
+                    
+                    string sql = "SELECT [UserRoleId], [RoleName] FROM [UserRole];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -168,7 +163,8 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new User(reader["UserId"].ToInt(), reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt())); }
+                                list.Add(new UserRole(reader["UserRoleId"].ToInt(), reader["RoleName"].ToString()));
+                            }
                         }
 
                         Logger.Log("Closing the SqlConnection" + Environment.NewLine);
@@ -185,7 +181,7 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public bool Update(User obj)
+        public bool Update(UserRole obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Update";
@@ -193,26 +189,17 @@ namespace Project1MVC.DAL
 
             using (SqlConnection conn = DAL.GetConnection())
             {
+                if(conn.State == System.Data.ConnectionState.Closed) conn.Open();
                 if (conn != null)
                 {
                     string sql =
-                        "UPDATE [User] " +
-                        @"SET [FName] = @FName,
-                            [LName] = @LName,
-                            [Email] = @Email,
-                            [Salt] = @Salt,
-                            [HashedPassword] = @HashedPassword,
-                            [UserRoleId] = @UserRoleId" +
-                        " WHERE [UserId] = @UserId;";
+                        "UPDATE [UserRole] " +
+                        "SET [RoleName]=@RoleName " +
+                        "WHERE [UserRoleId] = @UserRoleId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@UserId", obj.UserId);
-                    cmd.Parameters.AddWithValue("@FName", obj.FName);
-                    cmd.Parameters.AddWithValue("@LName", obj.LName);
-                    cmd.Parameters.AddWithValue("@Email", obj.Email);
-                    cmd.Parameters.AddWithValue("@Salt", obj.Salt);
-                    cmd.Parameters.AddWithValue("@HashedPassword", obj.HashedPassword);
                     cmd.Parameters.AddWithValue("@UserRoleId", obj.UserRoleId);
+                    cmd.Parameters.AddWithValue("@RoleName", obj.RoleName);
 
                     try
                     {
@@ -236,4 +223,5 @@ namespace Project1MVC.DAL
             return status;
         }
     }
+
 }

@@ -17,6 +17,9 @@ namespace Project1MVC.Controllers
         {
             var userDB = UserDAL.Instance;
             var users = userDB.GetAll();
+            var userRoleDB = UserRoleDAL.Instance;
+            var userRoles = userRoleDB.GetAll();
+            ViewBag.userRoles = userRoles;
             return View(users);
         }
 
@@ -32,11 +35,11 @@ namespace Project1MVC.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            //var userRoleDB = UserRoleDAL.Instance;
-            //var userRoles = userRoleDB.GetAll();
-            //List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
-            //var selectList = new SelectList(selectListItems, "Value", "Text");
-            //ViewBag.SelectListRoles = selectList;
+            var userRoleDB = UserRoleDAL.Instance;
+            var userRoles = userRoleDB.GetAll();
+            List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
+            var selectList = new SelectList(selectListItems, "Value", "Text");
+            ViewBag.SelectListRoles = selectList;
             return View();
         }
 
@@ -52,6 +55,7 @@ namespace Project1MVC.Controllers
                 var salt = crypto.CreateSalt();
                 var pwd = user.HashedPassword;
                 var storedSaltedHash = crypto.GenerateSaltedHash(pwd, salt);
+                user.Salt = salt;
                 user.HashedPassword = storedSaltedHash;
                 userDB.Add(user);
 
@@ -69,11 +73,11 @@ namespace Project1MVC.Controllers
             var userDB = UserDAL.Instance;
             var user = userDB.Get(id);
 
-            //var userRoleDB = UserRoleDAL.Instance;
-            //var userRoles = userRoleDB.GetAll();
-            //List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
-            //var selectList = new SelectList(selectListItems, "Value", "Text");
-            //ViewBag.SelectListRoles = selectList;
+            var userRoleDB = UserRoleDAL.Instance;
+            var userRoles = userRoleDB.GetAll();
+            List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
+            var selectList = new SelectList(selectListItems, "Value", "Text");
+            ViewBag.SelectListRoles = selectList;
 
             return View(user);
         }
