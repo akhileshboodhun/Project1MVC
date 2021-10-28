@@ -124,6 +124,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
+    <Compile Include="Controllers\EquipmentsInStockController.cs" />
     <Compile Include="Controllers\FutureStockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageStocksController.cs" />
@@ -230,6 +231,7 @@
     <Content Include="Views\UserRoles\Edit.cshtml" />
     <Content Include="Views\UserRoles\Index.cshtml" />
     <Content Include="Views\FutureStock\Index.cshtml" />
+    <Content Include="Views\EquipmentsInStock\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
