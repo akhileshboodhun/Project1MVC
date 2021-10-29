@@ -34,67 +34,71 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Create(Supplier supplier)
         {
-            //try
-            //{
-            //    SupplierDAL.Instance.Add(supplier);
-
-            //    return RedirectToAction("Index");
-            //}
-            //catch
-            //{
-            return View();
-            //}
+            var supplierDB = SupplierDAL.Instance;
+            try
+            {
+                // TODO: Add insert logic here
+                supplierDB.Add(supplier);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: Suppliers/Edit/5
         public ActionResult Edit(int id)
         {
-            //var supplierDB = new SupplierDAL();
-            //var supplier = supplierDB.Get(id);
-            return View();
+            var supplierDB = SupplierDAL.Instance;
+            var userRole = supplierDB.Get(id);
+            return View(userRole);
         }
 
         // POST: Suppliers/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, Supplier supplier)
         {
-            //var supplierDB = new SupplierDAL();
-            //try
-            //{
-            //    supplierDB.Update(supplier);
+            var supplierDB = SupplierDAL.Instance;
 
-            //    return RedirectToAction("Index");
-            //}
-            //catch
-            //{
-            //    supplier = supplierDB.Get(id);
-            return View();
-            //}
+            try
+            {
+                // TODO: Add update logic here
+                supplierDB.Update(supplier);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                supplier = supplierDB.Get(id);
+                return View(supplier);
+            }
         }
 
         // GET: Suppliers/Delete/5
         public ActionResult Delete(int id)
         {
-            SupplierDAL.Instance.Delete(id);
-            return View();
+            var supplierDB = SupplierDAL.Instance;
+            var supplier = supplierDB.Get(id);
+            return View(supplier);
         }
 
         // POST: Suppliers/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(int id, FormCollection fc)
-        //{
-        //        var supplierDB = new SupplierDAL();
-        //        var supplier = supplierDB.Get(id);
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-        //        supplierDB.Delete(supplier);
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View(supplier);
-        //    }
-        //}
+        [HttpPost]
+        public ActionResult Delete(int id, FormCollection fc)
+        {
+            var supplierDB = SupplierDAL.Instance;
+            try
+            {
+                // TODO: Add delete logic here
+
+                supplierDB.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                var supplier = supplierDB.Get(id);
+                return View(supplier);
+            }
+        }
     }
 }
