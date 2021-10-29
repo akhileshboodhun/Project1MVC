@@ -208,7 +208,7 @@ namespace Project1MVC.DAL
                     cmd.Parameters.AddWithValue("@Model", obj.Model);
                     cmd.Parameters.AddWithValue("@Description", obj.Description);
                     cmd.Parameters.AddWithValue("@CurrentStockCount", obj.CurrentStockCount);
-                    cmd.Parameters.AddWithValue("@ReStockTreshold", obj.ReStockThreshold);
+                    cmd.Parameters.AddWithValue("@ReStockThreshold", obj.ReStockThreshold);
 
                     try
                     {
