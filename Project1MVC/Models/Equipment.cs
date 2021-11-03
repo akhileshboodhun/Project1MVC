@@ -8,6 +8,7 @@ namespace Project1MVC.Models
 {
     public class Equipment
     {
+        public Equipment() { }
         public Equipment(int id, string type, string brand, string model, string description, int currentStockCount = 11, int reStockThreshold = 10)
         {
             this.Id = id;
