@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Project1MVC.Services
 {
-    public class InMemoryEmployees : IManageEmployees
+    public class InMemoryEmployees
     {
         List<Employee> lstEmployees;
 

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Project1MVC.Services
 {
-    public class InMemoryRoles : IManageRoles
+    public class InMemoryRoles
     {
         private List<Role> lstRoles;
         public InMemoryRoles()
