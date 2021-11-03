@@ -1,43 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Reflection;
-using System.Web;
 using Project1MVC.Models;
 using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class EquipmentDAL : IDataAccess<Equipment>
+    public sealed class EquipmentRepository : IEquipmentRepository
     {
-        private EquipmentDAL() { }
+        private EquipmentRepository() { }
 
-        public static EquipmentDAL Instance { get { return Nested.instance; } }
+        public static EquipmentRepository Instance { get { return Nested.instance; } }
 
         private class Nested
         {
             // Explicit static constructor to tell C# compiler not to lazily instantiate us
             static Nested() { }
 
-            internal static readonly EquipmentDAL instance = new EquipmentDAL();
+            internal static readonly EquipmentRepository instance = new EquipmentRepository();
         }
 
         public bool Add(Equipment obj)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Add;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.GetConnection())
+            using (SqlConnection conn = DBManager.Instance.GetConnection())
             {
                 if (conn != null)
                 {
                     string sql =
                         "INSERT INTO Equipment (Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold) " +
                         "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);";
-           
+ 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
@@ -51,7 +48,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
-                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
@@ -71,11 +68,11 @@ namespace Project1MVC.DAL
 
         public bool Delete(int id)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Delete;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.GetConnection())
+            using (SqlConnection conn = DBManager.Instance.GetConnection())
             {
                 if (conn != null)
                 {
@@ -89,7 +86,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
-                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
@@ -109,11 +106,11 @@ namespace Project1MVC.DAL
 
         public Equipment Get(int id)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Get;
             Equipment equipment = null;
 
-            using (SqlConnection conn = DBManager.GetConnection())
+            using (SqlConnection conn = DBManager.Instance.GetConnection())
             {
                 if (conn != null)
                 {
@@ -149,13 +146,13 @@ namespace Project1MVC.DAL
             return equipment;
         }
 
-        public List<Equipment> GetAll()
+        public IList<Equipment> GetAll()
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.GetAll;
             List<Equipment> list = new List<Equipment>();
 
-            using (SqlConnection conn = DBManager.GetConnection())
+            using (SqlConnection conn = DBManager.Instance.GetConnection())
             {
                 if (conn != null)
                 {
@@ -192,11 +189,11 @@ namespace Project1MVC.DAL
 
         public bool Update(Equipment obj)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Update;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.GetConnection())
+            using (SqlConnection conn = DBManager.Instance.GetConnection())
             {
                 if (conn != null)
                 {
@@ -219,7 +216,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
-                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
