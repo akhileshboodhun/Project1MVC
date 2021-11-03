@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace Project1MVC.Services
 {
-    public class AuthorizeEmployeeAttribute : AuthorizeAttribute
+    public class AuthorizeUserAttribute : AuthorizeAttribute
     {
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
@@ -19,11 +21,12 @@ namespace Project1MVC.Services
             {
                 // The user is not in any of the listed roles => 
                 // show the unauthorized view
-                filterContext.Result = new HttpStatusCodeResult(System.Net.HttpStatusCode.Unauthorized);
+                filterContext.Result = new HttpStatusCodeResult(System.Net.HttpStatusCode.Unauthorized, "Oopss");
                 //filterContext.Result = new ViewResult
                 //{
                 //    ViewName = "~/Views/Shared/Unauthorized.cshtml"
                 //};
+
             }
             else
             {

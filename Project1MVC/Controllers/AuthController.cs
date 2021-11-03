@@ -1,4 +1,5 @@
-﻿using Project1MVC.Models;
+﻿using Project1MVC.DAL;
+using Project1MVC.Models;
 using Project1MVC.Services;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,8 @@ namespace Project1MVC.Controllers
         // GET: Auth/Login
         public ActionResult Login(string ReturnUrl)
         {
-            if (ReturnUrl != null) {
+            if (ReturnUrl != null)
+            {
                 ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
                 GlobalReturnUrl = ReturnUrl;
             }
@@ -26,18 +28,19 @@ namespace Project1MVC.Controllers
 
         // POST: Auth/Login
         [HttpPost]
-        public ActionResult Login(string Email, string Password)
+        public ActionResult Login(UserCredentials userCredentials)
         {
             try
             {
                 // TODO: Add insert logic here
-                var emp_db = InMemoryEmployees.GetInstance();
-                var employees = emp_db.GetAll();
-                var employee = employees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
-                if (!(employee is null))
+                var userDB =  UserDAL.Instance;
+                var users = userDB.GetAll();
+                var crypto = new CryptographyProcessor(size: 10);
+                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
+                if (!(user is null))
                 {
-                    Session["EmployeeFirstName"] = employee?.FirstName;
-                    FormsAuthentication.SetAuthCookie(employee.Email, true);
+                    Session["UserFirstName"] = user?.FName;
+                    FormsAuthentication.SetAuthCookie(user.Email, true);
                     System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
                     if (GlobalReturnUrl?.Length > 0)
                     {
