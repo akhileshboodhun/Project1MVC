@@ -13,15 +13,15 @@ namespace Project1MVC.Controllers
         // GET: Suppliers
         public ActionResult Index()
         {
-            var suppliers = SupplierDAL.Instance.GetAll();
-            return View(suppliers);
+            //var suppliers = SupplierDAL.Instance.GetAll();
+            return View();
         }
 
         // GET: Suppliers/Details/5
         public ActionResult Details(int id)
         {
-            var supplier = SupplierDAL.Instance.Get(id);
-            return View(supplier);
+            //var supplier = SupplierDAL.Instance.Get(id);
+            return View();
         }
 
         // GET: Suppliers/Create
@@ -75,7 +75,7 @@ namespace Project1MVC.Controllers
         // GET: Suppliers/Delete/5
         public ActionResult Delete(int id)
         {
-            SupplierDAL.Instance.Delete(id);
+            //SupplierDAL.Instance.Delete(id);
             return View();
         }
 

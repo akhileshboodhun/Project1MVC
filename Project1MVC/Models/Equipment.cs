@@ -10,7 +10,7 @@ namespace Project1MVC.Models
     {
         public Equipment(int id, string type, string brand, string model, string description, int currentStockCount = 11, int reStockThreshold = 10)
         {
-            this.Id = id;
+            this.EquipId = id;
             this.Type = type;
             this.Brand = brand;
             this.Model = model;
@@ -19,18 +19,25 @@ namespace Project1MVC.Models
             this.ReStockThreshold = reStockThreshold;
         }
 
-        public int Id { get; set; }
+        [Display(Name = "Equipment Id"), Key]
+        public int EquipId { get; set; }
 
+        [Display(Name = "Type")]
         public string Type { get; set; }
 
+        [Display(Name = "Brand")]
         public string Brand { get; set; }
 
+        [Display(Name = "Model")]
         public string Model { get; set; }
 
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
+        [Display(Name = "Current Stock Count")]
         public int CurrentStockCount { get; set; }
 
+        [Display(Name = "ReStock Threshold")]
         public int ReStockThreshold { get; set; }
 
         public string DisplayName()
