@@ -4,14 +4,14 @@ namespace Project1MVC.Models
 {
     public class Role
     {
-
-        public Role(string name)
+        public Role(int id, string name)
         {
-            this.id = Guid.NewGuid();
+            this.Id = id;
             this.Name = name;
         }
 
-        public Guid id { get; set; }
+        public int Id { get; set; }
+
         public string Name { get; set; }
     }
 }
