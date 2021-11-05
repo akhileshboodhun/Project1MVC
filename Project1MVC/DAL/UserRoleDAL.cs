@@ -140,6 +140,47 @@ namespace Project1MVC.DAL
             return UserRole;
         }
 
+        public UserRole GetRoleByName(string roleName)
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select";
+            UserRole UserRole = null;
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = "SELECT [UserRoleId], [RoleName] FROM [UserRole] WHERE [RoleName] = @RoleName;";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@RoleName", roleName);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                UserRole = new UserRole(reader["UserRoleId"].ToInt(), reader["RoleName"].ToString());
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return UserRole;
+        }
+
         public List<UserRole> GetAll()
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");

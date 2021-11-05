@@ -35,22 +35,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserRoleId)
+            @Html.DisplayNameFor(model => model.RoleName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.UserRoleId)
-        </dd>
-
-        <dt>
-            @Html.DisplayName("RoleName")
-        </dt>
-        <dd>
-            @{
-                var userRoleDB = Project1MVC.DAL.UserRoleDAL.Instance;
-                Project1MVC.Models.UserRole userRole = userRoleDB.Get(Model.UserRoleId);
-            }
-            @userRole.RoleName
+            @Html.DisplayFor(model => model.RoleName)
         </dd>
 
     </dl>

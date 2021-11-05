@@ -9,7 +9,7 @@ using Project1MVC.DAL;
 
 namespace Project1MVC.Controllers
 {
-    [AuthorizeEmployee(Roles = "Admin")]
+    [AuthorizeUser(Roles = "Admin")]
     public class EquipmentController : Controller
     {
         // GET: Equipments

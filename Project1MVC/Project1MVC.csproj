@@ -133,6 +133,7 @@
     <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
+    <Compile Include="DAL\EmployeeDAL.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\FutureStockDAL.cs" />
     <Compile Include="DAL\OrderDAL.cs" />
@@ -151,23 +152,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Data.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\EquipmentStock.cs" />
-    <Compile Include="Models\IUser.cs" />
+    <Compile Include="Models\UserCredentials.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AuthorizeEmployeeAttribute.cs" />
+    <Compile Include="Services\AuthorizeUserAttribute.cs" />
     <Compile Include="DAL\IModelDAL.cs" />
-    <Compile Include="Services\IManageData.cs" />
-    <Compile Include="Services\IManageEmployees.cs" />
-    <Compile Include="Services\IManageRoles.cs" />
-    <Compile Include="Services\InMemoryEmployees.cs" />
-    <Compile Include="Services\InMemoryEquipments.cs" />
-    <Compile Include="Services\EmployeeRoleProvider.cs" />
-    <Compile Include="Services\InMemoryRoles.cs" />
+    <Compile Include="Services\UserRoleProvider.cs" />
     <Compile Include="Services\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -207,25 +201,19 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
-    <Content Include="Views\Employees\Create.cshtml" />
-    <Content Include="Views\Employees\Details.cshtml" />
-    <Content Include="Views\Employees\Edit.cshtml" />
-    <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\_AssignedPartialPage.cshtml" />
     <Content Include="Views\Employees\_ManageAssignedPartial.cshtml" />
-    <Content Include="Views\Auth\Login.cshtml" />
-    <Content Include="Views\Equipment\Index.cshtml" />
+
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\Create.cshtml" />
     <Content Include="Views\Supplier\Details.cshtml" />
     <Content Include="Views\Supplier\Edit.cshtml" />
     <Content Include="Views\Supplier\Delete.cshtml" />
+	<Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\UserRoles\Create.cshtml" />
     <Content Include="Views\UserRoles\Delete.cshtml" />
     <Content Include="Views\UserRoles\Details.cshtml" />
@@ -233,6 +221,13 @@
     <Content Include="Views\UserRoles\Index.cshtml" />
     <Content Include="Views\FutureStock\Index.cshtml" />
     <Content Include="Views\EquipmentsInStock\Index.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+	<Content Include="Views\Equipment\Index.cshtml" />
     <Content Include="Views\Equipment\Details.cshtml" />
     <Content Include="Views\Equipment\Create.cshtml" />
     <Content Include="Views\Equipment\Edit.cshtml" />

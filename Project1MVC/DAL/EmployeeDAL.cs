@@ -10,21 +10,21 @@ using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class UserDAL : IModelDAL<User>
+    public sealed class EmployeeDAL : IModelDAL<Employee>
     {
-        private UserDAL() { }
+        private EmployeeDAL() { }
 
-        public static UserDAL Instance { get { return Nested.instance; } }
+        public static EmployeeDAL Instance { get { return Nested.instance; } }
 
         private class Nested
         {
             // Explicit static constructor to tell C# compiler not to lazily instantiate us
             static Nested() { }
 
-            internal static readonly UserDAL instance = new UserDAL();
+            internal static readonly EmployeeDAL instance = new EmployeeDAL();
         }
 
-        public bool Add(User obj)
+        public bool Add(Employee obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Insert";
@@ -35,16 +35,20 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "INSERT INTO [User] ([FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId]) " +
-                        "VALUES (@FName, @LName, @Email, @Salt, @HashedPassword, @UserRoleId);";
+                        "AddEmployee";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@FName", obj.FName);
                     cmd.Parameters.AddWithValue("@LName", obj.LName);
                     cmd.Parameters.AddWithValue("@Email", obj.Email);
                     cmd.Parameters.AddWithValue("@Salt", obj.Salt);
                     cmd.Parameters.AddWithValue("@HashedPassword", obj.HashedPassword);
                     cmd.Parameters.AddWithValue("@UserRoleId", obj.UserRoleId);
+                    cmd.Parameters.AddWithValue("@DOB", obj.DateOfBirth);
+                    cmd.Parameters.AddWithValue("@Address", obj.Address);
+                    cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
+                    cmd.Parameters.AddWithValue("@IsActive", obj.IsActive);
 
                     try
                     {
@@ -79,7 +83,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "DELETE FROM [User] WHERE [UserId] = @Id;";
+                    string sql = "DELETE FROM [Employee] WHERE [EmpId] = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -105,13 +109,12 @@ namespace Project1MVC.DAL
 
             return status;
         }
-
-        public User Get(int id) => Get(id.ToString());
-        public User Get(string query)
+        public Employee Get(int id) => Get(id.ToString());
+        public Employee Get(string query)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Select";
-            User User = null;
+            Employee Employee = null;
 
             using (SqlConnection conn = DAL.GetConnection())
             {
@@ -121,7 +124,10 @@ namespace Project1MVC.DAL
                     var byEmail = "[Email] = @Email";
                     int id;
                     var byCondition = (int.TryParse(query, out id)) ? byId : byEmail;
-                    string sql = $"SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName] FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId WHERE {byCondition};";
+                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
+                                    FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
+                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId
+                                    WHERE " + byCondition;
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -135,7 +141,18 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                User = new User(reader["UserId"].ToInt(),reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt(), reader["RoleName"].ToString());
+                                Employee = new Employee(reader["UserId"].ToInt(),
+                                                        reader["FName"].ToString(),
+                                                        reader["LName"].ToString(),
+                                                        reader["Email"].ToString(),
+                                                        reader["Salt"].ToString(),
+                                                        reader["HashedPassword"].ToString(),
+                                                        reader["UserRoleId"].ToInt(),
+                                                        reader["RoleName"].ToString(),
+                                                        reader["DOB"].ToDateTime(),
+                                                        reader["Address"].ToString(),
+                                                        reader["PhoneNo"].ToString(),
+                                                        reader["IsActive"].ToBoolean());
                             }
                         }
 
@@ -150,20 +167,22 @@ namespace Project1MVC.DAL
                 }
             }
 
-            return User;
+            return Employee;
         }
 
-        public List<User> GetAll()
+        public List<Employee> GetAll()
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Select All";
-            List<User> list = new List<User>();
+            List<Employee> list = new List<Employee>();
 
             using (SqlConnection conn = DAL.GetConnection())
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName] FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId;";
+                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
+                                    FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
+                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -175,7 +194,20 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new User(reader["UserId"].ToInt(), reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt(), reader["RoleName"].ToString())); }
+                                list.Add(
+                                    new Employee(reader["UserId"].ToInt(),
+                                                        reader["FName"].ToString(),
+                                                        reader["LName"].ToString(),
+                                                        reader["Email"].ToString(),
+                                                        reader["Salt"].ToString(),
+                                                        reader["HashedPassword"].ToString(),
+                                                        reader["UserRoleId"].ToInt(),
+                                                        reader["RoleName"].ToString(),
+                                                        reader["DOB"].ToDateTime(),
+                                                        reader["Address"].ToString(),
+                                                        reader["PhoneNo"].ToString(),
+                                                        reader["IsActive"].ToBoolean())
+                                    );  }
                         }
 
                         Logger.Log("Closing the SqlConnection" + Environment.NewLine);
@@ -192,7 +224,7 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public bool Update(User obj)
+        public bool Update(Employee obj)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Update";
@@ -203,16 +235,10 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "UPDATE [User] " +
-                        @"SET [FName] = @FName,
-                            [LName] = @LName,
-                            [Email] = @Email,
-                            [Salt] = @Salt,
-                            [HashedPassword] = @HashedPassword,
-                            [UserRoleId] = @UserRoleId" +
-                        " WHERE [UserId] = @UserId;";
+                        "UpdateEmployee";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@UserId", obj.UserId);
                     cmd.Parameters.AddWithValue("@FName", obj.FName);
                     cmd.Parameters.AddWithValue("@LName", obj.LName);
@@ -220,6 +246,10 @@ namespace Project1MVC.DAL
                     cmd.Parameters.AddWithValue("@Salt", obj.Salt);
                     cmd.Parameters.AddWithValue("@HashedPassword", obj.HashedPassword);
                     cmd.Parameters.AddWithValue("@UserRoleId", obj.UserRoleId);
+                    cmd.Parameters.AddWithValue("@DOB", obj.DateOfBirth);
+                    cmd.Parameters.AddWithValue("@Address", obj.Address);
+                    cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
+                    cmd.Parameters.AddWithValue("@IsActive", obj.IsActive);
 
                     try
                     {
