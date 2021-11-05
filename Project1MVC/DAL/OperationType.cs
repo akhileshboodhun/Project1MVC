@@ -7,8 +7,10 @@ namespace Project1MVC.DAL
 {
     public enum OperationType
     {
+        GetCount,
         Get,
         GetAll,
+        GetPaginated,
         Add,
         Update,
         Delete,
