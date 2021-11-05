@@ -29,9 +29,11 @@ namespace Project1MVC.Models
         public int? UserId { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "First Name is required")]
+        [Display(Name = "First Name")]
         public string FName { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name is required")]
+        [Display(Name = "Last Name")]
         public string LName { get; set; }
 
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Invalid Email")]

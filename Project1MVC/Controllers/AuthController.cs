@@ -41,6 +41,13 @@ namespace Project1MVC.Controllers
                 {
                     Session["UserFirstName"] = user?.FName;
                     FormsAuthentication.SetAuthCookie(user.Email, true);
+
+                    HttpCookie UserIdCookie = new HttpCookie("UserIdCookie");
+                    UserIdCookie.Value = user.UserId.ToString();
+                    UserIdCookie.Expires = DateTime.Now.AddDays(90);
+                    Response.Cookies.Add(UserIdCookie);
+
+
                     System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
                     if (GlobalReturnUrl?.Length > 0)
                     {
@@ -66,6 +73,8 @@ namespace Project1MVC.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+            Request.Cookies.Remove("UserIdCookie");
+            Response.Cookies.Remove("UserIdCookie");
             return RedirectToAction("Index", "Home");
         }
     }

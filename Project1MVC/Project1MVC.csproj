@@ -123,11 +123,11 @@
     <Compile Include="BL.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\EquipmentAssignmentController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\EquipmentsInStockController.cs" />
     <Compile Include="Controllers\FutureStockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageStocksController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
@@ -138,11 +138,13 @@
     <Compile Include="DAL\FutureStockDAL.cs" />
     <Compile Include="DAL\OrderDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="DAL\AssignEquipmentService.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
     <Compile Include="Models\EquipmentOrder.cs" />
     <Compile Include="Models\FutureStock.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderWrapper.cs" />
+    <Compile Include="Models\AssignedEquipment.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Services\CryptographyProcessor.cs" />
@@ -203,13 +205,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Employees\_AssignedPartialPage.cshtml" />
     <Content Include="Views\Employees\_ManageAssignedPartial.cshtml" />
-
     <Content Include="Views\Supplier\Index.cshtml" />
     <Content Include="Views\Supplier\Create.cshtml" />
     <Content Include="Views\Supplier\Details.cshtml" />
     <Content Include="Views\Supplier\Edit.cshtml" />
     <Content Include="Views\Supplier\Delete.cshtml" />
-	<Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
@@ -227,7 +228,7 @@
     <Content Include="Views\Employees\Delete.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Create.cshtml" />
-	<Content Include="Views\Equipment\Index.cshtml" />
+    <Content Include="Views\Equipment\Index.cshtml" />
     <Content Include="Views\Equipment\Details.cshtml" />
     <Content Include="Views\Equipment\Create.cshtml" />
     <Content Include="Views\Equipment\Edit.cshtml" />
@@ -239,10 +240,10 @@
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Order\EditEquipment.cshtml" />
     <Content Include="Views\Order\DeleteEquipment.cshtml" />
+    <Content Include="Views\EquipmentAssignment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ManageStocks\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

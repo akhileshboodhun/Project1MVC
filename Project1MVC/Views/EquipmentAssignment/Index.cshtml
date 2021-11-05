@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Project1MVC.Models.Equipment>
+@{
+    ViewBag.Title = "Assign Equipments";
+}
+
+<h2>Assign Equipments</h2>
+@using (Html.BeginForm("Assign","EquipmentAssignment",FormMethod.Post, new { }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("First Name")
+        </dt>
+
+        <dd>
+            @ViewBag.FName
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Last Name")
+        </dt>
+
+        <dd>
+            @ViewBag.LName
+        </dd>
+     </dl>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="UserId" value="@ViewBag.UserId"/>
+
+        <div class="form-group">
+            @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-6">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "Id", "DisplayName"), "Select Equipment", new { @class = "form-control equipment-form", @id = "equipment-form", @onchange = "DisableButton(this)" })
+                    </div>
+                    <div class="col-md-2">
+                        <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Add" onclick="AddToList()" title="Select Equipment First" disabled="disabled" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("../Employees/_ManageAssignedPartial", Model)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Employees")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/userscripts")
+}
