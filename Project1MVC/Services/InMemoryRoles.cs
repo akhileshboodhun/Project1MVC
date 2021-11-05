@@ -12,19 +12,19 @@ namespace Project1MVC.Services
         public InMemoryRoles()
         {
             string roles = "Developer|TE|BA|PO|QA|Admin|Technician";
-            lstRoles = roles.Split('|').Select(el => new Role(el)).ToList();
+            lstRoles = roles.Split('|').Select(el => new Role(1, el)).ToList();
         }
         public void Add(Role obj) => lstRoles.Add(obj);
 
         public void Delete(Role obj) => lstRoles.Remove(obj);
 
-        public Role Get(Guid id) => lstRoles.FirstOrDefault(el => el.id == id);
+        public Role Get(int id) => lstRoles.FirstOrDefault(el => el.Id == id);
 
         public IEnumerable<Role> GetAll() => lstRoles;
 
         public void Update(Role obj)
         {
-            var index = lstRoles.FindIndex(el => el.id == obj.id);
+            var index = lstRoles.FindIndex(el => el.Id == obj.Id);
             lstRoles[index] = obj;
         }
 
