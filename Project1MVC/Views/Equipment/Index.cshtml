@@ -9,21 +9,24 @@
 </p>
 <table class="table">
     <tr>
+        @*<th>
+            @Html.ActionLink(linkText: "Id", actionName: "Index", controllerName: "Equipment")
+        </th>*@
         <th>
             @Html.ActionLink(linkText: "Type", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Type", sortOrder = ViewBag.nextSortOrders["Type"] },
+                    routeValues: new { orderBy = "Type" },
                     htmlAttributes: null
                 )
         </th>
         <th>
             @Html.ActionLink(linkText: "Brand", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Brand", sortOrder = ViewBag.nextSortOrders["Brand"] },
+                    routeValues: new { orderBy = "Brand" },
                     htmlAttributes: null
                 )
         </th>
         <th>
             @Html.ActionLink(linkText: "Model", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Model", sortOrder = ViewBag.nextSortOrders["Model"] },
+                    routeValues: new { orderBy = "Model" },
                     htmlAttributes: null
                 )
         </th>
@@ -32,13 +35,13 @@
         </th>
         <th>
             @Html.ActionLink(linkText: "Current Stock Count", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "CurrentStockCount", sortOrder = ViewBag.nextSortOrders["CurrentStockCount"] },
+                    routeValues: new { orderBy = "CurrentStockCount" },
                     htmlAttributes: null
                 )
         </th>
         <th>
-            @Html.ActionLink(linkText: "ReStock Threshold", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { orderBy = "ReStockThreshold", sortOrder = ViewBag.nextSortOrders["ReStockThreshold"] },
+            @Html.ActionLink(linkText: "ReStock Treshold", actionName: "Index", controllerName: "Equipment",
+                    routeValues: new { orderBy = "threshold" },
                     htmlAttributes: null
                 )
         </th>
@@ -49,7 +52,7 @@
     {
 <tr>
     @*<td>
-        @Html.DisplayFor(modelItem => item.EquipId)
+        @Html.DisplayFor(modelItem => item.Id)
     </td>*@
     <td>
         @Html.DisplayFor(modelItem => item.Type)
@@ -70,9 +73,9 @@
         @Html.DisplayFor(modelItem => item.ReStockThreshold)
     </td>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-        @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
+        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
     </td>
 </tr>
     }

@@ -13,47 +13,50 @@ namespace Project1MVC.Controllers
     {
         private static string GlobalReturnUrl { get; set; }
         // GET: Auth/Login
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string ReturnUrl)
         {
-            Employee employee = new Employee(0, "Admin", "Admin", DateTime.Now, "", "Admin", "Employed", null, "");
-
-            if (returnUrl != null)
-            {
-                ModelState.AddModelError("", $"You need to be logged in to access {returnUrl}");
-                GlobalReturnUrl = returnUrl;
+            if (ReturnUrl != null) {
+                ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
+                GlobalReturnUrl = ReturnUrl;
             }
-            return View(employee);
+            return View();
         }
+
+
 
         // POST: Auth/Login
         [HttpPost]
-        public ActionResult Login(string email, string password)
+        public ActionResult Login(string Email, string Password)
         {
-          
-            // TODO: Add insert logic here
-            //var emp_db = InMemoryEmployees.GetInstance();
-            //var employees = emp_db.GetAll();
-            //var employee = employees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
-            Employee employee = new Employee(1, "Admin", "Admin", DateTime.Now, email, "Admin", "Employed", null, password);
-            if (password == "pass")
+            try
             {
-                Session["EmployeeFirstName"] = employee?.FirstName;
-                FormsAuthentication.SetAuthCookie(employee.Email, true);
-                System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
-                
-                if (GlobalReturnUrl?.Length > 0)
+                // TODO: Add insert logic here
+                var emp_db = InMemoryEmployees.GetInstance();
+                var employees = emp_db.GetAll();
+                var employee = employees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
+                if (!(employee is null))
                 {
-                    var returnUrl = GlobalReturnUrl;
-                    GlobalReturnUrl = null;
-                    return Redirect(returnUrl);
-                }
+                    Session["EmployeeFirstName"] = employee?.FirstName;
+                    FormsAuthentication.SetAuthCookie(employee.Email, true);
+                    System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
+                    if (GlobalReturnUrl?.Length > 0)
+                    {
+                        var returnUrl = GlobalReturnUrl;
+                        GlobalReturnUrl = null;
+                        return Redirect(returnUrl);
+                    }
+                    return RedirectToAction("Index", "Home");
 
-                return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid Credentials");
+                    return View();
+                }
             }
-            else
+            catch
             {
-                ModelState.AddModelError("", "Invalid Credentials");
-                return View(employee);
+                return View();
             }
         }
 

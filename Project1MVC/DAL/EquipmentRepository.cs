@@ -7,7 +7,7 @@ using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
-    public sealed class EquipmentRepository : IRepository<Equipment>
+    public sealed class EquipmentRepository : IEquipmentRepository
     {
         private EquipmentRepository() { }
 
@@ -48,6 +48,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
@@ -85,6 +86,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
@@ -121,6 +123,8 @@ namespace Project1MVC.DAL
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
+
                             while (reader.Read())
                             {
                                 equipment = new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt());
@@ -160,6 +164,8 @@ namespace Project1MVC.DAL
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
+
                             while (reader.Read())
                             {
                                 list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
@@ -179,91 +185,6 @@ namespace Project1MVC.DAL
             }
 
             return list;
-        }
-
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, string sortBy, string sortOrder)
-        {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.GetPaginated;
-            List<Equipment> list = new List<Equipment>();
-            
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
-                    string sql =
-                        "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold " +
-                        "FROM Equipment " +
-                        "ORDER BY [" + sortBy + "] " + sortOrder.ToUpper() + " " +
-                        "OFFSET @Offset ROWS " +
-                        "FETCH NEXT @PageSize ROWS ONLY;";
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
-
-                    try
-                    {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
-
-            return list;
-        }
-
-        public int GetCount()
-        {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.GetCount;
-            int count = -1;
-
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
-                    string sql = "SELECT COUNT(EquipId) AS [Total] FROM Equipment;";
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-
-                    try
-                    {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                count = reader["Total"].ToInt();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
-
-            return count;
         }
 
         public bool Update(Equipment obj)
@@ -282,7 +203,7 @@ namespace Project1MVC.DAL
                         "WHERE EquipId = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", obj.EquipId);
+                    cmd.Parameters.AddWithValue("@Id", obj.Id);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Model", obj.Model);
@@ -295,6 +216,7 @@ namespace Project1MVC.DAL
                         if (cmd.ExecuteNonQuery() == 1)
                         {
                             status = true;
+                            //Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
                     }
                     catch (Exception ex)
