@@ -42,7 +42,7 @@ namespace Project1MVC.Services
             var db = InMemoryEmployees.GetInstance();
             var employees = db.GetAll();
             var employee = employees.FirstOrDefault(el => el.Email == username);
-            string role = employee.Role;
+            string role = "Admin"; // TODO: fix this later
             List<string> roles = new List<string>(){ };
             roles.Add(role);
             return roles.ToArray();
