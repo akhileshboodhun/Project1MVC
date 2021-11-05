@@ -128,15 +128,20 @@
     <Compile Include="Controllers\FutureStockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageStocksController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\FutureStockDAL.cs" />
+    <Compile Include="DAL\OrderDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
+    <Compile Include="Models\EquipmentOrder.cs" />
     <Compile Include="Models\FutureStock.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderWrapper.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Services\CryptographyProcessor.cs" />
@@ -232,6 +237,13 @@
     <Content Include="Views\Equipment\Create.cshtml" />
     <Content Include="Views\Equipment\Edit.cshtml" />
     <Content Include="Views\Equipment\Delete.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\Details.cshtml" />
+    <Content Include="Views\Order\Delete.cshtml" />
+    <Content Include="Views\Order\Edit.cshtml" />
+    <Content Include="Views\Order\EditEquipment.cshtml" />
+    <Content Include="Views\Order\DeleteEquipment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

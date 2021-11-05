@@ -1,0 +1,153 @@
+﻿@model Project1MVC.Models.Order
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Order</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.IsOrderComplete, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.IsOrderComplete, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Equipments</label>
+            <div class="col-md-3">
+                <select id="equipmentSelect" class="form-control">
+                    <option value="">--SELECT EQUIPMENT--</option>
+                    @foreach (var item in ViewBag.EquipmentsList)
+                    {
+                        <option value="@item.Id">@item.DisplayName()</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Quantity</label>
+            <input id="equipmentQty" class=" form-control col-md-3" type="number" />
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Unit Price</label>
+            <input id="unitPrice" class=" form-control col-md-3" type="number" />
+            <button class="btn col-md-2" id="addEquipmentBtn" style="margin-left: 2px;"  type="button">Add</button>
+        </div>
+    </div>
+
+    <div id="addedEquipments"></div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="submitBtn" type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        const addEquipBtn = document.querySelector("#addEquipmentBtn");
+        const addedEquipmentsSection = document.querySelector("#addedEquipments");
+        const equipmentSelectEl = document.querySelector("#equipmentSelect");
+        const equipmentQuantityEl = document.querySelector("#equipmentQty");
+        const unitPriceEl = document.querySelector("#unitPrice");
+        //const submitBtn = document.querySelector("#submitBtn");
+        const form = document.querySelector("form");
+        const equipmentsData = [];
+
+        addEquipBtn.addEventListener("click", () => {
+            const equipmentSelectedText = equipmentSelectEl.options[equipmentSelectEl.selectedIndex].text
+            const equipmentQty = +equipmentQuantityEl.value;
+            const unitPrice = +unitPriceEl.value;
+            if (equipmentSelectEl.value != "" && equipmentQty > 0 && unitPrice > 0)
+            {
+                addedEquipmentsSection.innerHTML += `
+                                                <div>
+                                                    <p>
+                                                        <span>${equipmentSelectedText}</span>
+                                                        <span>${equipmentQty}</span>
+                                                        <span>${unitPrice}</span>
+                                                    </p>
+                                                </div>
+                                                `;
+                equipmentsData.push({
+                    equipmentId: +equipmentSelectEl.value,
+                    qty: equipmentQty,
+                    unitPrice: unitPrice
+                })
+                equipmentSelectEl.remove(equipmentSelectEl.selectedIndex);
+                equipmentSelectEl.value = "";
+                equipmentQuantityEl.value = "";
+                unitPriceEl.value = "";
+            }
+        })
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const supplier = document.querySelector("#SupplierId").value;
+            const orderDate = document.querySelector("#OrderDate").value;
+            const isOrderCompleted = document.querySelector("#IsOrderComplete").checked;
+            //bool isOrderComplete, DateTime orderDate, int supplierId
+            const orderData = {
+                isOrderComplete: isOrderCompleted,
+                orderDate,
+                supplierId: supplier
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Order/Create",
+                data: JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    window.location.href = '/Order/Index';
+                },
+                failure: function (response) {
+                    window.location.href = '/Order/Index';
+                },
+                error: function (response) {
+                    window.location.href = '/Order/Index';
+                }
+            })
+        })
+
+    </script>
+}
