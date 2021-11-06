@@ -39,43 +39,61 @@
             @Html.DisplayNameFor(model => model.RoleName)
         </th>
         <th></th>
+        <th></th>
+        <th>Actions</th>
+        <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfBirth)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PhoneNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Age)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RoleName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.FName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.LName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DateOfBirth)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Address)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PhoneNo)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.IsActive)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Age)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.RoleName)
+    </td>
+    <td>
+        @Html.ActionLink("Assign Equipments", "Index", "EquipmentAssignment", new { id = item.UserId }, new { @class = "btn btn-primary" })
+    </td>
+    @{
+        if (User.IsInRole("Admin"))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.UserId })
+            </td>
+
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.UserId })
+            </td>
+
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+            </td>
+                }
+                }
+        </tr>
+    }
 
 </table>
