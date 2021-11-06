@@ -34,9 +34,9 @@ namespace Project1MVC.Models
 
         public int ReStockThreshold { get; set; }
 
-        public string DisplayName()
+        public string DisplayName
         {
-            return $"{this.Type} - {this.Brand} - {this.Model}";
+            get => $"{this.Type} - {this.Brand} - {this.Model}";
         }
     }
 }
