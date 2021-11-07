@@ -163,6 +163,7 @@
     <Compile Include="Services\InMemoryEquipments.cs" />
     <Compile Include="Services\EmployeeRoleProvider.cs" />
     <Compile Include="Services\InMemoryRoles.cs" />
+    <Compile Include="Services\ServicesHelper.cs" />
     <Compile Include="Services\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
