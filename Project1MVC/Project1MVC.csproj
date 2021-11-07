@@ -135,6 +135,7 @@
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\FutureStockDAL.cs" />
     <Compile Include="DAL\IDBProvider.cs" />
+    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
     <Compile Include="Models\FutureStock.cs" />
