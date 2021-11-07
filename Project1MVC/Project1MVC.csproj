@@ -145,6 +145,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Services\CryptographyProcessor.cs" />
+    <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
