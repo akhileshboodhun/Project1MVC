@@ -132,6 +132,7 @@
     <Compile Include="Controllers\UserRolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
+    <Compile Include="DAL\DBManager.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\FutureStockDAL.cs" />
     <Compile Include="DAL\IDBProvider.cs" />
