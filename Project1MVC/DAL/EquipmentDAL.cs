@@ -202,7 +202,7 @@ namespace Project1MVC.DAL
                         "WHERE EquipId = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", obj.Id);
+                    cmd.Parameters.AddWithValue("@Id", obj.EquipId);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Model", obj.Model);

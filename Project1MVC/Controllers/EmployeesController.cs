@@ -89,7 +89,7 @@ namespace Project1MVC.Controllers
             var emp_db = InMemoryEmployees.GetInstance();
             var equipments = db.GetAll().ToList();
             ViewBag.Equipments = equipments;
-            List<SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.Id.ToString(), Text = el.DisplayName() }).ToList();
+            List<SelectListItem> selectListItems = equipments.Select(el => new SelectListItem() { Value = el.EquipId.ToString(), Text = el.DisplayName() }).ToList();
             ViewBag.SelectListEquipments = selectListItems;
             ViewBag.tempEquipments = new List<Equipment>() { };
             var employee = emp_db.Get(Guid.Parse(id));

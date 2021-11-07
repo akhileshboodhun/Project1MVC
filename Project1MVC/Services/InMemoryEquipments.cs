@@ -34,14 +34,14 @@ namespace Project1MVC.Services
 
         public void Delete(Equipment obj) => lstEquipments.Remove(obj);
 
-        public Equipment Get(int id) => lstEquipments.FirstOrDefault(el => el.Id == id);
+        public Equipment Get(int id) => lstEquipments.FirstOrDefault(el => el.EquipId == id);
 
         public IEnumerable<Equipment> GetAll() => lstEquipments;
 
 
         public void Update(Equipment obj)
         {
-            var index = lstEquipments.FindIndex(el => el.Id == obj.Id);
+            var index = lstEquipments.FindIndex(el => el.EquipId == obj.EquipId);
             lstEquipments[index] = obj;
         }
     }
