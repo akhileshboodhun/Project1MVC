@@ -5,46 +5,25 @@ using System.Web;
 using System.Web.Mvc;
 using Project1MVC.Models;
 using Project1MVC.Services;
-using Project1MVC.DAL;
-
 namespace Project1MVC.Controllers
 {
-    [AuthorizeEmployee(Roles ="Admin")]
+    [AuthorizeEmployee(Roles = "Admin")]
     public class EquipmentController : Controller
     {
-        // GET: Equipments
-        public ActionResult Index(string orderBy)
+        private readonly IEquipmentService equipmentService;
+
+        public EquipmentController(IEquipmentService service)
         {
-            var equipments = EquipmentDAL.Instance.GetAll();
+            equipmentService = service;
+        }
 
-            if (orderBy == null)
-            {
-                return View(equipments);
-            }
-            else if (orderBy.ToLower() == "type")
-            {
-                equipments = equipments.OrderBy(i => i.Type).ToList();
-            }
-            else if (orderBy.ToLower() == "brand")
-            {
-                equipments = equipments.OrderBy(i => i.Brand).ToList();
+        // GET: Equipments
+        [HttpGet]
+        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
+        {
+            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, sortBy, sortOrder);
 
-            }
-            else if (orderBy.ToLower() == "model")
-            {
-                equipments = equipments.OrderBy(i => i.Model).ToList();
-
-            }
-            else if (orderBy.Contains("currentstockcount"))
-            {
-                equipments = equipments.OrderBy(i => i.CurrentStockCount).ToList();
-
-            }
-            else if (orderBy.Contains("threshold"))
-            {
-                equipments = equipments.OrderBy(i => i.ReStockThreshold).ToList();
-            }
-
+            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
             return View(equipments);
         }
 
