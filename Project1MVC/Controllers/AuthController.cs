@@ -19,7 +19,9 @@ namespace Project1MVC.Controllers
                 ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
                 GlobalReturnUrl = ReturnUrl;
             }
-            return View();
+
+            var emp = new Employee("", "", DateTime.Now, "", "", "", null);
+            return View(emp);
         }
 
 
