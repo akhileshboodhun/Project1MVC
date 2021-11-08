@@ -12,20 +12,22 @@ namespace Project1MVC.Controllers
     [AuthorizeEmployee(Roles = "Admin")]
     public class EquipmentController : Controller
     {
-        private readonly IUnitOfWork uow;
+        private readonly IEquipmentService equipmentService;
 
-        public EquipmentController(IUnitOfWork unitOfWork)
+        public EquipmentController(IEquipmentService service)
         {
-            uow = unitOfWork;
+            equipmentService = service;
         }
 
         // GET: Equipments
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
         {
-            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, sortBy, sortOrder);
+            List<string> cols = new List<string>() { "Type", "Brand", "Model" };
+            var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
 
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
+            ViewBag.displayCols = cols;
             return View(equipments);
         }
 
