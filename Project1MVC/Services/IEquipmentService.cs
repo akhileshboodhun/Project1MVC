@@ -6,8 +6,8 @@ namespace Project1MVC.Services
 {
     public interface IEquipmentService : IRepository<Equipment>
     {
-        bool AssignToEmployee(int equipId, int empId);
+        bool AssignToEmployee(int equipId, int empId, int assignorId);
 
-        void ReturnFromEmployee(int equipId, int empId);
+        bool TakeFromEmployee(int equipId, int empId);
     }
 }
