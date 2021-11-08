@@ -37,11 +37,11 @@ namespace Project1MVC.DAL
             //using (SqlConnection conn = dbProvider.GetConnection)
             //{
             //    if (conn != null)
-            //    {
-                    string sql =
+            //    {            
+                    string sql = 
                         "INSERT INTO Equipment (Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold) " +
-                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);";
- 
+                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);COMMIT;";
+                         
                     SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
@@ -111,6 +111,11 @@ namespace Project1MVC.DAL
 
         public Equipment Get(int id)
         {
+            return Get(id, ServicesHelper.GetColumns<Equipment>());
+        }
+
+        public Equipment Get(int id, IList<String> cols)
+        {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Get;
             Equipment equipment = null;
@@ -119,26 +124,34 @@ namespace Project1MVC.DAL
             //{
             //    if (conn != null)
             //    {
-                    string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment WHERE EquipId = @Id;";
+            string sql = 
+                "SELECT " +
+                ServicesHelper.StringifyColumns<Equipment>(cols) + 
+                "FROM Equipment WHERE EquipId = @Id;";
 
             SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
             cmd.Parameters.AddWithValue("@Id", id);
 
-                    try
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        equipment = new Equipment(null);
+                                
+                        foreach(string col in cols)
                         {
-                            while (reader.Read())
-                            {
-                                equipment = new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt());
-                            }
+                            equipment[col] = reader[col];
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"{ex.ToString()}");
+            }
             //        finally
             //        {
             //            conn.Close();
@@ -188,7 +201,7 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.GetPaginated;
@@ -199,7 +212,8 @@ namespace Project1MVC.DAL
             //    if (conn != null)
             //    {
                     string sql =
-                        "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold " +
+                        "SELECT " +
+                        ServicesHelper.StringifyColumns<Equipment>(cols) +
                         "FROM Equipment " +
                         "ORDER BY [" + sortBy + "] " + sortOrder.ToUpper() + " " +
                         "OFFSET @Offset ROWS " +
@@ -215,7 +229,14 @@ namespace Project1MVC.DAL
                         {
                             while (reader.Read())
                             {
-                                list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
+                                Equipment equipment = new Equipment(null);
+
+                                foreach (string col in cols)
+                                {
+                                    equipment[col] = reader[col];
+                                }
+
+                                list.Add(equipment);
                             }
                         }
                     }
