@@ -23,14 +23,26 @@ namespace Project1MVC.Services
             return equipmentRepo.Add(obj);
         }
 
-        public void ReturnFromEmployee(int equipId, int empId)
+        public bool TakeFromEmployee(int equipId, int empId)
         {
             throw new NotImplementedException();
         }
 
-        public bool AssignToEmployee(int equipId, int empId)
+        public bool AssignToEmployee(int equipId, int empId, int assignorId)
         {
-            throw new NotImplementedException();
+            Equipment equipment = equipmentRepo.Get(equipId, new List<string>() 
+            { "CurrentStockCount" });
+
+            bool status = false;
+
+            if (equipment.CurrentStockCount > 0)
+            {
+                // start trasaction
+                // 1.  Decrease currentstockcount
+                // 2. add an entry in EquipmentEmployee
+            }
+
+            return status;
         }
 
         public bool Delete(int id)
@@ -48,19 +60,25 @@ namespace Project1MVC.Services
             return equipmentRepo.Get(id);
         }
 
+        public Equipment Get(int id, IList<String> cols)
+        {
+            return equipmentRepo.Get(id, cols);
+        }
+
         public IList<Equipment> GetAll()
         {
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
         {
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
             int _pageNumber = pageNumber ?? 1;
             int _pageSize = pageSize ?? ServicesHelper.DefaultPageSize;
             string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
             string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
 
-            return equipmentRepo.GetPaginatedList(_pageNumber, _pageSize, _sortBy, _sortOrder);
+            return equipmentRepo.GetPaginatedList(_cols, _pageNumber, _pageSize, _sortBy, _sortOrder);
         }
 
         public bool Update(Equipment obj)

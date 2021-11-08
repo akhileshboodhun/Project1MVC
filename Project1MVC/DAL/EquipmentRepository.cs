@@ -9,16 +9,23 @@ namespace Project1MVC.DAL
 {
     public sealed class EquipmentRepository : IRepository<Equipment>
     {
-        private EquipmentRepository() { }
+        //private EquipmentRepository() { }
 
-        public static EquipmentRepository Instance { get { return Nested.instance; } }
+        //public static EquipmentRepository Instance { get { return Nested.instance; } }
 
-        private class Nested
+        //private class Nested
+        //{
+        //    // Explicit static constructor to tell C# compiler not to lazily instantiate us
+        //    static Nested() { }
+
+        //    internal static readonly EquipmentRepository instance = new EquipmentRepository();
+        //}
+
+        private readonly IDBProvider dbProvider;
+
+        public EquipmentRepository(IDBProvider provider)
         {
-            // Explicit static constructor to tell C# compiler not to lazily instantiate us
-            static Nested() { }
-
-            internal static readonly EquipmentRepository instance = new EquipmentRepository();
+            dbProvider = provider;
         }
 
         public bool Add(Equipment obj)
@@ -27,15 +34,15 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Add;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
-                    string sql =
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {            
+                    string sql = 
                         "INSERT INTO Equipment (Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold) " +
-                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);";
- 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
+                        "VALUES (@Type, @Brand, @Model, @Description, @CurrentStockCount, @ReStockThreshold);COMMIT;";
+                         
+                    SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Model", obj.Model);
@@ -55,12 +62,12 @@ namespace Project1MVC.DAL
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }         
+                    //finally
+                    //{
+                    //    transaction.Connection.Close();
+                    //}
+            //    }
+            //}         
 
             return status;
         }
@@ -71,14 +78,14 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Delete;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
                     string sql = "DELETE FROM Equipment WHERE EquipId = @Id;";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+            cmd.Parameters.AddWithValue("@Id", id);
                     
                     try
                     {
@@ -92,52 +99,65 @@ namespace Project1MVC.DAL
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
+                    //finally
+                    //{
+                    //    conn.Close();
+                    //}
+            //    }
+            //}
 
             return status;
         }
 
         public Equipment Get(int id)
         {
+            return Get(id, ServicesHelper.GetColumns<Equipment>());
+        }
+
+        public Equipment Get(int id, IList<string> cols)
+        {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Get;
             Equipment equipment = null;
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
+            string sql = 
+                "SELECT " +
+                ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
+                "FROM Equipment WHERE EquipId = @Id;";
+
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            try
             {
-                if (conn != null)
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment WHERE EquipId = @Id;";
-
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
-
-                    try
+                    while (reader.Read())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        equipment = new Equipment();
+
+                        foreach (string col in cols)
                         {
-                            while (reader.Read())
-                            {
-                                equipment = new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt());
-                            }
+                            equipment[col] = reader[col];
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-                    finally
-                    {
-                        conn.Close();
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"{ex.ToString()}");
+            }
+            //        finally
+            //        {
+            //            conn.Close();
+            //        }
+            //    }
+            //}
 
             return equipment;
         }
@@ -148,15 +168,15 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.GetAll;
             List<Equipment> list = new List<Equipment>();
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
                     string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment;";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-        
-                    try
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+
+            try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -171,58 +191,67 @@ namespace Project1MVC.DAL
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
+            //        finally
+            //        {
+            //            conn.Close();
+            //        }
+            //    }
+            //}
 
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.GetPaginated;
             List<Equipment> list = new List<Equipment>();
             
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
                     string sql =
-                        "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold " +
+                        "SELECT " +
+                        ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
                         "FROM Equipment " +
                         "ORDER BY [" + sortBy + "] " + sortOrder.ToUpper() + " " +
                         "OFFSET @Offset ROWS " +
                         "FETCH NEXT @PageSize ROWS ONLY;";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+            cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    try
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        Equipment equipment = new Equipment();
+
+                        foreach (string col in cols)
                         {
-                            while (reader.Read())
-                            {
-                                list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
-                            }
+                            equipment[col] = reader[col];
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-                    finally
-                    {
-                        conn.Close();
+
+                        list.Add(equipment);
                     }
                 }
             }
+
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"{ex.ToString()}");
+            }
+            //        finally
+            //        {
+            //            conn.Close();
+            //        }
+            //    }
+            //}
 
             return list;
         }
@@ -233,15 +262,15 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.GetCount;
             int count = -1;
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
                     string sql = "SELECT COUNT(EquipId) AS [Total] FROM Equipment;";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
 
-                    try
+            try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -256,12 +285,12 @@ namespace Project1MVC.DAL
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
+            //        finally
+            //        {
+            //            conn.Close();
+            //        }
+            //    }
+            //}
 
             return count;
         }
@@ -272,17 +301,17 @@ namespace Project1MVC.DAL
             OperationType opType = OperationType.Update;
             bool status = false;
 
-            using (SqlConnection conn = DBManager.Instance.GetConnection())
-            {
-                if (conn != null)
-                {
+            //using (SqlConnection conn = dbProvider.GetConnection)
+            //{
+            //    if (conn != null)
+            //    {
                     string sql = 
                         "UPDATE Equipment " +
                         "SET Type=@Type, Brand=@Brand, Model=@Model, Description=@Description, CurrentStockCount=@CurrentStockCount, ReStockThreshold=@ReStockThreshold " + 
                         "WHERE EquipId = @Id;";
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@Id", obj.EquipId);
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+            cmd.Parameters.AddWithValue("@Id", obj.EquipId);
                     cmd.Parameters.AddWithValue("@Type", obj.Type);
                     cmd.Parameters.AddWithValue("@Brand", obj.Brand);
                     cmd.Parameters.AddWithValue("@Model", obj.Model);
@@ -302,12 +331,12 @@ namespace Project1MVC.DAL
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
-            }
+            //        finally
+            //        {
+            //            conn.Close();
+            //        }
+            //    }
+            //}
 
             return status;
         }

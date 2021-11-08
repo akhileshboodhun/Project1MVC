@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Project1MVC.DAL;
 using Project1MVC.Models;
 using Project1MVC.Services;
+
 namespace Project1MVC.Controllers
 {
     [AuthorizeEmployee(Roles = "Admin")]
@@ -21,9 +23,11 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
         {
-            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, sortBy, sortOrder);
+            List<string> cols = new List<string>();// { "fff", "CurrentffCount" };
+            var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
 
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
+            ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
             return View(equipments);
         }
 

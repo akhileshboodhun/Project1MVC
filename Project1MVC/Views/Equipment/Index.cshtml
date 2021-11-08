@@ -1,4 +1,6 @@
-﻿@model List<Project1MVC.Models.Equipment>
+﻿@using Project1MVC.Models;
+@using Project1MVC.Services;
+@model List<Equipment>
 @{
     ViewBag.Title = "Index";
 }
@@ -9,74 +11,32 @@
 </p>
 <table class="table">
     <tr>
-        @*<th>
-            @Html.ActionLink(linkText: "Equipment Id", actionName: "Index", controllerName: "Equipment")
-        </th>*@
-        <th>
-            @Html.ActionLink(linkText: "Type", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Type", sortOrder = ViewBag.nextSortOrders["Type"] },
-                    htmlAttributes: null
+        @foreach (string col in ViewBag.displayCols)
+        {
+            <th>
+                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
+                routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
+                htmlAttributes: null
                 )
-        </th>
-        <th>
-            @Html.ActionLink(linkText: "Brand", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Brand", sortOrder = ViewBag.nextSortOrders["Brand"] },
-                    htmlAttributes: null
-                )
-        </th>
-        <th>
-            @Html.ActionLink(linkText: "Model", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "Model", sortOrder = ViewBag.nextSortOrders["Model"] },
-                    htmlAttributes: null
-                )
-        </th>
-        <th>
-            @Html.DisplayNameFor(modelItem => modelItem[0].Description)
-        </th>
-        <th>
-            @Html.ActionLink(linkText: "Current Stock Count", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = "CurrentStockCount", sortOrder = ViewBag.nextSortOrders["CurrentStockCount"] },
-                    htmlAttributes: null
-                )
-        </th>
-        <th>
-            @Html.ActionLink(linkText: "ReStock Threshold", actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { orderBy = "ReStockThreshold", sortOrder = ViewBag.nextSortOrders["ReStockThreshold"] },
-                    htmlAttributes: null
-                )
-        </th>
-        <th></th>
+            </th>
+        }
     </tr>
 
-@foreach (var item in Model)
-{
-    <tr>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.EquipId)
-        </td>*@
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Brand)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Model)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CurrentStockCount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReStockThreshold)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            @foreach (string col in ViewBag.displayCols)
+            {
+            <td>
+                @item[col]
+            </td>
+
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
+                    </td>*@
+            }
+        </tr>
+    }
 </table>

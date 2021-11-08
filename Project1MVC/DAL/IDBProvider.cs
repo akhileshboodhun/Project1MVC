@@ -14,6 +14,6 @@ namespace Project1MVC.DAL
 
         string ConnectionString { get; }
 
-        SqlConnection GetConnection();
+        SqlConnection GetConnection { get; }
     }
 }

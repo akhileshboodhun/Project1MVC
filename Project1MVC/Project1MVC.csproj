@@ -188,6 +188,8 @@
     <Compile Include="Services\InMemoryRoles.cs" />
     <Compile Include="Services\ServicesHelper.cs" />
     <Compile Include="Services\Utilities.cs" />
+    <Compile Include="Unit_of_Work\IUnitOfWork.cs" />
+    <Compile Include="Unit_of_Work\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

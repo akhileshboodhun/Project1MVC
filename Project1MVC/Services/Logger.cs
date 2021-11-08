@@ -13,7 +13,7 @@ namespace Project1MVC.Services
     {
         public static void Log(string message)
         {
-            //    Debug.WriteLine(message);
+            Debug.WriteLine(message);
 
             //    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin");
             //    string filename = path + @"\log.txt";

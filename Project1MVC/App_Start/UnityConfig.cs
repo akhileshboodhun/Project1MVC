@@ -18,7 +18,8 @@ namespace Project1MVC
             // it is NOT necessary to register your controllers
 
             container.RegisterType<IEquipmentService, EquipmentService>(new PerThreadLifetimeManager());
-            container.RegisterInstance<IRepository<Equipment>>(EquipmentRepository.Instance);
+            container.RegisterType<IRepository<Equipment>, EquipmentRepository>(new PerThreadLifetimeManager());
+            container.RegisterType<IDBProvider, DBManager>(new PerThreadLifetimeManager());
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

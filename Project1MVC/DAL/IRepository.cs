@@ -11,9 +11,11 @@ namespace Project1MVC.DAL
 
         T Get(int id);
 
+        T Get(int id, IList<string> cols);
+
         IList<T> GetAll();
 
-        IList<T> GetPaginatedList(int? pageNumber, int? pageSize, string sortBy, string sortOrder);
+        IList<T> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder);
 
         int GetCount();
 
