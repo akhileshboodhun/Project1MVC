@@ -1,11 +1,13 @@
 ﻿using Project1MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Project1MVC.Services
 {
@@ -26,7 +28,7 @@ namespace Project1MVC.Services
 
         public static IDictionary<string, string> GetNextSortParams<T>(string sortBy, string sortOrder)
         {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            IDictionary<string, string> dict = new Dictionary<string, string>();
 
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
@@ -45,30 +47,46 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        public static string StringifyColumns<T>(IList<string> cols)
+        public static IList<string> SanitizeColumns<T>(IList<string> cols)
         {
-            if (cols.Count == 0)
+            IList<string> _cols = new List<string>();
+            IList<string> validCols = GetColumns<T>();
+
+            foreach (string entry in cols)
             {
-                return "* ";
+                if (validCols.Contains(entry))
+                {
+                    _cols.Add(entry);
+                }
             }
 
+            _cols = _cols.Count != 0 ? _cols : validCols;
+            return _cols;
+        }
+
+        public static string StringifyColumns<T>(IList<string> cols)
+        {
+            IList<string> _cols = SanitizeColumns<T>(cols);
             StringBuilder sb = new StringBuilder();
             
-            foreach (string col in cols)
+            foreach (string col in _cols)
             {
                 sb.Append(col + ", ");
             }
 
-            return sb.ToString().Remove(sb.Length - 2, 1);
+            return sb.ToString().Substring(0, sb.Length - 2);
         }
 
         public static IList<string> GetColumns<T>()
         {
-            List<string> list = new List<string>();
+            IList<string> list = new List<string>();
 
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
-                list.Add(property.Name);
+                if (property.Name != "Item")
+                {
+                    list.Add(property.Name);
+                }
             }
 
             return list;
@@ -88,6 +106,34 @@ namespace Project1MVC.Services
             }
 
             return col;
+        }
+
+        public static string GetDisplayName<T>(string propertyName)
+        {
+            string name = "null";
+
+            foreach (PropertyInfo info in typeof(T).GetProperties())
+            {
+                if (info.Name == propertyName)
+                {
+                    object[] attributes = info.GetCustomAttributes(typeof(DisplayAttribute), false);
+
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        name = attributes.Cast<DisplayAttribute>().Single().Name;
+                        break;
+                    }
+                }
+            }
+
+            return name;
+        }
+
+        public static string GetDisplayText<T>(T obj, string col)
+        {
+            string text = "null";
+
+            return (text);
         }
     }
 }
