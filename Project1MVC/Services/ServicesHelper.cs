@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Web;
 
 namespace Project1MVC.Services
@@ -44,7 +45,24 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        private static IList<string> GetColumns<T>()
+        public static string StringifyColumns<T>(IList<string> cols)
+        {
+            if (cols.Count == 0)
+            {
+                return "* ";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            
+            foreach (string col in cols)
+            {
+                sb.Append(col + ", ");
+            }
+
+            return sb.ToString().Remove(sb.Length - 2, 1);
+        }
+
+        public static IList<string> GetColumns<T>()
         {
             List<string> list = new List<string>();
 
