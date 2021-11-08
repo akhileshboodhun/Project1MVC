@@ -114,7 +114,7 @@ namespace Project1MVC.DAL
             return Get(id, ServicesHelper.GetColumns<Equipment>());
         }
 
-        public Equipment Get(int id, IList<String> cols)
+        public Equipment Get(int id, IList<string> cols)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
             OperationType opType = OperationType.Get;
@@ -126,7 +126,7 @@ namespace Project1MVC.DAL
             //    {
             string sql = 
                 "SELECT " +
-                ServicesHelper.StringifyColumns<Equipment>(cols) + 
+                ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
                 "FROM Equipment WHERE EquipId = @Id;";
 
             SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
@@ -138,9 +138,9 @@ namespace Project1MVC.DAL
                 {
                     while (reader.Read())
                     {
-                        equipment = new Equipment(null);
-                                
-                        foreach(string col in cols)
+                        equipment = new Equipment();
+
+                        foreach (string col in cols)
                         {
                             equipment[col] = reader[col];
                         }
@@ -213,7 +213,7 @@ namespace Project1MVC.DAL
             //    {
                     string sql =
                         "SELECT " +
-                        ServicesHelper.StringifyColumns<Equipment>(cols) +
+                        ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
                         "FROM Equipment " +
                         "ORDER BY [" + sortBy + "] " + sortOrder.ToUpper() + " " +
                         "OFFSET @Offset ROWS " +
@@ -223,28 +223,29 @@ namespace Project1MVC.DAL
             cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
                     cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
-                    try
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        Equipment equipment = new Equipment();
+
+                        foreach (string col in cols)
                         {
-                            while (reader.Read())
-                            {
-                                Equipment equipment = new Equipment(null);
-
-                                foreach (string col in cols)
-                                {
-                                    equipment[col] = reader[col];
-                                }
-
-                                list.Add(equipment);
-                            }
+                            equipment[col] = reader[col];
                         }
+
+                        list.Add(equipment);
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"{ex.ToString()}");
+            }
             //        finally
             //        {
             //            conn.Close();
