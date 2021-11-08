@@ -26,7 +26,7 @@ namespace Project1MVC.Models
             }
         }
 
-        public Equipment(int? id, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0)
+        public Equipment(int id = 0, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0)
         {
             this.EquipId = id;
             this.Type = type;
@@ -38,7 +38,7 @@ namespace Project1MVC.Models
         }
 
         [Display(Name = "Equipment Id"), Key]
-        public int? EquipId { get; set; }
+        public int EquipId { get; set; }
 
         [Display(Name = "Type")]
         public string Type { get; set; }
