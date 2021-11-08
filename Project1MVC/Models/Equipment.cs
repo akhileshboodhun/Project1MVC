@@ -2,13 +2,31 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 
 namespace Project1MVC.Models
 {
     public class Equipment
     {
-        public Equipment(int id, string type, string brand, string model, string description, int currentStockCount = 11, int reStockThreshold = 10)
+        public object this[string propertyName]
+        {
+            get
+            {
+                Type myType = typeof(Equipment);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                return myPropInfo.GetValue(this, null);
+            }
+
+            set
+            {
+                Type myType = typeof(Equipment);
+                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+                myPropInfo.SetValue(this, value, null);
+            }
+        }
+
+        public Equipment(int? id, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0)
         {
             this.EquipId = id;
             this.Type = type;
@@ -20,7 +38,7 @@ namespace Project1MVC.Models
         }
 
         [Display(Name = "Equipment Id"), Key]
-        public int EquipId { get; set; }
+        public int? EquipId { get; set; }
 
         [Display(Name = "Type")]
         public string Type { get; set; }
