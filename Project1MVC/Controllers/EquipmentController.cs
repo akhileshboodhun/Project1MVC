@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Project1MVC.DAL;
 using Project1MVC.Models;
 using Project1MVC.Services;
+
 namespace Project1MVC.Controllers
 {
     [AuthorizeEmployee(Roles = "Admin")]
     public class EquipmentController : Controller
     {
-        private readonly IEquipmentService equipmentService;
+        private readonly IUnitOfWork uow;
 
-        public EquipmentController(IEquipmentService service)
+        public EquipmentController(IUnitOfWork unitOfWork)
         {
-            equipmentService = service;
+            uow = unitOfWork;
         }
 
         // GET: Equipments
