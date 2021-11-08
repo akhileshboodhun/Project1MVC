@@ -13,7 +13,7 @@ namespace Project1MVC.DAL
     {
         private bool disposedValue;
         private readonly IDBProvider dbProvider;
-        private readonly SqlTransaction transaction;
+        //private readonly SqlTransaction transaction;
         private IEquipmentService equipmentService = null;
 
         public UnitOfWork(IDBProvider provider)
@@ -35,12 +35,12 @@ namespace Project1MVC.DAL
 
         public void Commit()
         {
-            transaction.Commit(); // TODO: use try-block here
+            //transaction.Commit(); // TODO: use try-block here
         }
 
         public void Rollback()
         {
-            transaction.Rollback();
+            //transaction.Rollback();
         }
 
         protected virtual void Dispose(bool disposing)
