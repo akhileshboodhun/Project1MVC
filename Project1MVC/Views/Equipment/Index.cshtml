@@ -1,4 +1,6 @@
-﻿@model List<Project1MVC.Models.Equipment>
+﻿@using Project1MVC.Models;
+@using Project1MVC.Services;
+@model List<Equipment>
 @{
     ViewBag.Title = "Index";
 }
@@ -11,36 +13,30 @@
     <tr>
         @foreach (string col in ViewBag.displayCols)
         {
-        <th>
-            @Html.ActionLink(linkText: col, actionName: "Index", controllerName: "Equipment",
-                    routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
-                    htmlAttributes: null
+            <th>
+                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
+                routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
+                htmlAttributes: null
                 )
-        </th>
+            </th>
         }
     </tr>
 
-@foreach (var item in Model)
-{
-
-
-<tr>
-    @*<td>
-            @Html.DisplayFor(modelItem => item.EquipId)
-        </td>*@
-
-    @foreach (string col in ViewBag.displayCols)
+    @foreach (var item in Model)
     {
-        <td>
-            @Html.DisplayFor(modelItem => item[col])
-        </td>
+        <tr>
+            @foreach (string col in ViewBag.displayCols)
+            {
+            <td>
+                @item[col]
+            </td>
 
-        @*<td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
-        </td>*@
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
+                    </td>*@
+            }
+        </tr>
     }
-</tr>
-}
 </table>
