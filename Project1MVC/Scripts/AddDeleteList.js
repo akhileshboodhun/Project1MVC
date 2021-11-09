@@ -15,7 +15,7 @@ for (var i = 0; i < inputs.length; i++) { mylist.push({ id: $(inputs[i]).val(), 
     function populateEquipments() {
         var html_list = "";
     for (var i = 0; i < mylist.length; i++) {
-        html_list += "<tr><td>" + mylist[i].text + "</td><td><input type=\"button\" name=\"delete-button\" class=\"btn btn-danger\" value=\"Delete\" onclick=\"DeleteFromList(this)\"/></td><input type=\"hidden\" name=\"EquipmentID[" + i + "]\" value=\"" + mylist[i].id + "\"></tr>";
+        html_list += "<tr><td>" + mylist[i].text + "</td><td><input type=\"button\" name=\"delete-button\" class=\"btn btn-danger\" value=\"Return\" onclick=\"ReturnFromList(this)\"/></td><input type=\"hidden\" name=\"EquipmentID[" + i + "]\" value=\"" + mylist[i].id + "\"></tr>";
         }
     $('#equipments-assigned').html(html_list);
     }
@@ -27,6 +27,31 @@ for (var i = 0; i < inputs.length; i++) { mylist.push({ id: $(inputs[i]).val(), 
     console.log('EquipmentID:' + equipmentId);
         mylist = mylist.filter(el => el.id != equipmentId);
     populateEquipments();
+}
+
+function ReturnFromList(obj) {
+    var parent = $(obj).parent();
+    var sibling2 = parent.siblings()[1];
+    var equipmentId = $(sibling2).val();
+    var userId = $('#UserId').val();
+    console.log('EquipmentID:' + equipmentId);
+    console.log('UserID:' + userId);
+    $.ajax({
+        type: "POST",
+        url: "/EquipmentAssignment/Return",
+        data: JSON.stringify({ UserId: userId, EquipmentId: equipmentId }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            window.location.href = '/EquipmentAssignment/Index/' + userId;
+        },
+        failure: function (response) {
+            window.location.href = '/EquipmentAssignment/Index/' + userId;
+        },
+        error: function (response) {
+            window.location.href = '/EquipmentAssignment/Index/' + userId;
+        }
+    });
 }
 
 function DisableButton(obj) {

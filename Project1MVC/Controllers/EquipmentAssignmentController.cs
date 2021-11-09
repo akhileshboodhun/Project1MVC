@@ -58,7 +58,7 @@ namespace Project1MVC.Controllers
                 assignEquipmentService.Assign(equipments);
 
 
-                return RedirectToAction("Index","Employees");
+                return RedirectToAction("Index", "Employees");
             }
             catch
             {
@@ -67,7 +67,7 @@ namespace Project1MVC.Controllers
         }
         // POST: EquipmentAssignment/Return
         [HttpPost]
-        public ActionResult Return(int UserId, List<int> EquipmentId)
+        public ActionResult Return(int UserId, int EquipmentId)
         {
             try
             {
@@ -77,23 +77,19 @@ namespace Project1MVC.Controllers
 
                 int assignorId = Request.Cookies["UserIdCookie"].Value.ToInt();
 
-                var equipments = new List<AssignedEquipment>();
-                EquipmentId.ForEach(equipId =>
-                equipments.Add(
-                    new AssignedEquipment(employeeId: UserId,
-                                          equipmentId: equipId,
-                                          assignorId: assignorId))
-                );
+                var equipment = new AssignedEquipment(employeeId: UserId,
+                                                        equipmentId: EquipmentId,
+                                                        assignorId: assignorId);
 
                 var assignEquipmentService = AssignEquipmentService.Instance;
-                assignEquipmentService.Assign(equipments);
+                assignEquipmentService.Return(equipment);
 
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = UserId });
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", new { id = UserId });
             }
         }
     }

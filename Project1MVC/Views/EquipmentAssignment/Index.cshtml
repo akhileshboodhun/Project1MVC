@@ -28,7 +28,7 @@
      </dl>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" name="UserId" value="@ViewBag.UserId"/>
+        <input type="hidden" id="UserId" name="UserId" value="@ViewBag.UserId"/>
 
         <div class="form-group">
             @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
