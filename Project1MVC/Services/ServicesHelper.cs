@@ -159,6 +159,19 @@ namespace Project1MVC.Services
             return _cols;
         }
 
+        private static SqlCommand GetSQLCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
+        {
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
+            IList<string> cols = GetColumns<T>();
+
+            foreach (string col in cols)
+            {
+                cmd.Parameters.AddWithValue($"@{col}", obj[col]);
+            }
+
+            return cmd;
+        }
+
         private static string GenerateInsertSQLQuery<T>(DBMS dbms, bool includePrimaryKey)
         {
             StringBuilder sb = new StringBuilder();
@@ -178,15 +191,7 @@ namespace Project1MVC.Services
         public static SqlCommand GenerateInsertSQLCommand<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
         {
             string sql = GenerateInsertSQLQuery<T>(dbProvider.DBMS, includePrimaryKey);
-            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            IList<string> cols = GetColumns<T>(includePrimaryKey);
-
-            foreach (string col in cols)
-            {
-                cmd.Parameters.AddWithValue($"@{col}", obj[col]);
-            }
-
-            return cmd;
+            return GetSQLCommand(sql, obj, dbProvider);
         }
 
         private static string GenerateUpdateSQLQuery<T>(DBMS dbms)
