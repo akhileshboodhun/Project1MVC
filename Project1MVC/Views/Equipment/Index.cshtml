@@ -11,32 +11,32 @@
 </p>
 <table class="table">
     <tr>
-        @foreach (string col in ViewBag.displayCols)
-        {
-            <th>
-                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
-                routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
-                htmlAttributes: null
-                )
-            </th>
-        }
+    @foreach (string col in ViewBag.displayCols)
+    {
+        <th>
+            @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
+            routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
+            htmlAttributes: null
+            )
+        </th>
+    }
+        <th></th>
     </tr>
 
-    @foreach (var item in Model)
+@foreach (var item in Model)
+{
+    <tr>
+    @foreach (string col in ViewBag.displayCols)
     {
-        <tr>
-            @foreach (string col in ViewBag.displayCols)
-            {
-            <td>
-                @item[col]
-            </td>
-
-                @*<td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.EquipId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.EquipId })
-                    </td>*@
-            }
-        </tr>
+        <td>
+            @item[col]
+        </td>
     }
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.EquipId })
+        </td>
+
+    </tr>
+}
 </table>
