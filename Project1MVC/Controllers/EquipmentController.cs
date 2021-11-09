@@ -31,13 +31,16 @@ namespace Project1MVC.Controllers
             return View(equipments);
         }
 
-        // GET: Equipment/Details/5
+        // POST: Equipment/Details
+        [HttpPost]
         public ActionResult Details(string id)
         {
             if (id != null && id.All(char.IsDigit))
             {
                 List<string> cols = new List<string>();
                 var equipment = equipmentService.Get(id.ToInt(), cols);
+
+                // TODO: if equipment is null, we need to display "not found" error in view
 
                 ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
                 return View(equipment);

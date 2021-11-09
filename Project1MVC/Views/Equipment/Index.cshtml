@@ -11,32 +11,44 @@
 </p>
 <table class="table">
     <tr>
-    @foreach (string col in ViewBag.displayCols)
-    {
-        <th>
-            @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
-            routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
-            htmlAttributes: null
-            )
-        </th>
-    }
+        @foreach (string col in ViewBag.displayCols)
+        {
+            <th>
+                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
+                routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
+                htmlAttributes: null
+                )
+            </th>
+        }
         <th></th>
     </tr>
 
-@foreach (var item in Model)
-{
-    <tr>
-    @foreach (string col in ViewBag.displayCols)
+    @foreach (var item in Model)
     {
-        <td>
-            @item[col]
-        </td>
-    }
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.EquipId })
-        </td>
+        <tr>
+            @foreach (string col in ViewBag.displayCols)
+            {
+                <td>
+                    @item[col]
+                </td>
+            }
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
+                @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
+            </td>
 
-    </tr>
-}
+        </tr>
+    }
 </table>
+
+@using (Html.BeginForm("Details", "Equipment", FormMethod.Post, new { id = "formDetails" }))
+{
+    @Html.Hidden("id", null, new { id = "formDetailsFieldId" })
+}
+
+<script>
+    function goDetails(id) {
+        document.getElementById('formDetailsFieldId').value = id;
+        document.getElementById('formDetails').submit();
+    }
+</script>
