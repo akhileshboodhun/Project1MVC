@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
@@ -14,6 +15,8 @@ namespace Project1MVC.DAL
 
         string ConnectionString { get; }
 
-        SqlConnection GetConnection { get; }
+        SqlConnection Connection { get; }
+
+        DBMS DBMS { get; }
     }
 }
