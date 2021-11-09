@@ -1,9 +1,13 @@
 ﻿@using Project1MVC.Models;
 @using Project1MVC.Services;
 @model Equipment
+@{
+    string controller = "Equipment";
+    ViewBag.Title = "Details";
+}
 
 <div>
-    <h2>Equipment Details</h2>
+    <h2>@{@controller} Details</h2>
     <hr />
     <dl class="dl-horizontal">
         @foreach (string col in ViewBag.displayCols)
@@ -23,7 +27,7 @@
     @Html.ActionLink("Back to List", "Index")
 </p>
 
-@using (Html.BeginForm("Edit", "Equipment", FormMethod.Post, new { id = "formEdit" }))
+@using (Html.BeginForm("Edit", controller, FormMethod.Post, new { id = "formEdit" }))
 {
     @Html.Hidden("id", null, new { id = "formEditFieldId" })
 }
