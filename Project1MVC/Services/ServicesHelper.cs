@@ -64,11 +64,20 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        public static string StringifyColumns<T>(IList<string> cols)
+        public static string StringifyColumns<T>(IList<string> cols, bool sanitize = true)
         {
-            IList<string> _cols = SanitizeColumns<T>(cols);
+            IList<string> _cols;
             StringBuilder sb = new StringBuilder();
-            
+
+            if (sanitize)
+            {
+                _cols = SanitizeColumns<T>(cols);
+            }
+            else
+            {
+                _cols = cols.Count != 0 ? cols : GetColumns<T>();
+            }
+
             foreach (string col in _cols)
             {
                 sb.Append(col + ", ");
@@ -127,13 +136,6 @@ namespace Project1MVC.Services
             }
 
             return name;
-        }
-
-        public static string GetDisplayText<T>(T obj, string col)
-        {
-            string text = "null";
-
-            return (text);
         }
     }
 }
