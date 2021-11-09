@@ -216,5 +216,11 @@ namespace Project1MVC.Services
 
             return sb.ToString();
         }
+
+        public static SqlCommand GenerateUpdateSQLCommand<T>(Model<T> obj, IDBProvider dbProvider)
+        {
+            string sql = GenerateUpdateSQLQuery<T>(dbProvider.DBMS);
+            return GetSQLCommand(sql, obj, dbProvider, true);
+        }
     }
 }
