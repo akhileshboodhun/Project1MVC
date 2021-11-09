@@ -32,12 +32,21 @@ namespace Project1MVC.Controllers
         }
 
         // GET: Equipment/Details/5
-        //public ActionResult Details(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
+        public ActionResult Details(string id)
+        {
+            if (id != null && id.All(char.IsDigit))
+            {
+                List<string> cols = new List<string>();
+                var equipment = equipmentService.Get(id.ToInt(), cols);
+
+                ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+                return View(equipment);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
 
         // GET: Equipment/Create
         //public ActionResult Create()
