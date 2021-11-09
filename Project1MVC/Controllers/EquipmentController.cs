@@ -19,10 +19,11 @@ namespace Project1MVC.Controllers
             equipmentService = service;
         }
 
-        // GET: Equipments
+        // GET: Equipments/Index
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
         {
+            //string sql = ServicesHelper.GetSQLInsertQuery<Equipment>(DBMS.SQLServer);
             List<string> cols = new List<string>();// { "fff", "CurrentffCount" };
             var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
 
@@ -51,15 +52,16 @@ namespace Project1MVC.Controllers
             }
         }
 
-        // GET: Equipment/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+        //GET: Equipment/Add
+        public ActionResult Add()
+        {
+            ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+            return View(new Equipment());
+        }
 
-        // POST: Equipment/Create
+        // POST: Equipment/Add
         //[HttpPost]
-        //public ActionResult Create(string Type, string Brand, string Model)
+        //public ActionResult Add(string Type, string Brand, string Model)
         //{
         //     try
         //     {
@@ -86,12 +88,11 @@ namespace Project1MVC.Controllers
         {
             if (fc["id"] != null && fc["id"].All(char.IsDigit))
             {
-                List<string> cols = new List<string>();
                 var equipment = equipmentService.Get(fc["id"].ToInt());
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
                 return View(equipment);
             }
             else
