@@ -1,36 +1,24 @@
-﻿@model Project1MVC.Models.Equipment
+﻿@using Project1MVC.Models;
+@using Project1MVC.Services;
+@model Equipment
 
 <div>
     <h4>Equipment</h4>
     <hr />
     <dl class="dl-horizontal">
+@foreach (string col in ViewBag.displayCols)
+{
         <dt>
-            @Html.DisplayNameFor(model => model.Type)
+            @Html.Label(ServicesHelper.GetDisplayName<Equipment>(col))
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Brand)
+            @Html.DisplayFor(model => model[col])
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CurrentStockCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ReStockThreshold)
-        </dt>
-
+}
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.EquipId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
