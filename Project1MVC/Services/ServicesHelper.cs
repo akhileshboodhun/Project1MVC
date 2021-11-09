@@ -1,8 +1,10 @@
-﻿using Project1MVC.Models;
+﻿using Project1MVC.DAL;
+using Project1MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -86,16 +88,23 @@ namespace Project1MVC.Services
             return sb.ToString().Substring(0, sb.Length - 2);
         }
 
-        public static IList<string> GetColumns<T>()
+        public static IList<string> GetColumns<T>(bool includePrimaryKey = true)
         {
             IList<string> list = new List<string>();
 
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
-                if (property.Name != "Item")
+                if (property.Name == "Item")
                 {
-                    list.Add(property.Name);
+                    continue;
                 }
+
+                if (!includePrimaryKey && Attribute.IsDefined(property, typeof(KeyAttribute)))
+                {
+                    continue;
+                }
+
+                list.Add(property.Name);
             }
 
             return list;
