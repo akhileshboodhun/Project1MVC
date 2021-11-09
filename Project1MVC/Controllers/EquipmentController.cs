@@ -23,12 +23,13 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
         {
-            //string sql = ServicesHelper.GetSQLInsertQuery<Equipment>(DBMS.SQLServer);
-            List<string> cols = new List<string>();// { "fff", "CurrentffCount" };
+            IList<string> cols = ServicesHelper.GetColumns<Equipment>();
             var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
 
+            cols.Remove(ServicesHelper.GetDefaultColumn<Equipment>());
+            ViewBag.displayCols = cols;
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
-            ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+            
             return View(equipments);
         }
 
