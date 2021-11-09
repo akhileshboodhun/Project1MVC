@@ -264,46 +264,26 @@ namespace Project1MVC.DAL
 
         public bool Update(Equipment obj)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.Update;
             bool status = false;
 
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-                    string sql = 
-                        "UPDATE Equipment " +
-                        "SET Type=@Type, Brand=@Brand, Model=@Model, Description=@Description, CurrentStockCount=@CurrentStockCount, ReStockThreshold=@ReStockThreshold " + 
-                        "WHERE EquipId = @Id;";
+            try
+            {
+                SqlCommand cmd = ServicesHelper.GenerateUpdateSQLCommand<Equipment>(obj, dbProvider);
 
-            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            cmd.Parameters.AddWithValue("@Id", obj.EquipId);
-                    cmd.Parameters.AddWithValue("@Type", obj.Type);
-                    cmd.Parameters.AddWithValue("@Brand", obj.Brand);
-                    cmd.Parameters.AddWithValue("@Model", obj.Model);
-                    cmd.Parameters.AddWithValue("@Description", obj.Description);
-                    cmd.Parameters.AddWithValue("@CurrentStockCount", obj.CurrentStockCount);
-                    cmd.Parameters.AddWithValue("@ReStockTreshold", obj.ReStockThreshold);
-
-                    try
-                    {
-                        if (cmd.ExecuteNonQuery() == 1)
-                        {
-                            status = true;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-            //        finally
-            //        {
-            //            conn.Close();
-            //        }
-            //    }
-            //}
+                if (cmd.ExecuteNonQuery() == 1)
+                {
+                    status = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {MethodBase.GetCurrentMethod().Name} {this.GetType().Name.Replace(rep, "")}");
+                Logger.Log($"{ex.ToString()}");
+            }
+            finally
+            {
+                dbProvider.Connection.Close();
+            }
 
             return status;
         }
