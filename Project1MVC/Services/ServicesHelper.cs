@@ -110,7 +110,7 @@ namespace Project1MVC.Services
             return list;
         }
 
-        private static string GetDefaultColumn<T>()
+        public static string GetDefaultColumn<T>()
         {
             string col = "";
 
