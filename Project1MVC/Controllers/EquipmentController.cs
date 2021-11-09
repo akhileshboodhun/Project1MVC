@@ -59,27 +59,32 @@ namespace Project1MVC.Controllers
         }
 
         // POST: Equipment/Add
-        //[HttpPost]
-        //public ActionResult Add(string Type, string Brand, string Model)
-        //{
-        //     try
-        //     {
-        //         // TODO: Add insert logic here
-        //         if (ModelState.IsValid)
-        //         {
-        //             var equipment = new Equipment(type: Type, brand: Brand, model: Model);
-        //             var db = InMemoryEquipments.GetInstance();
-        //             db.Add(equipment);
-        //             return RedirectToAction("Index");
-        //         }
-        //         return View();
+        [HttpPost]
+        public ActionResult Add(FormCollection fc)
+        {
+            try
+            {
+                // TODO: validate fields
+                string type = fc["[Type]"];
+                string brand = fc["[Brand]"];
+                string model = fc["[Model]"];
+                string description = fc["[Description]"];
+                int currentStockCount = fc["[CurrentStockCount]"].ToInt();
+                int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
+                var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
+                equipmentService.Add(equipment);
+
+                // TODO: check status of update and notify user instead of redirecting
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.ToString());
+                return RedirectToAction("Index");
+            }
+        }
 
         //POST: Equipment/Edit
         [HttpPost]
