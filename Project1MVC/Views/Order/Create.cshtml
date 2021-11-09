@@ -17,10 +17,10 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <div class="form-group">
-        @Html.LabelFor(model => model.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
         </div>
     </div>
 
@@ -41,10 +41,9 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.EquipmentsList, "Id", "DisplayName"), new { @class = "form-control", @id = "equipmentSelect" })
-            @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+            @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "Id", "DisplayName"), new { @class = "form-control", @id = "equipmentSelect" })
         </div>
     </div>
     @*<div class="form-group">
@@ -78,12 +77,15 @@
             <button class="btn col-md-2" id="addEquipmentBtn" style="margin-left: 2px;" type="button">Add</button>
         </div>*@
 
-    <div class="form-group">
-        @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
-        </div>
+<div class="form-group">
+    @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-8">
+        @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
     </div>
+    <div class="col-md-2">
+        <button class="btn" id="addEquipmentBtn" type="button">Add</button>
+    </div>
+</div>
 
     <div id="addedEquipments"></div>
 
@@ -116,6 +118,7 @@
             const equipmentSelectedText = equipmentSelectEl.options[equipmentSelectEl.selectedIndex].text
             const equipmentQty = +equipmentQuantityEl.value;
             const unitPrice = +unitPriceEl.value;
+            console.log(equipmentQty);
             if (equipmentSelectEl.value != "" && equipmentQty > 0 && unitPrice > 0)
             {
                 addedEquipmentsSection.innerHTML += `
@@ -150,22 +153,29 @@
                 orderDate,
                 supplierId: supplier
             }
-            $.ajax({
-                type: "POST",
-                url: "/Order/Create",
-                data: JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    window.location.href = '/Order/Index';
-                },
-                failure: function (response) {
-                    window.location.href = '/Order/Index';
-                },
-                error: function (response) {
-                    window.location.href = '/Order/Index';
-                }
-            })
+            if (equipmentsData.length < 1) {
+                alert("Please add at least one equipment");
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/Order/Create",
+                    data: JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        window.location.href = '/Order/Index';
+                    },
+                    failure: function (response) {
+                        window.location.href = '/Order/Index';
+                    },
+                    error: function (response) {
+                        window.location.href = '/Order/Index';
+                    }
+                })
+
+            }
         })
 
     </script>

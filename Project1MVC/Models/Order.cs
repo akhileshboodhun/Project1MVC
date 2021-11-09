@@ -33,15 +33,18 @@ namespace Project1MVC.Models
         public int? Id { get; set; }
 
         [Display(Name = "Order Completed")]
+        [Required]
         public bool IsOrderComplete { get; set; }
 
         [Display(Name = "Order Date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Required]
         public DateTime OrderDate { get; set; }
         public int SupplierId { get; set; }
 
         [Display(Name = "Supplier Name")]
+        [Required]
         public string SupplierName { get; set; }
     }
 }
