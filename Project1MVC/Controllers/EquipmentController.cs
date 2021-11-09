@@ -59,56 +59,64 @@ namespace Project1MVC.Controllers
 
         // POST: Equipment/Create
         //[HttpPost]
-        //public ActionResult Create(string EquipmentName, int Quantity)
+        //public ActionResult Create(string Type, string Brand, string Model)
         //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
-        //        //if (ModelState.IsValid)
-        //        //{
+        //     try
+        //     {
+        //         // TODO: Add insert logic here
+        //         if (ModelState.IsValid)
+        //         {
+        //             var equipment = new Equipment(type: Type, brand: Brand, model: Model);
+        //             var db = InMemoryEquipments.GetInstance();
+        //             db.Add(equipment);
+        //             return RedirectToAction("Index");
+        //         }
+        //         return View();
 
-        //        var equipment = new Equipment(EquipmentName, Quantity);
-        //        var db = InMemoryEquipments.GetInstance();
-        //        db.Add(equipment);
-        //        return RedirectToAction("Index");
-        //        //}
-        //        //return View();
+        //     }
+        //     catch
+        //     {
+        //         return View();
+        //     }
+        // }
 
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        //POST: Equipment/Edit
+        [HttpPost]
+        public ActionResult Edit(FormCollection fc)
+        {
+            if (fc["id"] != null && fc["id"].All(char.IsDigit))
+            {
+                List<string> cols = new List<string>();
+                var equipment = equipmentService.Get(fc["id"].ToInt());
 
-        // GET: Equipment/Edit/5
-        //public ActionResult Edit(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
+                // TODO: if equipment is null, we need to display "not found" error in view
 
-        // POST: Equipment/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(string id, string EquipmentName, int Quantity)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
-        //        var db = InMemoryEquipments.GetInstance();
-        //        //var equipment = db.Get(Guid.Parse(id));
-        //        //equipment.EquipmentName = EquipmentName;
-        //        //equipment.Quantity = Quantity;
-        //        //db.Update(equipment);
+                ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+                return View(equipment);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
 
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        //POST: Equipment/Update
+        [HttpPost]
+        public ActionResult Update(string id, string type, string brand, string model, string description, int currentStockCount, int reStockThreshold)
+        {
+            try
+            {
+                // TODO: validate id (data type and range only)
+                var equipment = new Equipment(id.ToInt(), type, brand, model, description, currentStockCount, reStockThreshold);
+                equipmentService.Update(equipment);
+                // TODO: check status of update and notify user instead of redirecting
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
         // GET: Equipment/Delete/5
         //public ActionResult Delete(string id)
