@@ -238,7 +238,7 @@
     <Content Include="Views\Employees\_AssignedPartialPage.cshtml" />
     <Content Include="Views\Employees\_ManageAssignedPartial.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
-    <Content Include="Views\Equipment\Create.cshtml" />
+    <Content Include="Views\Equipment\Add.cshtml" />
     <Content Include="Views\Equipment\Delete.cshtml" />
     <Content Include="Views\Equipment\Index.cshtml" />
     <Content Include="Views\Equipment\Details.cshtml" />
