@@ -158,5 +158,21 @@ namespace Project1MVC.Services
 
             return _cols;
         }
+
+        private static string GenerateInsertSQLQuery<T>(DBMS dbms, bool includePrimaryKey)
+        {
+            StringBuilder sb = new StringBuilder();
+            IList<string> cols = GetColumns<T>(includePrimaryKey);
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"INSERT INTO {typeof(T).Name} ({StringifyColumns<T>(cols)}) ");
+                    sb.Append($"VALUES ({StringifyColumns<T>(FormatList(cols, "@"), false)});");
+                    break;
+            }
+
+            return sb.ToString();
+        }
     }
 }
