@@ -16,6 +16,7 @@ namespace Project1MVC.Controllers
         // GET: Auth/Login
         public ActionResult Login(string ReturnUrl)
         {
+            if (User.Identity.IsAuthenticated && User.Identity.Name != null) return RedirectToAction("Index","Home");
             if (ReturnUrl != null)
             {
                 ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");

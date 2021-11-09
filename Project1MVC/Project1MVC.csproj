@@ -126,6 +126,7 @@
     <Compile Include="Controllers\EquipmentAssignmentController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\EquipmentsInStockController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FutureStockController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="DAL\AssignEquipmentService.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
     <Compile Include="Models\EquipmentOrder.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\FutureStock.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderWrapper.cs" />
@@ -171,6 +173,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Error\Error.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -189,6 +192,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\ParticlesJS\particles.js" />
+    <Content Include="Scripts\ParticlesJS\particles.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -241,6 +246,8 @@
     <Content Include="Views\Order\EditEquipment.cshtml" />
     <Content Include="Views\Order\DeleteEquipment.cshtml" />
     <Content Include="Views\EquipmentAssignment\Index.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

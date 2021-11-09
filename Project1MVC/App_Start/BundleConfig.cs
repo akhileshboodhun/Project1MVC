@@ -13,6 +13,10 @@ namespace Project1MVC
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/ParticlesJS").Include(
+                        "~/Scripts/ParticlesJS/particles*"));
+
             bundles.Add(new ScriptBundle("~/bundles/userscripts").Include(
                         "~/Scripts/AddDeleteList.js"));
 
@@ -27,6 +31,10 @@ namespace Project1MVC
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/Error").Include(
+                      "~/Content/Error/Error.css"));
+
         }
     }
 }
