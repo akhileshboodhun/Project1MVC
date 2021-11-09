@@ -149,6 +149,7 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\DBManager.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Services\DBMS.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\EquipmentRepository.cs" />
