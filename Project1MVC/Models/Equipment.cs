@@ -7,24 +7,24 @@ using System.Web;
 
 namespace Project1MVC.Models
 {
-    public class Equipment
+    public class Equipment : Model<Equipment>
     {
-        public object this[string propertyName]
-        {
-            get
-            {
-                Type myType = typeof(Equipment);
-                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
-                return myPropInfo.GetValue(this, null);
-            }
+        //public object this[string propertyName]
+        //{
+        //    get
+        //    {
+        //        Type myType = typeof(Equipment);
+        //        PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+        //        return myPropInfo.GetValue(this, null);
+        //    }
 
-            set
-            {
-                Type myType = typeof(Equipment);
-                PropertyInfo myPropInfo = myType.GetProperty(propertyName);
-                myPropInfo.SetValue(this, value, null);
-            }
-        }
+        //    set
+        //    {
+        //        Type myType = typeof(Equipment);
+        //        PropertyInfo myPropInfo = myType.GetProperty(propertyName);
+        //        myPropInfo.SetValue(this, value, null);
+        //    }
+        //}
 
         public Equipment(int id = 0, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0)
         {
