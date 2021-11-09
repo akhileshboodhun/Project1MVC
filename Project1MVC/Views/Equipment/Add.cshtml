@@ -6,7 +6,7 @@
     ViewBag.Title = "Add";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Add", controller, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
