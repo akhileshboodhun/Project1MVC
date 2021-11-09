@@ -62,7 +62,8 @@ namespace Project1MVC.Services
 
         public Equipment Get(int id, IList<String> cols)
         {
-            return equipmentRepo.Get(id, cols);
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+            return equipmentRepo.Get(id, _cols);
         }
 
         public IList<Equipment> GetAll()
