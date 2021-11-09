@@ -32,10 +32,10 @@
                     @item[col]
                 </td>
             }
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.EquipId }) |
-                @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
-            </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" })
+            @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
+        </td>
 
         </tr>
     }
@@ -46,9 +46,21 @@
     @Html.Hidden("id", null, new { id = "formDetailsFieldId" })
 }
 
+@using (Html.BeginForm("Edit", "Equipment", FormMethod.Post, new { id = "formEdit" }))
+{
+    @Html.Hidden("id", null, new { id = "formEditFieldId" })
+}
+
 <script>
     function goDetails(id) {
         document.getElementById('formDetailsFieldId').value = id;
         document.getElementById('formDetails').submit();
+    }
+</script>
+
+<script>
+    function goEdit(id) {
+        document.getElementById('formEditFieldId').value = id;
+        document.getElementById('formEdit').submit();
     }
 </script>
