@@ -32,10 +32,10 @@
                     @item[col]
                 </td>
             }
-        <td>
-            @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" }) |
-            @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
-        </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" }) |
+                @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
+            </td>
 
         </tr>
     }
@@ -56,9 +56,7 @@
         document.getElementById('formDetailsFieldId').value = id;
         document.getElementById('formDetails').submit();
     }
-</script>
 
-<script>
     function goEdit(id) {
         document.getElementById('formEditFieldId').value = id;
         document.getElementById('formEdit').submit();
