@@ -55,7 +55,7 @@ namespace Project1MVC.Controllers
         public ActionResult Add()
         {
             ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
-            return View(new Equipment());
+            return View(new Equipment(type: " ", brand: " ", model: " ", description: " "));
         }
 
         // POST: Equipment/Add
