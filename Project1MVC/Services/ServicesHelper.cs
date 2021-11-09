@@ -146,5 +146,17 @@ namespace Project1MVC.Services
 
             return name;
         }
+
+        private static IList<string> FormatList(IList<string> cols, string prefix = "", string suffix = "")
+        {
+            IList<string> _cols = new List<string>();
+
+            foreach (string col in cols)
+            {
+                _cols.Add($"{prefix}{col}{suffix}");
+            }
+
+            return _cols;
+        }
     }
 }
