@@ -110,12 +110,14 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Update(FormCollection fc)
         {
-            if (fc["[EquipId]"] != null && fc["[EquipId]"].All(char.IsDigit))
+            string primaryKey = "EquipId";
+
+            if (fc[primaryKey] != null && fc[primaryKey].All(char.IsDigit))
             {
                 try
                 {
-                    // TODO: validate fields other than EquipId
-                    int id = fc["[EquipId]"].ToInt();
+                    // TODO: validate fields other than primaryKey
+                    int id = fc[primaryKey].ToInt();
                     string type = fc["[Type]"];
                     string brand = fc["[Brand]"];
                     string model = fc["[Model]"];
@@ -141,31 +143,5 @@ namespace Project1MVC.Controllers
             }
         }
 
-        // GET: Equipment/Delete/5
-        //public ActionResult Delete(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
-
-        // POST: Equipment/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(string id, FormCollection collection)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-        //        db.Delete(equipment);
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-
-        //        return View(equipment);
-        //    }
-        //}
     }
 }
