@@ -2,7 +2,7 @@
 @using Project1MVC.Services;
 @model Equipment
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Update", "Equipment", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     
