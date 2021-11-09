@@ -3,18 +3,19 @@
 @model List<Equipment>
 @{
     ViewBag.Title = "Index";
+    string controller = "Equipment";
 }
 
-<h2>All Equipments</h2>
+<h2>All @{@controller}s</h2>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add New", "Add")
 </p>
 <table class="table">
     <tr>
         @foreach (string col in ViewBag.displayCols)
         {
             <th>
-                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: "Equipment",
+                @Html.ActionLink(linkText: ServicesHelper.GetDisplayName<Equipment>(col), actionName: "Index", controllerName: controller,
                 routeValues: new { sortBy = col, sortOrder = ViewBag.nextSortOrders[col] },
                 htmlAttributes: null
                 )
@@ -41,12 +42,12 @@
     }
 </table>
 
-@using (Html.BeginForm("Details", "Equipment", FormMethod.Post, new { id = "formDetails" }))
+@using (Html.BeginForm("Details", controller, FormMethod.Post, new { id = "formDetails" }))
 {
     @Html.Hidden("id", null, new { id = "formDetailsFieldId" })
 }
 
-@using (Html.BeginForm("Edit", "Equipment", FormMethod.Post, new { id = "formEdit" }))
+@using (Html.BeginForm("Edit", controller, FormMethod.Post, new { id = "formEdit" }))
 {
     @Html.Hidden("id", null, new { id = "formEditFieldId" })
 }
