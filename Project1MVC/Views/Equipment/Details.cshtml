@@ -6,19 +6,31 @@
     <h2>Equipment Details</h2>
     <hr />
     <dl class="dl-horizontal">
-@foreach (string col in ViewBag.displayCols)
-{
-        <dt>
-            @Html.Label(ServicesHelper.GetDisplayName<Equipment>(col))
-        </dt>
+        @foreach (string col in ViewBag.displayCols)
+        {
+            <dt>
+                @Html.Label(ServicesHelper.GetDisplayName<Equipment>(col))
+            </dt>
 
-        <dd>
-            @Model[col]
-        </dd>
-}
+            <dd>
+                @Model[col]
+            </dd>
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EquipId }) |
+    @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({Model.EquipId});return false;" }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@using (Html.BeginForm("Edit", "Equipment", FormMethod.Post, new { id = "formEdit" }))
+{
+    @Html.Hidden("id", null, new { id = "formEditFieldId" })
+}
+
+<script>
+    function goEdit(id) {
+        document.getElementById('formEditFieldId').value = id;
+        document.getElementById('formEdit').submit();
+    }
+</script>
