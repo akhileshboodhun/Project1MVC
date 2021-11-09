@@ -38,12 +38,11 @@ namespace Project1MVC.Controllers
         {
             if (id != null && id.All(char.IsDigit))
             {
-                List<string> cols = new List<string>();
-                var equipment = equipmentService.Get(id.ToInt(), cols);
+                var equipment = equipmentService.Get(id.ToInt());
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
                 return View(equipment);
             }
             else
