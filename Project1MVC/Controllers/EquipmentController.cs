@@ -102,19 +102,36 @@ namespace Project1MVC.Controllers
 
         //POST: Equipment/Update
         [HttpPost]
-        public ActionResult Update(string id, string type, string brand, string model, string description, int currentStockCount, int reStockThreshold)
+        public ActionResult Update(FormCollection fc)
         {
-            try
+            if (fc["[EquipId]"] != null && fc["[EquipId]"].All(char.IsDigit))
             {
-                // TODO: validate id (data type and range only)
-                var equipment = new Equipment(id.ToInt(), type, brand, model, description, currentStockCount, reStockThreshold);
-                equipmentService.Update(equipment);
-                // TODO: check status of update and notify user instead of redirecting
-                return RedirectToAction("Index");
+                try
+                {
+                    // TODO: validate fields other than EquipId
+                    int id = fc["[EquipId]"].ToInt();
+                    string type = fc["[Type]"];
+                    string brand = fc["[Brand]"];
+                    string model = fc["[Model]"];
+                    string description = fc["[Description]"];
+                    int currentStockCount = fc["[CurrentStockCount]"].ToInt();
+                    int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
+
+                    var equipment = new Equipment(id, type, brand, model, description, currentStockCount, reStockThreshold);
+                    equipmentService.Update(equipment);
+
+                    // TODO: check status of update and notify user instead of redirecting
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex.ToString());
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            else
             {
-                return View();
+                return RedirectToAction("Index");
             }
         }
 
