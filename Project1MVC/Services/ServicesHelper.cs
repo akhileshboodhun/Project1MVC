@@ -159,10 +159,10 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        private static SqlCommand GetSQLCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
+        private static SqlCommand GetSQLCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey)
         {
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            IList<string> cols = GetColumns<T>();
+            IList<string> cols = GetColumns<T>(includePrimaryKey);
 
             foreach (string col in cols)
             {
@@ -191,7 +191,7 @@ namespace Project1MVC.Services
         public static SqlCommand GenerateInsertSQLCommand<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
         {
             string sql = GenerateInsertSQLQuery<T>(dbProvider.DBMS, includePrimaryKey);
-            return GetSQLCommand(sql, obj, dbProvider);
+            return GetSQLCommand(sql, obj, dbProvider, includePrimaryKey);
         }
 
         private static string GenerateUpdateSQLQuery<T>(DBMS dbms)
