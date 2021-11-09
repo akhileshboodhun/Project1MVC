@@ -174,5 +174,19 @@ namespace Project1MVC.Services
 
             return sb.ToString();
         }
+
+        public static SqlCommand GenerateInsertSQLCommand<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
+        {
+            string sql = GenerateInsertSQLQuery<T>(dbProvider.DBMS, includePrimaryKey);
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
+            IList<string> cols = GetColumns<T>(includePrimaryKey);
+
+            foreach (string col in cols)
+            {
+                cmd.Parameters.AddWithValue($"@{col}", obj[col]);
+            }
+
+            return cmd;
+        }
     }
 }
