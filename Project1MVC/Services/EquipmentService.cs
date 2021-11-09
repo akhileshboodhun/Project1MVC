@@ -57,7 +57,7 @@ namespace Project1MVC.Services
 
         public Equipment Get(int id)
         {
-            return this.Get(id, new List<string>());
+            return this.Get(id, ServicesHelper.GetColumns<Equipment>());
         }
 
         public Equipment Get(int id, IList<String> cols)
