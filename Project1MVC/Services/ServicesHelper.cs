@@ -188,5 +188,28 @@ namespace Project1MVC.Services
 
             return cmd;
         }
+
+        private static string GenerateUpdateSQLQuery<T>(DBMS dbms)
+        {
+            StringBuilder sb = new StringBuilder();
+            IList<string> cols = GetColumns<T>(false);
+            string primaryColumn = GetDefaultColumn<T>();
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"UPDATE {typeof(T).Name} ");
+                    sb.Append($"SET ");
+                    foreach (string col in cols)
+                    {
+                        sb.Append($"[{col}] = @{col}, ");
+                    }
+                    sb.Remove(sb.Length - 2, 2);
+                    sb.Append($" WHERE ({primaryColumn} = @{primaryColumn});");
+                    break;
+            }
+
+            return sb.ToString();
+        }
     }
 }
