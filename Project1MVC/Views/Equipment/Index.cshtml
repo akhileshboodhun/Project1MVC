@@ -4,6 +4,13 @@
 @{
     string controller = "Equipment";
     ViewBag.Title = "Index";
+
+    ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(ViewBag.displayCols);
+
+    if (ViewBag.displayPrimaryColumn == false)
+    {
+        ViewBag.displayCols.Remove(ServicesHelper.GetDefaultColumn<Equipment>());
+    }
 }
 
 <h2>All @{@controller}s</h2>
