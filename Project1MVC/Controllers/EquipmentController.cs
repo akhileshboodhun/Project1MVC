@@ -23,11 +23,11 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
-            IList<string> cols = new List<string>();// { "" };
+            IList<string> cols = new List<string>();
 
             var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
 
-            ViewBag.displayPrimaryColumn = true;
+            ViewBag.displayPrimaryColumn = false;
             ViewBag.displayCols = cols;
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
             
@@ -44,7 +44,8 @@ namespace Project1MVC.Controllers
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+                ViewBag.displayPrimaryColumn = false;
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
                 return View(equipment);
             }
             else

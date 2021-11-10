@@ -3,7 +3,21 @@
 @model Equipment
 @{
     string controller = "Equipment";
+    string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
     ViewBag.Title = "Details";
+    ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(ViewBag.displayCols);
+
+    if (ViewBag.displayPrimaryColumn == false)
+    {
+        ViewBag.displayCols.Remove(primaryColumn);
+    }
+    else
+    {
+        if (!ViewBag.displayCols.Contains(primaryColumn))
+        {
+            ViewBag.displayCols.Add(primaryColumn);
+        }
+    }
 }
 
 <div>
