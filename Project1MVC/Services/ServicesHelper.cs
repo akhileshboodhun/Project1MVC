@@ -222,5 +222,28 @@ namespace Project1MVC.Services
             string sql = GenerateSqlQueryForUpdate<T>(dbProvider.DBMS);
             return GenerateSqlCommand(sql, obj, dbProvider, true);
         }
+
+        private static string GenerateSqlQueryForGetPaginatedList<T>(IList<string> cols, string sortBy, string sortOrder, DBMS dbms)
+        {
+            StringBuilder sb = new StringBuilder();
+            string _table = typeof(T).Name;
+            string _cols = StringifyColumns<T>(cols);
+            string _sortBy = SanitizeSortBy<T>(sortBy);
+            string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"SELECT ");
+                    sb.Append($"{_cols} ");
+                    sb.Append($"FROM {_table} ");
+                    sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
+                    sb.Append($"OFFSET @Offset ROWS ");
+                    sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
+                    break;
+            }
+
+            return sb.ToString();
+        }
     }
 }
