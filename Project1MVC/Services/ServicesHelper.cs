@@ -159,7 +159,7 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        private static SqlCommand GetSQLCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey)
+        private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey)
         {
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
             IList<string> cols = GetColumns<T>(includePrimaryKey);
@@ -172,7 +172,7 @@ namespace Project1MVC.Services
             return cmd;
         }
 
-        private static string GenerateInsertSQLQuery<T>(DBMS dbms, bool includePrimaryKey)
+        private static string GenerateSqlQueryForInsert<T>(DBMS dbms, bool includePrimaryKey)
         {
             StringBuilder sb = new StringBuilder();
             IList<string> cols = GetColumns<T>(includePrimaryKey);
@@ -188,13 +188,13 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateInsertSQLCommand<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
+        public static SqlCommand GenerateSqlCommandForInsert<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
         {
-            string sql = GenerateInsertSQLQuery<T>(dbProvider.DBMS, includePrimaryKey);
-            return GetSQLCommand(sql, obj, dbProvider, includePrimaryKey);
+            string sql = GenerateSqlQueryForInsert<T>(dbProvider.DBMS, includePrimaryKey);
+            return GenerateSqlCommand(sql, obj, dbProvider, includePrimaryKey);
         }
 
-        private static string GenerateUpdateSQLQuery<T>(DBMS dbms)
+        private static string GenerateSqlQueryForUpdate<T>(DBMS dbms)
         {
             StringBuilder sb = new StringBuilder();
             IList<string> cols = GetColumns<T>(false);
@@ -217,10 +217,10 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateUpdateSQLCommand<T>(Model<T> obj, IDBProvider dbProvider)
+        public static SqlCommand GenerateSqlCommandForUpdate<T>(Model<T> obj, IDBProvider dbProvider)
         {
-            string sql = GenerateUpdateSQLQuery<T>(dbProvider.DBMS);
-            return GetSQLCommand(sql, obj, dbProvider, true);
+            string sql = GenerateSqlQueryForUpdate<T>(dbProvider.DBMS);
+            return GenerateSqlCommand(sql, obj, dbProvider, true);
         }
     }
 }

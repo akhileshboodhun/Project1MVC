@@ -23,7 +23,7 @@ namespace Project1MVC.DAL
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateInsertSQLCommand<Equipment>(obj, dbProvider);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForInsert<Equipment>(obj, dbProvider);
 
                 if (cmd.ExecuteNonQuery() == 1)
                 {
@@ -268,7 +268,7 @@ namespace Project1MVC.DAL
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateUpdateSQLCommand<Equipment>(obj, dbProvider);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForUpdate<Equipment>(obj, dbProvider);
 
                 if (cmd.ExecuteNonQuery() == 1)
                 {
