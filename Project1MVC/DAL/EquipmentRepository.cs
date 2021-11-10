@@ -170,28 +170,12 @@ namespace Project1MVC.DAL
 
         public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.GetPaginated;
             List<Equipment> list = new List<Equipment>();
-            
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-                    string sql =
-                        "SELECT " +
-                        ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
-                        "FROM Equipment " +
-                        "ORDER BY [" + sortBy + "] " + sortOrder.ToUpper() + " " +
-                        "OFFSET @Offset ROWS " +
-                        "FETCH NEXT @PageSize ROWS ONLY;";
-
-            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
-                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
             try
             {
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(cols, pageNumber, pageSize, sortBy, sortOrder, dbProvider);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -207,18 +191,15 @@ namespace Project1MVC.DAL
                     }
                 }
             }
-
             catch (Exception ex)
             {
-                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"FAILED: {MethodBase.GetCurrentMethod().Name} {this.GetType().Name.Replace(rep, "")}");
                 Logger.Log($"{ex.ToString()}");
             }
-            //        finally
-            //        {
-            //            conn.Close();
-            //        }
-            //    }
-            //}
+            finally
+            {
+                dbProvider.Connection.Close();
+            }
 
             return list;
         }
