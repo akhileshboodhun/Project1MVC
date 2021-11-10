@@ -69,15 +69,16 @@ namespace Project1MVC.Services
         public static string StringifyColumns<T>(IList<string> cols, bool sanitize = true)
         {
             IList<string> _cols;
+            IList<string> colsParam = cols ?? GetColumns<T>();
             StringBuilder sb = new StringBuilder();
 
             if (sanitize)
             {
-                _cols = SanitizeColumns<T>(cols);
+                _cols = SanitizeColumns<T>(colsParam);
             }
             else
             {
-                _cols = cols.Count != 0 ? cols : GetColumns<T>();
+                _cols = colsParam.Count != 0 ? colsParam : GetColumns<T>();
             }
 
             foreach (string col in _cols)
