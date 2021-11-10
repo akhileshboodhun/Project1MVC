@@ -23,10 +23,11 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
-            IList<string> cols = ServicesHelper.GetColumns<Equipment>();
-            var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
+            IList<string> cols = new List<string>();// { "" };
 
-            cols.Remove(ServicesHelper.GetDefaultColumn<Equipment>());
+            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
+
+            ViewBag.displayPrimaryColumn = true;
             ViewBag.displayCols = cols;
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
             
@@ -75,6 +76,8 @@ namespace Project1MVC.Controllers
 
                 var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
                 equipmentService.Add(equipment);
+
+                equipmentService.
 
                 // TODO: check status of update and notify user instead of redirecting
                 return RedirectToAction("Index");
