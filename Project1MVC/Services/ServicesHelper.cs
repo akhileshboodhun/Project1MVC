@@ -51,10 +51,11 @@ namespace Project1MVC.Services
 
         public static IList<string> SanitizeColumns<T>(IList<string> cols)
         {
+            IList<string> colsParam = cols == null ? new List<string>() : cols;
             IList<string> _cols = new List<string>();
             IList<string> validCols = GetColumns<T>();
 
-            foreach (string entry in cols)
+            foreach (string entry in colsParam)
             {
                 if (validCols.Contains(entry))
                 {
@@ -66,21 +67,18 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        public static string StringifyColumns<T>(IList<string> cols, bool sanitize = true)
+        public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
         {
-            IList<string> _cols;
-            IList<string> colsParam = cols ?? GetColumns<T>();
+            IList<string> _cols = cols ?? GetColumns<T>();
             StringBuilder sb = new StringBuilder();
 
             if (sanitize)
             {
-                _cols = SanitizeColumns<T>(colsParam);
+                _cols = SanitizeColumns<T>(_cols);
             }
-            else
-            {
-                _cols = colsParam.Count != 0 ? colsParam : GetColumns<T>();
-            }
-
+               
+            _cols = _cols.Count != 0 ? _cols : GetColumns<T>();
+            
             foreach (string col in _cols)
             {
                 sb.Append(col + ", ");
@@ -252,7 +250,7 @@ namespace Project1MVC.Services
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols = null, string sortBy = "", string sortOrder = "")
+        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "")
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
@@ -278,15 +276,13 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder, IDBProvider dbProvider)
+        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "")
         {
             string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder);
-            int _pageNumber = pageNumber ?? 1;
-            int _pageSize = pageSize ?? DefaultPageSize;
-
+                    
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            cmd.Parameters.AddWithValue("@Offset", (_pageNumber - 1) * _pageSize);
-            cmd.Parameters.AddWithValue("@PageSize", _pageSize);
+            cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
+            cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
             return cmd;
         }
