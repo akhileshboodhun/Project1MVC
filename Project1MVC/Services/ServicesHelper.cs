@@ -245,5 +245,18 @@ namespace Project1MVC.Services
 
             return sb.ToString();
         }
+
+        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder, IDBProvider dbProvider)
+        {
+            string sql = GenerateSqlQueryForGetPaginatedList<T>(cols, sortBy, sortOrder, dbProvider.DBMS);
+            int _pageNumber = pageNumber ?? 1;
+            int _pageSize = pageSize ?? DefaultPageSize;
+
+            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
+            cmd.Parameters.AddWithValue("@Offset", (_pageNumber - 1) * _pageSize);
+            cmd.Parameters.AddWithValue("@PageSize", _pageSize);
+
+            return cmd;
+        }
     }
 }
