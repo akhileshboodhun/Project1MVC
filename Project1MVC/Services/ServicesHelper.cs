@@ -160,39 +160,64 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey)
+        private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
         {
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            IList<string> cols = GetColumns<T>(includePrimaryKey);
+            IList<string> cols = GetColumns<T>();
 
             foreach (string col in cols)
             {
-                cmd.Parameters.AddWithValue($"@{col}", obj[col]);
+                string param = $"@{col}";
+
+                if (cmd.CommandText.Contains(param))
+                {
+                    cmd.Parameters.AddWithValue(param, obj[col]);
+                }
             }
 
             return cmd;
         }
 
-        private static string GenerateSqlQueryForInsert<T>(DBMS dbms, bool includePrimaryKey)
+        private static string GenerateSqlQueryForInsert<T>(DBMS dbms, IList<string> cols = null, bool includePrimaryKey = false)
         {
             StringBuilder sb = new StringBuilder();
-            IList<string> cols = GetColumns<T>(includePrimaryKey);
+            IList<string> colsParam = cols ?? GetColumns<T>(includePrimaryKey);
+            string primaryColumn = GetDefaultColumn<T>();
+
+            if (!includePrimaryKey)
+            {
+                colsParam.Remove(primaryColumn);
+            }
+            else
+            {
+                if (!colsParam.Contains(primaryColumn))
+                {
+                    colsParam.Add(primaryColumn);
+                }
+            }
+
+            colsParam = colsParam.Count != 0 ? colsParam : GetColumns<T>(includePrimaryKey);
+            string _cols = StringifyColumns<T>(colsParam, false);
+            string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"), false);
 
             switch (dbms)
             {
                 case DBMS.SQLServer:
-                    sb.Append($"INSERT INTO {typeof(T).Name} ({StringifyColumns<T>(cols)}) ");
-                    sb.Append($"VALUES ({StringifyColumns<T>(FormatList(cols, "@"), false)});");
+                    sb.Append($"INSERT INTO {typeof(T).Name} ({_cols}) ");
+                    sb.Append($"VALUES ({_colsParameterized});");
                     break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForInsert<T>(Model<T> obj, IDBProvider dbProvider, bool includePrimaryKey = false)
+        public static SqlCommand GenerateSqlCommandForInsert<T>(Model<T> obj, IDBProvider dbProvider, IList<string> cols = null, bool includePrimaryKey = false)
         {
-            string sql = GenerateSqlQueryForInsert<T>(dbProvider.DBMS, includePrimaryKey);
-            return GenerateSqlCommand(sql, obj, dbProvider, includePrimaryKey);
+            string sql = GenerateSqlQueryForInsert<T>(dbProvider.DBMS, cols, includePrimaryKey);
+            return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
         private static string GenerateSqlQueryForUpdate<T>(DBMS dbms)
@@ -213,6 +238,9 @@ namespace Project1MVC.Services
                     sb.Remove(sb.Length - 2, 2);
                     sb.Append($" WHERE ({primaryColumn} = @{primaryColumn});");
                     break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
             return sb.ToString();
@@ -221,10 +249,10 @@ namespace Project1MVC.Services
         public static SqlCommand GenerateSqlCommandForUpdate<T>(Model<T> obj, IDBProvider dbProvider)
         {
             string sql = GenerateSqlQueryForUpdate<T>(dbProvider.DBMS);
-            return GenerateSqlCommand(sql, obj, dbProvider, true);
+            return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForGetPaginatedList<T>(IList<string> cols, string sortBy, string sortOrder, DBMS dbms)
+        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols = null, string sortBy = "", string sortOrder = "")
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
@@ -242,6 +270,9 @@ namespace Project1MVC.Services
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
                     break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
             return sb.ToString();
@@ -249,7 +280,7 @@ namespace Project1MVC.Services
 
         public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder, IDBProvider dbProvider)
         {
-            string sql = GenerateSqlQueryForGetPaginatedList<T>(cols, sortBy, sortOrder, dbProvider.DBMS);
+            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder);
             int _pageNumber = pageNumber ?? 1;
             int _pageSize = pageSize ?? DefaultPageSize;
 
