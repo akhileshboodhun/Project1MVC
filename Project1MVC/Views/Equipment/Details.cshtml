@@ -1,36 +1,54 @@
-﻿@model Project1MVC.Models.Equipment
+﻿@using Project1MVC.Models;
+@using Project1MVC.Services;
+@model Equipment
+@{
+    string controller = "Equipment";
+    string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+    ViewBag.Title = "Details";
+    ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(ViewBag.displayCols);
+
+    if (ViewBag.displayPrimaryColumn == false)
+    {
+        ViewBag.displayCols.Remove(primaryColumn);
+    }
+    else
+    {
+        if (!ViewBag.displayCols.Contains(primaryColumn))
+        {
+            ViewBag.displayCols.Add(primaryColumn);
+        }
+    }
+}
 
 <div>
-    <h4>Equipment</h4>
+    <h2>@{@controller} Details</h2>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
+        @foreach (string col in ViewBag.displayCols)
+        {
+            <dt>
+                @Html.Label(ServicesHelper.GetDisplayName<Equipment>(col))
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Brand)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CurrentStockCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ReStockThreshold)
-        </dt>
-
+            <dd>
+                @Model[col]
+            </dd>
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({Model.EquipId});return false;" }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@using (Html.BeginForm("Edit", controller, FormMethod.Post, new { id = "formEdit" }))
+{
+    @Html.Hidden("id", null, new { id = "formEditFieldId" })
+}
+
+<script>
+    function goEdit(id) {
+        document.getElementById('formEditFieldId').value = id;
+        document.getElementById('formEdit').submit();
+    }
+</script>

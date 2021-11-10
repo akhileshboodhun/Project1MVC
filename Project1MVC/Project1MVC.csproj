@@ -149,6 +149,8 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\DBManager.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Services\DBMS.cs" />
     <Compile Include="DAL\EquipmentDAL.cs" />
     <Compile Include="DAL\EquipmentRepository.cs" />
     <Compile Include="DAL\FutureStockDAL.cs" />
@@ -236,7 +238,7 @@
     <Content Include="Views\Employees\_AssignedPartialPage.cshtml" />
     <Content Include="Views\Employees\_ManageAssignedPartial.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
-    <Content Include="Views\Equipment\Create.cshtml" />
+    <Content Include="Views\Equipment\Add.cshtml" />
     <Content Include="Views\Equipment\Delete.cshtml" />
     <Content Include="Views\Equipment\Index.cshtml" />
     <Content Include="Views\Equipment\Details.cshtml" />

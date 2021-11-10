@@ -59,7 +59,7 @@ namespace Project1MVC.DAL
             }
         }
 
-        public SqlConnection GetConnection
+        public SqlConnection Connection
         {
             get
             {
@@ -69,6 +69,14 @@ namespace Project1MVC.DAL
                 }
 
                 return conn;
+            }
+        }
+
+        public DBMS DBMS
+        {
+            get
+            {
+                return DBMS.SQLServer;
             }
         }
 

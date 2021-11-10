@@ -19,110 +19,131 @@ namespace Project1MVC.Controllers
             equipmentService = service;
         }
 
-        // GET: Equipments
+        // GET: Equipments/Index
         [HttpGet]
-        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
+        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
-            List<string> cols = new List<string>();// { "fff", "CurrentffCount" };
-            var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
+            IList<string> cols = new List<string>();
 
+            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
+
+            ViewBag.displayPrimaryColumn = false;
+            ViewBag.displayCols = cols;
             ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
-            ViewBag.displayCols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+            
             return View(equipments);
         }
 
-        // GET: Equipment/Details/5
-        //public ActionResult Details(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
+        // POST: Equipment/Details
+        [HttpPost]
+        public ActionResult Details(string id)
+        {
+            if (id != null && id.All(char.IsDigit))
+            {
+                var equipment = equipmentService.Get(id.ToInt());
 
-        // GET: Equipment/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+                // TODO: if equipment is null, we need to display "not found" error in view
 
-        // POST: Equipment/Create
-        //[HttpPost]
-        //public ActionResult Create(string EquipmentName, int Quantity)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
-        //        //if (ModelState.IsValid)
-        //        //{
+                ViewBag.displayPrimaryColumn = false;
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
+                return View(equipment);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
 
-        //        var equipment = new Equipment(EquipmentName, Quantity);
-        //        var db = InMemoryEquipments.GetInstance();
-        //        db.Add(equipment);
-        //        return RedirectToAction("Index");
-        //        //}
-        //        //return View();
+        //GET: Equipment/Add
+        public ActionResult Add()
+        {
+            ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+            return View(new Equipment(type: " ", brand: " ", model: " ", description: " "));
+        }
 
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        // POST: Equipment/Add
+        [HttpPost]
+        public ActionResult Add(FormCollection fc)
+        {
+            try
+            {
+                // TODO: validate fields
+                string type = fc["[Type]"];
+                string brand = fc["[Brand]"];
+                string model = fc["[Model]"];
+                string description = fc["[Description]"];
+                int currentStockCount = fc["[CurrentStockCount]"].ToInt();
+                int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-        // GET: Equipment/Edit/5
-        //public ActionResult Edit(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
+                var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
+                equipmentService.Add(equipment);
 
-        // POST: Equipment/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(string id, string EquipmentName, int Quantity)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
-        //        var db = InMemoryEquipments.GetInstance();
-        //        //var equipment = db.Get(Guid.Parse(id));
-        //        //equipment.EquipmentName = EquipmentName;
-        //        //equipment.Quantity = Quantity;
-        //        //db.Update(equipment);
+                // TODO: check status of update and notify user instead of redirecting
+                return RedirectToAction("Index");
 
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.ToString());
+                return RedirectToAction("Index");
+            }
+        }
 
-        // GET: Equipment/Delete/5
-        //public ActionResult Delete(string id)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    return View(equipment);
-        //}
+        //POST: Equipment/Edit
+        [HttpPost]
+        public ActionResult Edit(FormCollection fc)
+        {
+            if (fc["id"] != null && fc["id"].All(char.IsDigit))
+            {
+                var equipment = equipmentService.Get(fc["id"].ToInt());
 
-        // POST: Equipment/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(string id, FormCollection collection)
-        //{
-        //    var db = InMemoryEquipments.GetInstance();
-        //    var equipment = db.Get(Guid.Parse(id));
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-        //        db.Delete(equipment);
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
+                // TODO: if equipment is null, we need to display "not found" error in view
 
-        //        return View(equipment);
-        //    }
-        //}
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+                return View(equipment);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        //POST: Equipment/Update
+        [HttpPost]
+        public ActionResult Update(FormCollection fc)
+        {
+            string primaryKey = "EquipId";
+
+            if (fc[primaryKey] != null && fc[primaryKey].All(char.IsDigit))
+            {
+                try
+                {
+                    // TODO: validate fields other than primaryKey
+                    int id = fc[primaryKey].ToInt();
+                    string type = fc["[Type]"];
+                    string brand = fc["[Brand]"];
+                    string model = fc["[Model]"];
+                    string description = fc["[Description]"];
+                    int currentStockCount = fc["[CurrentStockCount]"].ToInt();
+                    int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
+
+                    var equipment = new Equipment(id, type, brand, model, description, currentStockCount, reStockThreshold);
+                    equipmentService.Update(equipment);
+
+                    // TODO: check status of update and notify user instead of redirecting
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex.ToString());
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
     }
 }

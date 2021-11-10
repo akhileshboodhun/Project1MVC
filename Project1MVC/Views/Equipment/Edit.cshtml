@@ -1,30 +1,31 @@
-﻿@model Project1MVC.Models.Equipment
+﻿@using Project1MVC.Models;
+@using Project1MVC.Services;
+@model Equipment
+@{
+    string controller = "Equipment";
+    ViewBag.Title = "Add";
+}
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Update", controller, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Equipment</h4>
+        <h2>Edit @{@controller}</h2>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.EquipmentId)
+        @Html.HiddenFor(model => model.EquipId)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipmentName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EquipmentName, "", new { @class = "text-danger" })
+        @foreach (string col in ViewBag.displayCols)
+        {
+            <div class="form-group">
+                @Html.Label(ServicesHelper.GetDisplayName<Equipment>(col), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model[col], new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model[col], "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        }
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
