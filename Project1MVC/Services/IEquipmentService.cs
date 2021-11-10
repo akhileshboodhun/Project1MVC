@@ -11,6 +11,8 @@ namespace Project1MVC.Services
 
         bool Add(Equipment obj);
 
+        int GetCount();
+
         Equipment Get(int id);
 
         Equipment Get(int id, IList<string> cols);
