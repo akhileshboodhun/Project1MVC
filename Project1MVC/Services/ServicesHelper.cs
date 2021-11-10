@@ -258,5 +258,26 @@ namespace Project1MVC.Services
 
             return cmd;
         }
+
+        private static string GenerateSqlQueryForGet<T>(IList<string> cols, DBMS dbms)
+        {
+            StringBuilder sb = new StringBuilder();
+            string _table = typeof(T).Name;
+            string _cols = StringifyColumns<T>(cols);
+            string primaryColumn = GetDefaultColumn<T>();
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"SELECT ");
+                    sb.Append($"{_cols} ");
+                    sb.Append($"FROM {_table} ");
+                    sb.Append($" WHERE ({primaryColumn} = @{primaryColumn});");
+                    break;
+            }
+
+            string test = sb.ToString();
+            return sb.ToString();
+        }
     }
 }
