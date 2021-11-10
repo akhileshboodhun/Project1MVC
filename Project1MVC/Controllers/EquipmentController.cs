@@ -21,7 +21,7 @@ namespace Project1MVC.Controllers
 
         // GET: Equipments/Index
         [HttpGet]
-        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "EquipId", string sortOrder = "asc")
+        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
             IList<string> cols = ServicesHelper.GetColumns<Equipment>();
             var equipments = equipmentService.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
