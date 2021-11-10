@@ -41,7 +41,6 @@ namespace Project1MVC.Services
             return status;
         }
 
-
         public int GetCount()
         {
             return equipmentRepo.GetCount();
