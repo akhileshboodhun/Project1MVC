@@ -77,8 +77,6 @@ namespace Project1MVC.Controllers
                 var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
                 equipmentService.Add(equipment);
 
-                equipmentService.
-
                 // TODO: check status of update and notify user instead of redirecting
                 return RedirectToAction("Index");
 
