@@ -9,8 +9,7 @@ using System.Web;
 
 namespace Project1MVC.DAL
 {
-    //public sealed class OrderDAL : IModelDAL<OrderWrapper>
-    public sealed class OrderDAL
+    public sealed class OrderDAL : IModelDAL<OrderWrapper>
     {
         private OrderDAL() { }
 
@@ -112,6 +111,7 @@ namespace Project1MVC.DAL
                                 status = true;
                                 Logger.Log($"SUCCESS: {opType} {modelName}");
                             }
+
                         }
 
                         catch (Exception ex)
@@ -119,6 +119,11 @@ namespace Project1MVC.DAL
                             Logger.Log($"FAILED: {opType} {modelName}");
                             Logger.Log($"{ex.ToString()}");
                         }
+                    }
+
+                    if (obj.OrderProp.IsOrderComplete == true)
+                    {
+                        OrderComplete(conn, lastInsertedId);
                     }
 
                     Logger.Log("Closing the SqlConnection" + Environment.NewLine);
@@ -384,6 +389,51 @@ namespace Project1MVC.DAL
 
         }
 
+        private bool OrderComplete(SqlConnection conn, int? orderId)
+        {
+            string sqlGetAllEquipIdsAndQty = "SELECT [EquipId], [Qty] FROM [EquipmentOrder] WHERE [OrderId] = @OrderId";
+            SqlCommand cmdGetAllEquipIdsAndQty = new SqlCommand(sqlGetAllEquipIdsAndQty, conn);
+            cmdGetAllEquipIdsAndQty.Parameters.AddWithValue("@OrderId", orderId);
+            List<EquipmentOrder> equipmentOrdersList = new List<EquipmentOrder>();
+
+            try
+            {
+                using (SqlDataReader reader = cmdGetAllEquipIdsAndQty.ExecuteReader())
+                { 
+                    while (reader.Read())
+                    {
+                        EquipmentOrder equipmentOrder = new EquipmentOrder();
+                        equipmentOrder.EquipmentId = reader["EquipId"].ToInt();
+                        equipmentOrder.Qty = reader["Qty"].ToInt();
+                        equipmentOrdersList.Add(equipmentOrder);
+                    }
+                }
+
+                foreach(var equipmentOrder in equipmentOrdersList)
+                {
+                    int quantity = equipmentOrder.Qty;
+                    int equipmentId = equipmentOrder.EquipmentId;
+                    SqlCommand sqlCommand = new SqlCommand("INSERT INTO [EquipmentInStock] ([EquipId]) VALUES(@EquipId)", conn);
+                    sqlCommand.Parameters.AddWithValue("@EquipId", equipmentId);
+
+                    for (int i = 1;  i <= quantity; i++)
+                    {
+                        if (sqlCommand.ExecuteNonQuery() != 1)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: OrderComplete");
+                Logger.Log($"{ex.ToString()}");
+                return false;
+            }
+
+            return true;
+        }
 
         public bool Update(OrderWrapper orderWrapper)
         {
@@ -412,6 +462,13 @@ namespace Project1MVC.DAL
                         {
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                        }
+
+                        //TODO: Insert into EquipmentInStock if order complete is true
+                        if (orderWrapper.OrderProp.IsOrderComplete == true)
+                        {
+                            OrderComplete(conn, orderWrapper.OrderProp.Id);
                         }
 
                         Logger.Log("Closing the SqlConnection" + Environment.NewLine);

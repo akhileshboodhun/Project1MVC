@@ -41,6 +41,9 @@ namespace Project1MVC.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime OrderDate { get; set; }
+        
+        [Display(Name = "Supplier Name")]
+        [Required]
         public int SupplierId { get; set; }
 
         [Display(Name = "Supplier Name")]
