@@ -73,13 +73,7 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
         {
-            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
-            int _pageNumber = pageNumber ?? 1;
-            int _pageSize = pageSize ?? ServicesHelper.DefaultPageSize;
-            string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
-            string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
-
-            return equipmentRepo.GetPaginatedList(_cols, _pageNumber, _pageSize, _sortBy, _sortOrder);
+            return equipmentRepo.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
         }
 
         public bool Update(Equipment obj)
