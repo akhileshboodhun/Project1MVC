@@ -260,7 +260,7 @@ namespace Project1MVC.Services
             return cmd;
         }
 
-        private static string GenerateSqlQueryForGet<T>(IList<string> cols, DBMS dbms)
+        private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols = null)
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
@@ -275,9 +275,11 @@ namespace Project1MVC.Services
                     sb.Append($"FROM {_table} ");
                     sb.Append($" WHERE ({primaryColumn} = @{primaryColumn});");
                     break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
-            string test = sb.ToString();
             return sb.ToString();
         }
     }
