@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Project1MVC.DAL;
 using Project1MVC.Models;
-using System.Web;
-using System.Reflection;
-//using System.Reflection;
 
 namespace Project1MVC.Services
 {
@@ -45,10 +41,6 @@ namespace Project1MVC.Services
             return status;
         }
 
-        public bool Delete(int id)
-        {
-            return equipmentRepo.Delete(id);
-        }
 
         public int GetCount()
         {
@@ -60,7 +52,7 @@ namespace Project1MVC.Services
             return this.Get(id, ServicesHelper.GetColumns<Equipment>());
         }
 
-        public Equipment Get(int id, IList<String> cols)
+        public Equipment Get(int id, IList<string> cols)
         {
             IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
             return equipmentRepo.Get(id, _cols);
@@ -71,9 +63,21 @@ namespace Project1MVC.Services
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(IList<string> cols, int? pageNumber, int? pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "")
         {
-            return equipmentRepo.GetPaginatedList(cols, pageNumber, pageSize, sortBy, sortOrder);
+            int _pageNumber = pageNumber ?? 1;
+            _pageNumber = _pageNumber > 0 ? _pageNumber : 1;
+
+            int _pageSize = pageSize ?? ServicesHelper.DefaultPageSize;
+            _pageSize = _pageSize > 0 ? _pageSize : ServicesHelper.DefaultPageSize;
+
+            string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
+            string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
+
+            IList<string> _cols = cols ?? ServicesHelper.GetColumns<Equipment>();
+            _cols = ServicesHelper.SanitizeColumns<Equipment>(_cols);
+
+            return equipmentRepo.GetPaginatedList(_cols, _pageNumber, _pageSize, _sortBy, _sortOrder);
         }
 
         public bool Update(Equipment obj)
