@@ -14,6 +14,7 @@ namespace Project1MVC.Controllers
         public ActionResult Index()
         {
             //EquipmentDAL.Instance.Add(new Equipment(0, "Diskette", "Blala", "HP", "Floppy disk"));
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Auth");
             return View();
         }
 

@@ -17,6 +17,14 @@ namespace Project1MVC
             bundles.Add(new ScriptBundle("~/bundles/ParticlesJS").Include(
                         "~/Scripts/ParticlesJS/particles*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/FontAwesome").Include(
+                       "~/Scripts/fontawesome/fontawesome.js",
+                      "~/Scripts/fontawesome/brands.js",
+                      "~/Scripts/fontawesome/solid.js",
+                      "~/Scripts/fontawesome/all.js"));
+
+
+
             bundles.Add(new ScriptBundle("~/bundles/userscripts").Include(
                         "~/Scripts/AddDeleteList.js"));
 
@@ -30,8 +38,19 @@ namespace Project1MVC
                       "~/Scripts/bootstrap4-toggle.js"
                       ));
 
+            bundles.Add(new ScriptBundle("~/bundles/sweetalert2").Include(
+                      "~/Scripts/sweetalert2.all.js",
+                      "~/Scripts/sweetalert2.js"
+                      ));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css", "~/Content/bootstrap4-toggle.css",
+                      "~/Content/bootstrap.css",
+                      "~/Content/sweetalert2.css",
+                      "~/Content/fontawesome.css",
+                      "~/Content/brands.css",
+                      "~/Content/solid.css",
+                      "~/Content/all.css",
+                      "~/Content/bootstrap4-toggle.css",
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/Error").Include(

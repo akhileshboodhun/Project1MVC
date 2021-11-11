@@ -1,42 +1,111 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<style>
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 
-<div class="jumbotron">
-    <h1>Project 1</h1>
-    <p class="lead">
-        @if (User.Identity.IsAuthenticated)
-        {
-            <b>Logged In Email: @HttpContext.Current.User.Identity.Name</b>
+    .grid {
+        display: grid;
+        justify-content: space-around;
+        align-items: center;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 2em;
+    }
 
+    .tiles-container {
+        margin-top: 5em;
+        padding: 2em;
+    }
+
+        .tiles-container .title {
+            margin-bottom: 1em;
         }
-        else
-        {
-            <b>Not Logged In</b>
 
+            .tiles-container .title p {
+                font-weight:bold;
+                font-size: 40px;
+                text-align: center;
+            }
+
+        .tiles-container .grid-container {
+            min-width: 80%;
         }
-    </p>
-    @Html.ActionLink("Login >>", "Login", "Auth", new { }, new { @class = "btn btn-primary btn-lg", id="loginBtn" })
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            .tiles-container .grid-container .item {
+                display: flex;
+                flex-direction: column;
+                border: 0.1em solid lightgray;
+                border-radius: 1em;
+                padding: 1em;
+                width: 250px;
+                transition: all 0.2s ease;
+            }
+
+                .tiles-container .grid-container .item .item-title {
+                    font-weight: bold;
+                    margin-bottom: 1em;
+                }
+
+                .tiles-container .grid-container .item .item-desc {
+                    font-weight: lighter;
+                }
+
+                .tiles-container .grid-container .item:hover {
+                    transform: scale(1.05);
+                    transition: all 0.2s ease;
+                    box-shadow: 0 0 10px 1px lightgray;
+                }
+</style>
+<div class="tiles-container center">
+    <div class="title">
+        <p>Dashboard</p>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="grid-container grid">
+        <div class="item" onclick="window.location.href='/Employees'">
+            <i class="fa fas fa-users fa-2x"></i>
+            <p class="item-title">Employees</p>
+            <p class="item-desc">Create, Edit, View and Delete Employees</p>
+        </div>
+        <div class="item" onclick="window.location.href='/Users'">
+            <i class="fa far fa-user fa-2x"></i>
+            <p class="item-title">Users</p>
+            <p class="item-desc">Create, Edit, View and Delete Users</p>
+        </div>
+        <div class="item" onclick="window.location.href='/Equipment'">
+            <i class="fa fas fa-laptop fa-2x"></i>
+            <p class="item-title">Equipment</p>
+            <p class="item-desc">Create, Edit, View and Delete Equipment</p>
+        </div>
+        <div class="item" onclick="window.location.href='/UserRoles'">
+            <i class="fa far fa-id-badge fa-2x"></i>
+            <p class="item-title">Roles</p>
+            <p class="item-desc">Create, Edit, View and Delete Roles</p>
+        </div>
+        <div class="item" onclick="window.location.href='/Supplier'">
+            <i class="fa fas fa-people-carry fa-2x"></i>
+            <p class="item-title">Supplier</p>
+            <p class="item-desc">Create, Edit, View and Delete Supplier</p>
+        </div>
+        <div class="item" onclick="window.location.href='/Order'">
+            <i class="fa fas fa-shopping-cart fa-2x"></i>
+            <p class="item-title">Orders</p>
+            <p class="item-desc">Create, Edit, View and Delete Order</p>
+        </div>
+        <div class="item" onclick="window.location.href='/EquipmentsInStock'">
+            <i class="fa fas fa-warehouse fa-2x"></i>
+            <p class="item-title">Current Stock Report</p>
+            <p class="item-desc">View Current Stock Report</p>
+        </div>
+        <div class="item" onclick="window.location.href='/FutureStock'">
+            <i class="fa fas fa-boxes fa-2x"></i>
+            <p class="item-title">Future Stock Report</p>
+            <p class="item-desc">View Future Stock Report</p>
+        </div>
+
     </div>
 </div>

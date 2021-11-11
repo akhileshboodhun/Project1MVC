@@ -83,7 +83,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input id="submitBtn" type="submit" value="Create" class="btn btn-default" />
+            <input id="submitBtn" type="submit" value="Create" class="btn btn-default"/>
         </div>
     </div>
 </div>
@@ -111,9 +111,15 @@
             const unitPrice = +unitPriceEl.value;
             if (equipmentSelectEl.value == "") {
                 alert("Please select an equipment");
+                
             }
             else if (equipmentQty <= 0) {
-                alert("Please enter a valid quantity");
+                //alert("Please enter a valid quantity");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a valid quantity!',
+                });
             }
             else if (unitPrice <= 0) {
                 alert("Please enter a valid unit price");
@@ -182,6 +188,7 @@
             }
             else
             {
+                console.log(JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }));
                 $.ajax({
                     type: "POST",
                     url: "/Order/Create",
@@ -189,14 +196,28 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        window.location.href = '/Order/Index';
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
+                        
                     },
-                    failure: function (response) {
-                        window.location.href = '/Order/Index';
+                    error: function (reponse) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
                     },
-                    error: function (response) {
-                        window.location.href = '/Order/Index';
-                    }
                 })
 
             }
