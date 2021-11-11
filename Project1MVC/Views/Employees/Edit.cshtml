@@ -77,7 +77,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control"} })
             @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -86,7 +86,8 @@
         @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <div class="checkbox">
-                @Html.EditorFor(model => model.IsActive)
+                @Html.CheckBoxFor(model => model.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning"})
+
                 @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
             </div>
         </div>

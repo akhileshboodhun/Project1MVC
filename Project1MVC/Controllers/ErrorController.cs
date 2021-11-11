@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Project1MVC.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         public ActionResult Index() => NotFound();

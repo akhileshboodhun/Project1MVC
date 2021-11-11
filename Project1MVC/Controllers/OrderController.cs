@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Project1MVC.DAL;
 using Project1MVC.Models;
+using Project1MVC.Services;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeUser(Roles = "Admin")]
     public class OrderController : Controller
     {
 

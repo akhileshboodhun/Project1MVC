@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeUser(Roles = "Admin,Technician")]
     public class EquipmentAssignmentController : Controller
     {
         // GET: EquipmentAssignment

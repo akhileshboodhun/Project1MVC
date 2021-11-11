@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web;
@@ -27,9 +28,12 @@ namespace Project1MVC.Models
         }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
+        [Display(Name = "Phone No")]
         public string PhoneNo { get; set; }
+        [Display(Name = "Status")]
         public bool IsActive { get; set; }
         public int Age { get => Convert.ToInt32(DateTime.Now.Subtract(this.DateOfBirth).TotalDays / 365.2425); }
 

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeUser(Roles = "Admin")]
     public class UsersController : Controller
     {
         // GET: Users

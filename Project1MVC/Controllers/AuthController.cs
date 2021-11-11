@@ -40,7 +40,11 @@ namespace Project1MVC.Controllers
                 var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
                 if (!(user is null))
                 {
-                    Session["UserFirstName"] = user?.FName;
+                    HttpCookie UserFullName = new HttpCookie("UserFullName");
+                    UserFullName.Value = user?.FName + " " + user?.LName;
+                    UserFullName.Expires = DateTime.Now.AddDays(90);
+                    Response.Cookies.Add(UserFullName);
+
                     FormsAuthentication.SetAuthCookie(user.Email, true);
 
                     HttpCookie UserIdCookie = new HttpCookie("UserIdCookie");

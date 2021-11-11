@@ -10,7 +10,6 @@ using Project1MVC.DAL;
 
 namespace Project1MVC.Controllers
 {
-    [AuthorizeUser(Roles = "Admin,Technician")]
     public class EmployeesController : Controller
     {
         // GET: Employees
@@ -19,6 +18,7 @@ namespace Project1MVC.Controllers
         {
             return PartialView("_AssignedPartialPage", equipments);
         }
+        [AuthorizeUser(Roles = "Admin,Technician")]
         public ActionResult Index()
         {
             var empDB = EmployeeDAL.Instance;
@@ -26,6 +26,7 @@ namespace Project1MVC.Controllers
             return View(employees);
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // GET: Employees/Details/5
         public ActionResult Details(int id)
         {
@@ -34,6 +35,7 @@ namespace Project1MVC.Controllers
             return View(employee);
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // GET: Employees/Create
         public ActionResult Create()
         {
@@ -45,7 +47,7 @@ namespace Project1MVC.Controllers
             ViewBag.SelectListRoles = selectList;
             return View();
         }
-
+        [AuthorizeUser(Roles = "Admin")]
         // POST: Employees/Create
         [HttpPost]
         public ActionResult Create(Employee employee, List<int> EquipmentId)
@@ -72,6 +74,7 @@ namespace Project1MVC.Controllers
             }
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // GET: Employees/Edit/5
         public ActionResult Edit(int id)
         {
@@ -87,6 +90,7 @@ namespace Project1MVC.Controllers
             return View(employee);
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // POST: Employees/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, Employee employee)
@@ -122,6 +126,7 @@ namespace Project1MVC.Controllers
             }
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // GET: Employees/Delete/5
         public ActionResult Delete(int id)
         {
@@ -130,6 +135,7 @@ namespace Project1MVC.Controllers
             return View(employee);
         }
 
+        [AuthorizeUser(Roles = "Admin")]
         // POST: Employees/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)

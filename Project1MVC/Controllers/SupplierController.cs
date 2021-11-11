@@ -1,5 +1,6 @@
 ﻿using Project1MVC.DAL;
 using Project1MVC.Models;
+using Project1MVC.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Project1MVC.Controllers
 {
+    [AuthorizeUser(Roles = "Admin")]
     public class SupplierController : Controller
     {
         // GET: Suppliers
