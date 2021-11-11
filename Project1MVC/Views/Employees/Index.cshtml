@@ -7,7 +7,7 @@
 <h2>Manage Employees</h2>
 
 <p>
-    @Html.ActionLink(" Create", "Create", new {}, new { @class = "btn btn-primary btn fa fa-plus" })
+    @Html.ActionLink("\0", "Create", new { }, new { @class = "btn btn-success fa fas fa-user-plus fa-2x", @title = "Create" })
 </p>
 <table class="table">
     <tr>
@@ -85,15 +85,15 @@
                 if (User.IsInRole("Admin"))
                 {
                     <td>
-                        @Html.ActionLink("\0", "Edit", new { id = item.UserId },new { @class = "btn btn-warning fa far fa-edit fa-3x", @title="Edit"})
+                        @Html.ActionLink("\0", "Edit", new { id = item.UserId },new { @class = "btn btn-warning fa far fa-edit", @title="Edit"})
                     </td>
 
                     <td>
-                        @Html.ActionLink("\0", "Details", new { id = item.UserId }, new { @class = "btn btn-primary fa fas fa-info-circle fa-3x", @title = "Details" })
+                        @Html.ActionLink("\0", "Details", new { id = item.UserId }, new { @class = "btn btn-primary fa fas fa-info-circle", @title = "Details" })
                     </td>
 
                     <td>
-                        @Html.ActionLink("\0", "Delete", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-trash fa-3x", @title = "Delete" })
+                        @Html.ActionLink("\0", "Delete", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-trash", @title = "Delete" })
                     </td>
                 }
             }
