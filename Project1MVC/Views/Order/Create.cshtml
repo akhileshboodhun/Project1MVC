@@ -46,23 +46,6 @@
             @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "Id", "DisplayName"), new { @class = "form-control", @id = "equipmentSelect" })
         </div>
     </div>
-    @*<div class="form-group">
-            <label class="control-label col-md-2">Equipments</label>
-            <div class="col-md-10">
-                <select id="equipmentSelect" class="form-control">
-                    <option value="">--SELECT EQUIPMENT--</option>
-                    @foreach (var item in ViewBag.EquipmentsList)
-                    {
-                        <option value="@item.Id">@item.DisplayName()</option>
-                    }
-                </select>
-            </div>
-        </div>*@
-
-    @*<div class="form-group">
-            <label class="control-label col-md-2">Quantity</label>
-            <input id="equipmentQty" class=" form-control col-md-10" type="number" />
-        </div>*@
 
     <div class="form-group">
         @Html.Label("Quantity", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -71,23 +54,32 @@
         </div>
     </div>
 
-    @*<div class="form-group">
-            <label class="control-label col-md-2">Unit Price</label>
-            <input id="unitPrice" class=" form-control col-md-10" type="number" />
-            <button class="btn col-md-2" id="addEquipmentBtn" style="margin-left: 2px;" type="button">Add</button>
-        </div>*@
-
-<div class="form-group">
-    @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-8">
-        @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
+    <div class="form-group">
+        @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-8">
+            @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
+        </div>
+        <div class="col-md-2">
+            <button class="btn" id="addEquipmentBtn" type="button">Add</button>
+        </div>
     </div>
-    <div class="col-md-2">
-        <button class="btn" id="addEquipmentBtn" type="button">Add</button>
-    </div>
-</div>
 
-    <div id="addedEquipments"></div>
+    <table id="addedEquipments" class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Equipment")
+            </th>
+            <th>
+                @Html.DisplayName("Quantity")
+            </th>
+            <th>
+                @Html.DisplayName("Unit Price (Rs)")
+            </th>
+            <th></th>
+        </tr>
+    </table>
+
+    <hr/>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -104,50 +96,82 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
+<script>
         const addEquipBtn = document.querySelector("#addEquipmentBtn");
         const addedEquipmentsSection = document.querySelector("#addedEquipments");
         const equipmentSelectEl = document.querySelector("#equipmentSelect");
         const equipmentQuantityEl = document.querySelector("#equipmentQty");
         const unitPriceEl = document.querySelector("#unitPrice");
-        //const submitBtn = document.querySelector("#submitBtn");
         const form = document.querySelector("form");
-        const equipmentsData = [];
+        let equipmentsData = [];
 
         addEquipBtn.addEventListener("click", () => {
             const equipmentSelectedText = equipmentSelectEl.options[equipmentSelectEl.selectedIndex].text
             const equipmentQty = +equipmentQuantityEl.value;
             const unitPrice = +unitPriceEl.value;
-            console.log(equipmentQty);
-            if (equipmentSelectEl.value != "" && equipmentQty > 0 && unitPrice > 0)
+            if (equipmentSelectEl.value == "") {
+                alert("Please select an equipment");
+            }
+            else if (equipmentQty <= 0) {
+                alert("Please enter a valid quantity");
+            }
+            else if (unitPrice <= 0) {
+                alert("Please enter a valid unit price");
+            }
+            else if (equipmentsData.some(equipment => equipment.equipmentId == +equipmentSelectEl.value)) {
+                alert("This equipment has already been added. Add another one");
+                clearFields();
+            }
+            else
             {
                 addedEquipmentsSection.innerHTML += `
-                                                <div>
-                                                    <p>
-                                                        <span>${equipmentSelectedText}</span>
-                                                        <span>${equipmentQty}</span>
-                                                        <span>${unitPrice}</span>
-                                                    </p>
-                                                </div>
+                                                        <tr>
+                                                            <td>
+                                                               ${equipmentSelectedText}
+                                                            </td>
+                                                            <td>
+                                                               ${equipmentQty}
+                                                            </td>
+                                                            <td>
+                                                                ${unitPrice}
+                                                            </td>
+                                                            <td>
+                                                                <button data-id="${equipmentSelectEl.value}" class="btn btn-danger remove-btn" type="button">Remove</button>
+                                                            </td>
+                                                        </tr>
                                                 `;
                 equipmentsData.push({
                     equipmentId: +equipmentSelectEl.value,
                     qty: equipmentQty,
                     unitPrice: unitPrice
                 })
-                equipmentSelectEl.remove(equipmentSelectEl.selectedIndex);
-                equipmentSelectEl.value = "";
-                equipmentQuantityEl.value = "";
-                unitPriceEl.value = "";
+
+                clearFields();
+
+                const removeBtns = document.querySelectorAll(".remove-btn");
+
+                removeBtns.forEach(removeBtn => {
+                    removeBtn.addEventListener("click", (e) => {
+                        const target = e.target;
+                        equipmentsData = equipmentsData.filter(equipment => equipment.equipmentId != +target.dataset.id);
+                        const row = target.parentElement.parentElement;
+                        row.remove();
+                    })
+                });
             }
         })
+
+        function clearFields() {
+            equipmentSelectEl.value = "";
+            equipmentQuantityEl.value = "";
+            unitPriceEl.value = "";
+        }
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
             const supplier = document.querySelector("#SupplierId").value;
             const orderDate = document.querySelector("#OrderDate").value;
             const isOrderCompleted = document.querySelector("#IsOrderComplete").checked;
-            //bool isOrderComplete, DateTime orderDate, int supplierId
             const orderData = {
                 isOrderComplete: isOrderCompleted,
                 orderDate,
@@ -178,5 +202,5 @@
             }
         })
 
-    </script>
+</script>
 }
