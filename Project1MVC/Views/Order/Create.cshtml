@@ -77,17 +77,35 @@
             <button class="btn col-md-2" id="addEquipmentBtn" style="margin-left: 2px;" type="button">Add</button>
         </div>*@
 
-<div class="form-group">
-    @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
-    <div class="col-md-8">
-        @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
+    <div class="form-group">
+        @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-8">
+            @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
+        </div>
+        <div class="col-md-2">
+            <button class="btn" id="addEquipmentBtn" type="button">Add</button>
+        </div>
     </div>
-    <div class="col-md-2">
-        <button class="btn" id="addEquipmentBtn" type="button">Add</button>
-    </div>
-</div>
 
-    <div id="addedEquipments"></div>
+    @*<div id="addedEquipments">
+
+    </div>*@
+
+    <table id="addedEquipments" class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Equipment")
+            </th>
+            <th>
+                @Html.DisplayName("Quantity")
+            </th>
+            <th>
+                @Html.DisplayName("Unit Price (Rs)")
+            </th>
+        </tr>
+    </table>
+
+    <hr/>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -104,13 +122,12 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
+<script>
         const addEquipBtn = document.querySelector("#addEquipmentBtn");
         const addedEquipmentsSection = document.querySelector("#addedEquipments");
         const equipmentSelectEl = document.querySelector("#equipmentSelect");
         const equipmentQuantityEl = document.querySelector("#equipmentQty");
         const unitPriceEl = document.querySelector("#unitPrice");
-        //const submitBtn = document.querySelector("#submitBtn");
         const form = document.querySelector("form");
         const equipmentsData = [];
 
@@ -122,13 +139,17 @@
             if (equipmentSelectEl.value != "" && equipmentQty > 0 && unitPrice > 0)
             {
                 addedEquipmentsSection.innerHTML += `
-                                                <div>
-                                                    <p>
-                                                        <span>${equipmentSelectedText}</span>
-                                                        <span>${equipmentQty}</span>
-                                                        <span>${unitPrice}</span>
-                                                    </p>
-                                                </div>
+                                                        <tr>
+                                                            <td>
+                                                               ${equipmentSelectedText}
+                                                            </td>
+                                                            <td>
+                                                               ${equipmentQty}
+                                                            </td>
+                                                            <td>
+                                                                ${unitPrice}
+                                                            </td>
+                                                        </tr>
                                                 `;
                 equipmentsData.push({
                     equipmentId: +equipmentSelectEl.value,
@@ -178,5 +199,5 @@
             }
         })
 
-    </script>
+</script>
 }
