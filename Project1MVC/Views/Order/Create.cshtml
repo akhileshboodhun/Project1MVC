@@ -110,22 +110,42 @@
             const equipmentQty = +equipmentQuantityEl.value;
             const unitPrice = +unitPriceEl.value;
             if (equipmentSelectEl.value == "") {
-                alert("Please select an equipment");
-                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    title: 'Please add at least one equipment',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
             else if (equipmentQty <= 0) {
-                //alert("Please enter a valid quantity");
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Please enter a valid quantity!',
+                    showConfirmButton: false,
+                    timer: 1500
                 });
             }
             else if (unitPrice <= 0) {
-                alert("Please enter a valid unit price");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    title: 'Please enter a valid price',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
+
             else if (equipmentsData.some(equipment => equipment.equipmentId == +equipmentSelectEl.value)) {
-                alert("This equipment has already been added. Add another one");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    title: 'This equipment has already been added. Add another one',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
                 clearFields();
             }
             else
@@ -184,7 +204,13 @@
                 supplierId: supplier
             }
             if (equipmentsData.length < 1) {
-                alert("Please add at least one equipment");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    title: 'Please add at least one equipment',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
             else
             {
