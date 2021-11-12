@@ -23,48 +23,50 @@ namespace Project1MVC.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(FormCollection fc)
         {
-            int _pageNumber;
-            int _pageSize;
-            string _sortBy;
-            string _sortOrder;
+            int pageNumber;
+            int pageSize;
+            string sortBy;
+            string sortOrder;
 
             if (fc["pageNumber"] != null && fc["pageNumber"].All(Char.IsDigit))
             {
-                _pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
+                pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
             }
             else
             {
-                _pageNumber = 1;
+                pageNumber = 1;
             }
 
             if (fc["pageSize"] != null && fc["pageSize"].All(Char.IsDigit))
             {
-                _pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
+                pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
             }
             else
             {
-                _pageSize = ServicesHelper.DefaultPageSize;
+                pageSize = ServicesHelper.DefaultPageSize;
             }
             
-             _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
-             _sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
+            sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
+            sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
+
+            int equipmentsCount = equipmentService.GetCount();
+            int pageCount = equipmentsCount / pageSize;
+            pageCount = pageCount < 1 ? 1 : pageCount;
+            pageNumber = (equipmentsCount - (pageNumber * pageSize)) <= 0 ? 1 : pageNumber;
 
             IList<string> cols = new List<string>();
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(_pageNumber, _pageSize, cols, _sortBy, _sortOrder);
-            
-            int equipmentsCount = equipmentService.GetCount();
-            int pageCount = equipmentsCount / _pageSize;
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
 
-            ViewBag.pageNumber = _pageNumber;
-            ViewBag.pageSize = _pageSize;
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.pageSize = pageSize;
             ViewBag.pageCount = pageCount;
 
             ViewBag.displayPrimaryColumn = false;
             ViewBag.displayCols = cols;
 
-            ViewBag.sortBy = _sortBy;
-            ViewBag.sortOrder = _sortOrder;
-            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(_sortBy, _sortOrder);
+            ViewBag.sortBy = sortBy;
+            ViewBag.sortOrder = sortOrder;
+            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
             
             return View(equipments);
         }
