@@ -62,7 +62,7 @@ namespace Project1MVC.Services
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "")
+        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", string complexFilterString = "")
         {
             int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
             int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
@@ -73,7 +73,9 @@ namespace Project1MVC.Services
             IList<string> _cols = cols ?? ServicesHelper.GetColumns<Equipment>();
             _cols = ServicesHelper.SanitizeColumns<Equipment>(_cols);
 
-            return equipmentRepo.GetPaginatedList(_cols, _pageNumber, _pageSize, _sortBy, _sortOrder);
+            IList<Filter> _filters = Filter.FromComplexString(complexFilterString);
+
+            return equipmentRepo.GetPaginatedList(_cols, _pageNumber, _pageSize, _sortBy, _sortOrder, _filters);
         }
 
         public bool Update(Equipment obj)
