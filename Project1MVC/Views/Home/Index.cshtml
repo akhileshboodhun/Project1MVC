@@ -71,31 +71,35 @@
             <p class="item-title">Employees</p>
             <p class="item-desc">Create, Edit, View and Delete Employees</p>
         </div>
-        <div class="item" onclick="window.location.href='/Users'">
-            <i class="fa far fa-user fa-2x"></i>
-            <p class="item-title">Users</p>
-            <p class="item-desc">Create, Edit, View and Delete Users</p>
-        </div>
-        <div class="item" onclick="window.location.href='/Equipment'">
-            <i class="fa fas fa-laptop fa-2x"></i>
-            <p class="item-title">Equipment</p>
-            <p class="item-desc">Create, Edit, View and Delete Equipment</p>
-        </div>
-        <div class="item" onclick="window.location.href='/UserRoles'">
-            <i class="fa far fa-id-badge fa-2x"></i>
-            <p class="item-title">Roles</p>
-            <p class="item-desc">Create, Edit, View and Delete Roles</p>
-        </div>
-        <div class="item" onclick="window.location.href='/Supplier'">
-            <i class="fa fas fa-truck fa-2x"></i>
-            <p class="item-title">Supplier</p>
-            <p class="item-desc">Create, Edit, View and Delete Supplier</p>
-        </div>
-        <div class="item" onclick="window.location.href='/Order'">
-            <i class="fa fas fa-shopping-cart fa-2x"></i>
-            <p class="item-title">Orders</p>
-            <p class="item-desc">Create, Edit, View and Delete Order</p>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="item" onclick="window.location.href='/Users'">
+                <i class="fa far fa-user fa-2x"></i>
+                <p class="item-title">Users</p>
+                <p class="item-desc">Create, Edit, View and Delete Users</p>
+            </div>
+
+            <div class="item" onclick="window.location.href='/Equipment'">
+                <i class="fa fas fa-laptop fa-2x"></i>
+                <p class="item-title">Equipment</p>
+                <p class="item-desc">Create, Edit, View and Delete Equipment</p>
+            </div>
+            <div class="item" onclick="window.location.href='/UserRoles'">
+                <i class="fa far fa-id-badge fa-2x"></i>
+                <p class="item-title">Roles</p>
+                <p class="item-desc">Create, Edit, View and Delete Roles</p>
+            </div>
+            <div class="item" onclick="window.location.href='/Supplier'">
+                <i class="fa fas fa-truck fa-2x"></i>
+                <p class="item-title">Supplier</p>
+                <p class="item-desc">Create, Edit, View and Delete Supplier</p>
+            </div>
+            <div class="item" onclick="window.location.href='/Order'">
+                <i class="fa fas fa-shopping-cart fa-2x"></i>
+                <p class="item-title">Orders</p>
+                <p class="item-desc">Create, Edit, View and Delete Order</p>
+            </div>
+        }
         <div class="item" onclick="window.location.href='/EquipmentsInStock'">
             <i class="fa fas fa-tasks fa-2x"></i>
             <p class="item-title">Current Stock Report</p>
