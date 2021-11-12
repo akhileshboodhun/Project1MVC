@@ -33,7 +33,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [Id], [Brand], [Model], [OrderDate], [IsOrderComplete], [UnitPrice], [Qty], [NetPrice], [SupplierName] FROM [FutureStockView];";
+                    string sql = "SELECT [Id], [Brand], [Model], [OrderDate], [UnitPrice], [Qty], [NetPrice], [SupplierName] FROM [FutureStockView];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -45,7 +45,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new FutureStock(reader["Id"].ToInt(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
+                                list.Add(new FutureStock(reader["Id"].ToInt(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
                             }
                         }
 

@@ -10,13 +10,12 @@ namespace Project1MVC.Models
     {
         public FutureStock() { }
 
-        public FutureStock(int id, string brand, string model, DateTime orderDate, bool isOrderComplete, double unitPrice, int qty, double netPrice, string supplierName)
+        public FutureStock(int id, string brand, string model, DateTime orderDate, double unitPrice, int qty, double netPrice, string supplierName)
         {
             this.Id = id;
             this.Brand = brand;
             this.Model = model;
             this.OrderDate = orderDate;
-            this.IsOrderComplete = isOrderComplete;
             this.UnitPrice = unitPrice;
             this.Qty = qty;
             this.NetPrice = netPrice;
@@ -29,8 +28,6 @@ namespace Project1MVC.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
-        [Display(Name = "Completed")]
-        public bool IsOrderComplete { get; set; }
         [Display(Name = "Unit Price")]
         public double  UnitPrice { get; set; }
         [Display(Name = "Quantity")]
