@@ -15,8 +15,15 @@ namespace Project1MVC.Services
 {
     public static class ServicesHelper
     {
-        public static readonly int DefaultPageSize = 2; // TODO: set this to a higher value after testing
         public static readonly int DefaultPageIncrement = 3;
+
+        public static int DefaultPageSize
+        {
+            get
+            {
+                return GetPageSizeList()[0];
+            }
+        }
 
         public static string SanitizeSortOrder(string sortOrder)
         {
@@ -68,6 +75,12 @@ namespace Project1MVC.Services
             }
 
             return dict;
+        }
+
+        public static IList<int> GetPageSizeList()
+        {
+            return new List<int>()
+            {2, 4, 10, 25, 50, 100, 250, 500, 1000};
         }
 
         public static IList<string> SanitizeColumns<T>(IList<string> cols)

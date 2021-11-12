@@ -25,9 +25,29 @@
 <p>
     @Html.ActionLink("Add New", "Add")
 </p>
+
+<div style="float: right; margin-bottom: 20px; display: flex; align-items: center;">
+    <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
+        @{
+            foreach (int pageSize in ServicesHelper.GetPageSizeList())
+            {
+                string selected = "";
+
+                if (pageSize == ViewBag.pageSize)
+                {
+                    selected = " selected";
+                }
+
+                <option value="@pageSize" @selected>@pageSize</option>
+            }
+         }
+    </select>
+    <p style="vertical-align: middle; margin: 5px;">records per page</p>
+</div>
+
 <table class="table">
     <tr>
-        @{ 
+        @{
             foreach (string col in ViewBag.displayCols)
             {
                 <th>
@@ -40,7 +60,7 @@
                         @columnText
                     </a>
                 </th>
-            }
+                        }
         }
         <th></th>
     </tr>
@@ -160,4 +180,14 @@
         document.getElementById('formIndexSortOrderField').value = sortOrder;
         document.getElementById('formIndex').submit();
     }
+
+    @{
+        string sortBy = $"{ViewBag.sortBy}";
+        string sortOrder = $"{ViewBag.sortOrder}";
+        int pageNumber = ViewBag.pageNumber;
+    }
+
+    document.getElementById('selectPageSize').addEventListener('change', function () {
+        goIndex(@{@pageNumber}, this.value, '@{@sortBy}', '@{@sortOrder}');
+    });
 </script>
