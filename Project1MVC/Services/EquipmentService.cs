@@ -64,11 +64,8 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "")
         {
-            int _pageNumber = pageNumber ?? 1;
-            _pageNumber = _pageNumber > 0 ? _pageNumber : 1;
-
-            int _pageSize = pageSize ?? ServicesHelper.DefaultPageSize;
-            _pageSize = _pageSize > 0 ? _pageSize : ServicesHelper.DefaultPageSize;
+            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
+            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
 
             string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
             string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);

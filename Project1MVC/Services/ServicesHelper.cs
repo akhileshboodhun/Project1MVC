@@ -67,6 +67,18 @@ namespace Project1MVC.Services
             return _cols;
         }
 
+        public static int SanitizePageNumber(int? pageNumber)
+        {
+            int _pageNumber = pageNumber ?? 1;
+            return _pageNumber > 0 ? _pageNumber : 1;
+        }
+
+        public static int SanitizePageSize(int? pageSize)
+        {
+            int _pageSize = pageSize ?? DefaultPageSize;
+            return _pageSize > 0 ? _pageSize : DefaultPageSize;
+        }
+
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
         {
             IList<string> _cols = cols ?? GetColumns<T>();

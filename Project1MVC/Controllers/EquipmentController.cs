@@ -23,9 +23,18 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
-            IList<string> cols = new List<string>();
+            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
+            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
 
-            var equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
+            IList<string> cols = new List<string>();
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(_pageNumber, _pageSize, cols, sortBy, sortOrder);
+            
+            int equipmentsCount = equipmentService.GetCount();
+            int pageCount = equipmentsCount / _pageSize;
+
+            ViewBag.pageNumber = _pageNumber;
+            ViewBag.pageSize = _pageSize;
+            ViewBag.pageCount = pageCount;
 
             ViewBag.displayPrimaryColumn = false;
             ViewBag.displayCols = cols;
