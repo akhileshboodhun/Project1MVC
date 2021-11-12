@@ -17,6 +17,10 @@ namespace Project1MVC
             bundles.Add(new ScriptBundle("~/bundles/ParticlesJS").Include(
                         "~/Scripts/ParticlesJS/particles*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jsPDF").Include(
+                        "~/Scripts/jsPDF/jspdf.min.js",
+                        "~/Scripts/jsPDF/jspdf.plugin.autotable.min.js"));
+
 
 
 

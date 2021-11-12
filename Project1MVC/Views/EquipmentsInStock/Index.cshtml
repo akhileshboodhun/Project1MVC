@@ -3,10 +3,9 @@
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Equipments In Stock</h2>
 
-<table class="table">
+<table class="table" id="simpleTable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Id)
@@ -28,27 +27,39 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Brand)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Model)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CurrentStockCount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReStockThreshold)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentStockCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReStockThreshold)
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+<input type="button" class="btn btn-primary" onclick="generate()" value="Export To PDF" />
+<script type="text/javascript">
+    function generate() {
+        var doc = new jsPDF('p', 'pt', 'letter');
+        doc.autoTable({
+            html: '.table'
+        });
+        doc.save('CurrentStock.pdf');
+    }
+</script>
