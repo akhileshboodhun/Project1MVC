@@ -60,7 +60,7 @@ namespace Project1MVC.Services
             return $"{{[{ColumnName}],[{SearchValue1}],[{SearchValue2}],[{FilterType}]}}";
         }
 
-        public Filter FromString(string filterString)
+        public static Filter FromString(string filterString)
         {
             // TODO: check if startswith and endswith { and } respectively
             List<string> list = filterString.TrimStart('{').TrimEnd('}').Split(',').ToList();
@@ -74,6 +74,18 @@ namespace Project1MVC.Services
 
             // TODO: check if enum is valid
             return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
+        }
+
+        public static IList<Filter> FromComplexString(string complexString)
+        {
+            IList<Filter> list = new List<Filter>();
+                
+            foreach(string filter in complexString.Split(','))
+            {
+                list.Add(Filter.FromString(filter));
+            }
+
+            return list;
         }
     }
 }
