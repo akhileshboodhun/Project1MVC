@@ -26,61 +26,97 @@
     @Html.ActionLink("Add New", "Add")
 </p>
 
-<div style="float: right; margin-bottom: 20px; display: flex; align-items: center;">
-    <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
-        @{
-            foreach (int pageSize in ServicesHelper.GetPageSizeList())
-            {
-                string selected = "";
+<div style="margin: 2em auto;">
+    <div style="float: left;">
+        <div syle="padding: 2em auto;">
+            <label>Type: </label>
+            <input type="text" placeholder="Type" class="form-control search mb-0" style="margin-left: 1em;" />
+        </div>
 
-                if (pageSize == ViewBag.pageSize)
+        <div syle="padding: 2em auto;">
+            <label>Brand: </label>
+            <input type="text" placeholder="Brand" class="form-control search mb-0" style="margin-left: 1em;" />
+        </div>
+
+        <div syle="padding: 2em auto;">
+            <label>Model: </label>
+            <input type="text" placeholder="Model" class="form-control search mb-0" style="margin-left: 1em;" />
+        </div>
+
+        <div syle="padding: 2em auto;">
+            <label>ReStock Threshold: </label>
+            <input type="text" placeholder="ReStock Threshold" class="form-control search mb-0" style="margin-left: 1em;" />
+        </div>
+
+        <button type="button" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+            </svg>
+            Filter
+        </button>
+    </div>
+
+    <div style="float: right; display: flex; align-items: center;">
+        <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
+            @{
+                foreach (int pageSize in ServicesHelper.GetPageSizeList())
                 {
-                    selected = " selected";
-                }
+                    string selected = "";
 
-                <option value="@pageSize" @selected>@pageSize</option>
+                    if (pageSize == ViewBag.pageSize)
+                    {
+                        selected = " selected";
+                    }
+
+                    <option value="@pageSize" @selected>@pageSize</option>
+                }
             }
-         }
-    </select>
-    <p style="vertical-align: middle; margin: 5px;">records per page</p>
+        </select>
+        <p style="vertical-align: middle; margin: 5px;">records per page</p>
+    </div>
 </div>
 
-<table class="table">
-    <tr>
-        @{
-            foreach (string col in ViewBag.displayCols)
-            {
-                <th>
-                    @{
-                        string nextSortOrder = ViewBag.nextSortOrders[col];
-                        string columnURL = $"goIndex({ViewBag.pageNumber}, {ViewBag.pageSize}, '{col}', '{nextSortOrder}');return false;";
-                        string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
-                    }
-                    <a href="/Equipment/Index" onclick="@columnURL">
-                        @columnText
-                    </a>
-                </th>
-                        }
-        }
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
         <tr>
-            @foreach (string col in ViewBag.displayCols)
-            {
-                <td>
-                    @item[col]
-                </td>
+            @{
+                foreach (string col in ViewBag.displayCols)
+                {
+                    <th>
+                        @{
+                            string nextSortOrder = ViewBag.nextSortOrders[col];
+                            string columnURL = $"goIndex({ViewBag.pageNumber}, {ViewBag.pageSize}, '{col}', '{nextSortOrder}');return false;";
+                            string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
+                        }
+                        <a href="/Equipment/Index" onclick="@columnURL">
+                            @columnText
+                        </a>
+                    </th>
+                }
             }
-            <td>
-                @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" }) |
-                @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
-            </td>
-
+            <th></th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @foreach (string col in ViewBag.displayCols)
+                {
+                    <td>
+                        @item[col]
+                    </td>
+                }
+                <td>
+                    @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" }) |
+                    @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 <nav aria-label="Page navigation example">
