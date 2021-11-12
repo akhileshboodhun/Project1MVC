@@ -68,10 +68,10 @@ namespace Project1MVC.Services
             // TODO: check if list.count == 4
             // TODO: check if if startswith and endswith [ and ] respectively
             string col = list[0].TrimStart('[').TrimEnd(']');
-            string s1 = list[0].TrimStart('[').TrimEnd(']');
-            string s2 = list[0].TrimStart('[').TrimEnd(']');
-            string type = list[0].TrimStart('[').TrimEnd(']');
-
+            string type = list[1].TrimStart('[').TrimEnd(']');
+            string s1 = list[2].TrimStart('[').TrimEnd(']');
+            string s2 = list[3].TrimStart('[').TrimEnd(']');
+            
             // TODO: check if enum is valid
             return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
         }
@@ -80,7 +80,7 @@ namespace Project1MVC.Services
         {
             IList<Filter> list = new List<Filter>();
                 
-            foreach(string filter in complexString.Split(','))
+            foreach(string filter in complexString.Split('|'))
             {
                 list.Add(Filter.FromString(filter));
             }
