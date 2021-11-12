@@ -23,13 +23,8 @@ namespace Project1MVC.Controllers
         [HttpGet]
         public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
         {
-            // TODO: Refactor this into a helper method
-            int _pageNumber = pageNumber ?? 1;
-            _pageNumber = _pageNumber > 0 ? _pageNumber : 1;
-
-            // TODO: refactor into a helper method
-            int _pageSize = pageSize ?? ServicesHelper.DefaultPageSize;
-            _pageSize = _pageSize > 0 ? _pageSize : ServicesHelper.DefaultPageSize;
+            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
+            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
 
             IList<string> cols = new List<string>();
             IList<Equipment> equipments = equipmentService.GetPaginatedList(_pageNumber, _pageSize, cols, sortBy, sortOrder);
