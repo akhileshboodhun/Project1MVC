@@ -307,7 +307,31 @@ namespace Project1MVC.Services
 
             if (filters != null && filters.Count != 0)
             {
-                // "WHERE ((condition1) OR (condition2) OR (condition3)) "
+                StringBuilder sb_where = new StringBuilder();
+                sb_where.Append("WHERE (");
+
+                for (int i = 0; i < filters.Count; i++)
+                {
+                    Filter filter = filters[i];
+                    string filterCol = filter.ColumnName;
+                    string filterS1 = filter.SearchValue1.ToString();
+                    string filterS2 = filter.SearchValue2.ToString();
+
+                    sb_where.Append("(");
+                    sb_where.Append($"{filterCol} ");
+                    string op = filter.FilterType == FilterType.Contains ? 
+                        $"LIKE '%{filterS1}%'" : $"BETWEEN {filterS1} AND {filterS2}";
+                    sb_where.Append(op);
+                    sb_where.Append(")");
+
+                    if (i != filters.Count - 1)
+                    {
+                        sb_where.Append(" OR ");
+                    }
+                }
+
+                sb_where.Append(")");
+                _whereClause = sb_where.ToString();
             }
 
             switch (dbms)
