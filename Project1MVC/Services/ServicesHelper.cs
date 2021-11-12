@@ -296,13 +296,19 @@ namespace Project1MVC.Services
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "")
+        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "", IList<Filter> filters = null)
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
             string _cols = StringifyColumns<T>(cols);
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
+            string _whereClause = "";
+
+            if (filters != null && filters.Count != 0)
+            {
+                // "WHERE ((condition1) OR (condition2) OR (condition3)) "
+            }
 
             switch (dbms)
             {
@@ -310,6 +316,7 @@ namespace Project1MVC.Services
                     sb.Append($"SELECT ");
                     sb.Append($"{_cols} ");
                     sb.Append($"FROM {_table} ");
+                    sb.Append($"{_whereClause} ");
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
@@ -322,9 +329,9 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "")
+        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "", IList<Filter> filters = null)
         {
-            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder);
+            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder, filters);
                     
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
             cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
