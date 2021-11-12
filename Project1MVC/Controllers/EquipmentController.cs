@@ -20,14 +20,37 @@ namespace Project1MVC.Controllers
         }
 
         // GET: Equipments/Index
-        [HttpGet]
-        public ActionResult Index(int? pageNumber, int? pageSize, string sortBy = "", string sortOrder = "")
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
+        public ActionResult Index(FormCollection fc)
         {
-            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
-            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
+            int _pageNumber;
+            int _pageSize;
+            string _sortBy;
+            string _sortOrder;
+
+            if (fc["pageNumber"] != null && fc["pageNumber"].All(Char.IsDigit))
+            {
+                _pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
+            }
+            else
+            {
+                _pageNumber = 1;
+            }
+
+            if (fc["pageSize"] != null && fc["pageSize"].All(Char.IsDigit))
+            {
+                _pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
+            }
+            else
+            {
+                _pageSize = ServicesHelper.DefaultPageSize;
+            }
+            
+             _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
+             _sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
             IList<string> cols = new List<string>();
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(_pageNumber, _pageSize, cols, sortBy, sortOrder);
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(_pageNumber, _pageSize, cols, _sortBy, _sortOrder);
             
             int equipmentsCount = equipmentService.GetCount();
             int pageCount = equipmentsCount / _pageSize;
@@ -38,7 +61,10 @@ namespace Project1MVC.Controllers
 
             ViewBag.displayPrimaryColumn = false;
             ViewBag.displayCols = cols;
-            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
+
+            ViewBag.sortBy = _sortBy;
+            ViewBag.sortOrder = _sortOrder;
+            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(_sortBy, _sortOrder);
             
             return View(equipments);
         }

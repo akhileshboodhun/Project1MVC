@@ -16,16 +16,37 @@ namespace Project1MVC.Services
     public static class ServicesHelper
     {
         public static readonly int DefaultPageSize = 2; // TODO: set this to a higher value after testing
+        public static readonly int DefaultPageIncrement = 3;
 
         public static string SanitizeSortOrder(string sortOrder)
         {
-            return sortOrder.ToLower().StartsWith("de") ? "desc" : "asc";
+            string defaultOrder = "asc";
+
+            if (sortOrder != null)
+            {
+                return sortOrder.ToLower().StartsWith("de") ? "desc" : defaultOrder;
+
+            }
+            else
+            {
+                return defaultOrder;
+            }
         }
 
         public static string SanitizeSortBy<T>(string sortBy)
         {
             IList<string> validCols = GetColumns<T>();
-            return validCols.Contains(sortBy) ? sortBy : GetDefaultColumn<T>();
+            string primaryColumn = GetDefaultColumn<T>();
+
+            if (sortBy != null)
+            {
+                return validCols.Contains(sortBy) ? sortBy : primaryColumn;
+            }
+            else
+            {
+                return primaryColumn;
+            }
+            
         }
 
         public static IDictionary<string, string> GetNextSortParams<T>(string sortBy, string sortOrder)
