@@ -70,6 +70,7 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Return(int UserId, int EquipmentId)
         {
+            bool state = false;
             try
             {
                 // TODO: Add insert logic here
@@ -83,14 +84,15 @@ namespace Project1MVC.Controllers
                                                         assignorId: assignorId);
 
                 var assignEquipmentService = AssignEquipmentService.Instance;
-                assignEquipmentService.Return(equipment);
+                state = assignEquipmentService.Return(equipment);
 
 
-                return RedirectToAction("Index", new { id = UserId });
+                if (state) return Json(equipment);
+                return HttpNotFound();
             }
             catch
             {
-                return RedirectToAction("Index", new { id = UserId });
+                return HttpNotFound();
             }
         }
     }

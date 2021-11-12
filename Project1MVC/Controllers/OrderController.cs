@@ -61,15 +61,17 @@ namespace Project1MVC.Controllers
             OrderWrapper orderWrapper = new OrderWrapper();
             orderWrapper.OrderProp = order;
             orderWrapper.EquipmentOrderProp = equipmentOrder;
+            bool state = false;
             try
             {
                 // TODO: Add insert logic here
-                orderDB.Add(orderWrapper);
-                return RedirectToAction("Index");
+                state = orderDB.Add(orderWrapper);
+                if(state) return Json(orderWrapper);
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
             catch
             {
-                return View();
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
         }
 

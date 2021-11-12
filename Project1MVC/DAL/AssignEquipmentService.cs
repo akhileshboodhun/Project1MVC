@@ -98,7 +98,7 @@ namespace Project1MVC.DAL
                             cmd.Parameters.AddWithValue("@employeeId", equipment.EmployeeId);
                             cmd.Parameters.AddWithValue("@equipmentId", equipment.EquipmentId);
 
-                            if (cmd.ExecuteNonQuery() == 1)
+                            if (cmd.ExecuteNonQuery() >= 1)
                             {
                                 status = true;
                                 Logger.Log($"SUCCESS: {opType} {modelName}");

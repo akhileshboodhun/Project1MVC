@@ -207,11 +207,11 @@
                         });
                         
                     },
-                    error: function (reponse) {
+                    error: function (response) {
                         Swal.fire({
                             position: 'top-end',
-                            icon: 'success',
-                            title: 'Your work has been saved',
+                            icon: 'error',
+                            title: 'Your work could not be saved',
                             showConfirmButton: false,
                             timer: 1500
                         }).then((result) => {

@@ -43,13 +43,37 @@ function ReturnFromList(obj) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            window.location.href = '/EquipmentAssignment/Index/' + userId;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Returned Equipment Successfully.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
         },
         failure: function (response) {
-            window.location.href = '/EquipmentAssignment/Index/' + userId;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Returned Equipment Failed.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
         },
         error: function (response) {
-            window.location.href = '/EquipmentAssignment/Index/' + userId;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Error: Returned Equipment Failed.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
         }
     });
 }
