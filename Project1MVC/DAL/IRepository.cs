@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Project1MVC.Models;
+using Project1MVC.Services;
 
 namespace Project1MVC.DAL
 {
@@ -15,7 +16,7 @@ namespace Project1MVC.DAL
 
         IList<T> GetAll();
 
-        IList<T> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder);
+        IList<T> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null);
 
         int GetCount();
 

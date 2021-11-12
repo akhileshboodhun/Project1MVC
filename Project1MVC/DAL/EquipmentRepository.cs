@@ -168,13 +168,13 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null)
         {
             List<Equipment> list = new List<Equipment>();
             
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, pageNumber, pageSize, sortBy, sortOrder);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, pageNumber, pageSize, sortBy, sortOrder, filters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
