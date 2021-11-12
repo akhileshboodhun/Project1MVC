@@ -165,6 +165,7 @@
     <Compile Include="Services\CryptographyProcessor.cs" />
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
+    <Compile Include="Services\FilterType.cs" />
     <Compile Include="Services\IEquipmentService.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="DAL\SupplierDAL.cs" />
