@@ -54,5 +54,26 @@ namespace Project1MVC.Services
         {
             get; private set;
         }
+
+        public override string ToString()
+        {
+            return $"{{[{ColumnName}],[{SearchValue1}],[{SearchValue2}],[{FilterType}]}}";
+        }
+
+        public Filter FromString(string filterString)
+        {
+            // TODO: check if startswith and endswith { and } respectively
+            List<string> list = filterString.TrimStart('{').TrimEnd('}').Split(',').ToList();
+
+            // TODO: check if list.count == 4
+            // TODO: check if if startswith and endswith [ and ] respectively
+            string col = list[0].TrimStart('[').TrimEnd(']');
+            string s1 = list[0].TrimStart('[').TrimEnd(']');
+            string s2 = list[0].TrimStart('[').TrimEnd(']');
+            string type = list[0].TrimStart('[').TrimEnd(']');
+
+            // TODO: check if enum is valid
+            return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
+        }
     }
 }
