@@ -305,6 +305,7 @@ namespace Project1MVC.Services
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = "";
 
+            // TODO: Refactor this into GenerateWhereClauseFromFilters()
             if (filters != null && filters.Count != 0)
             {
                 StringBuilder sb_where = new StringBuilder();
@@ -321,6 +322,10 @@ namespace Project1MVC.Services
                     sb_where.Append($"{filterCol} ");
                     string op = filter.FilterType == FilterType.Contains ? 
                         $"LIKE '%{filterS1}%'" : $"BETWEEN {filterS1} AND {filterS2}";
+                    // if s2 == null, then find col >= s1
+                    // if s1 == null, then find col <= s2
+                    // if s1 and s2 exists, then find BETWEEN s1 and s2
+                    // if both s1 and s2 are null, then discard filter
                     sb_where.Append(op);
                     sb_where.Append(")");
 
