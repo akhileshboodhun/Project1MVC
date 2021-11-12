@@ -144,6 +144,7 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderWrapper.cs" />
     <Compile Include="Models\AssignedEquipment.cs" />
+    <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Services\CryptographyProcessor.cs" />
