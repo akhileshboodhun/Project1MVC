@@ -225,24 +225,27 @@
 
     function goIndex(pageNumber, pageSize, sortBy, sortOrder) {
 
-        let dict = {};
+        let arr = [];
 
         document.querySelectorAll('[id^="filter"]').forEach((element) =>
         {
-            let key = element.id.replace(/^(filter)/, "");
+            let key = element.id.replace(/^(filter)/, "").slice(0, -2);
             let value = element.value.replace("|", "");
-            dict[key] = value;
+            let type = element.classList.contains("filter-range-min") | element.classList.contains("filter-range-max") ? "Range" : "Contains";
+            arr.push(new Array(key, value, type));
         });
-
-        // sort filter_inputs in ascending order
-        // for each item in filter_inputs, get its value and remove | (pipe) character from the input values
-        // Store id, value in an array/dictionary
-        // foreach 2 entries in the array/dictionary,
-        //      1. Remove "filter" in front and "S1" at the end for 1st element's first column
-        //      2. Remove "filter" in front and "S2" at the end for 2nd element's first column
 
         let filterString = "";
         let orFilters = "false";
+
+        for (let i = 0; i < arr.length; i = i + 2)
+        {
+            let arr_s1 = arr[i];
+            let arr_s2 = arr[i + 1];
+
+            let filter = `{"${arr_s1[0]}", "${arr_s1[2]}", "${arr_s1[1]}", "${arr_s2[1]}"}`;
+            filterString += filter + "|";
+        }
 
         document.getElementById('formIndexPageNumberField').value = pageNumber;
         document.getElementById('formIndexPageSizeField').value = pageSize;
