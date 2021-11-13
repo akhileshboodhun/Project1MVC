@@ -44,11 +44,6 @@ namespace Project1MVC.Controllers
             filterString = fc["filterString"] != null ? fc["filterString"] : filterString;
             orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
 
-            orFilters = false;
-
-            filterString = "{\"CurrentStockCount\", \"Range\", \"30\", \"\"}";
-            filterString += "|{\"ReStockThreshold\", \"Range\", \"10\", \"50\"}";
-
             // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
             int pageCount = equipmentsCount / pageSize;
@@ -57,6 +52,10 @@ namespace Project1MVC.Controllers
 
             IList<string> cols = new List<string>();
             IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filterString, orFilters);
+
+            IList<string> cols_filters = new List<string>()
+            { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
+            ViewBag.filterCols = cols_filters;
 
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;

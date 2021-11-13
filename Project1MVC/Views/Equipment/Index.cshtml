@@ -28,32 +28,29 @@
 
 <div style="margin: 2em auto;">
     <div style="float: left;">
-        <div syle="padding: 2em auto;">
-            <label>Type: </label>
-            <input type="text" placeholder="Type" class="form-control search mb-0" style="margin-left: 1em;" />
-        </div>
+        @{
+            foreach (string col in ViewBag.filterCols)
+            {
+                string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
 
-        <div syle="padding: 2em auto;">
-            <label>Brand: </label>
-            <input type="text" placeholder="Brand" class="form-control search mb-0" style="margin-left: 1em;" />
-        </div>
+                <div class="form-group form-inline">
+                    <label>@columnText: </label>
+                    <input type="text" placeholder="@columnText" id="@{@columnText}S1" class="form-control search mb-0" />
+                </div>
+                <br />
+            }
 
-        <div syle="padding: 2em auto;">
-            <label>Model: </label>
-            <input type="text" placeholder="Model" class="form-control search mb-0" style="margin-left: 1em;" />
-        </div>
-
-        <div syle="padding: 2em auto;">
-            <label>ReStock Threshold: </label>
-            <input type="text" placeholder="ReStock Threshold" class="form-control search mb-0" style="margin-left: 1em;" />
-        </div>
-
-        <button type="button" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-            </svg>
-            Filter
-        </button>
+            if (ViewBag.filterCols.Count != 0)
+            {
+                <button type="button" id="buttonFilter" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                    </svg>
+                    Filter
+                </button>
+                <br /><br />
+            }
+        }
     </div>
 
     <div style="float: right; display: flex; align-items: center;">
