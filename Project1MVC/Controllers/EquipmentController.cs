@@ -31,11 +31,13 @@ namespace Project1MVC.Controllers
             string filterString = "";
             bool orFilters = true;
 
+            // TODO: refactor this into SanitizePageNumber(string)
             if (fc["pageNumber"] != null && fc["pageNumber"].All(char.IsDigit))
             {
                 pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
             }
 
+            // TODO: refactor this into SanitizePageSize(string)
             if (fc["pageSize"] != null && fc["pageSize"].All(char.IsDigit))
             {
                 pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
@@ -44,6 +46,7 @@ namespace Project1MVC.Controllers
             filterString = fc["filterString"] != null ? fc["filterString"] : filterString;
             orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
             // TODO: handle case when orFilters is a string not equal to "true", then set it to false
+            // Use SanitizeOrFilters(string)
 
             // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
@@ -57,6 +60,11 @@ namespace Project1MVC.Controllers
             IList<string> cols_filters = new List<string>()
             { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterCols = cols_filters;
+            
+            // TODO: a dictionary with the value to display in each input boxes
+            // Extract the values from filterString (Write a helper method)
+            // Then, from View, display the values in inputboxes by accessing the Dictionary from ViewBag
+            // ViewBag.filterInputValues = 
 
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;
