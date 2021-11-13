@@ -66,6 +66,11 @@ namespace Project1MVC.Services
 
         public static IList<Filter> FromComplexString(string complexString)
         {
+            if (string.IsNullOrEmpty(complexString))
+            {
+                return null;
+            }
+
             IList<Filter> list = new List<Filter>();
                 
             foreach(string filter in complexString.Split('|'))
