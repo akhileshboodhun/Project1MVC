@@ -192,6 +192,22 @@ namespace Project1MVC.Services
             return name;
         }
 
+        public static bool IsColumnOfTypeString<T>(string columnName)
+        {
+            bool result = false;
+
+            foreach (PropertyInfo info in typeof(T).GetProperties())
+            {
+                if (info.Name == columnName)
+                {
+                    result = info.PropertyType == typeof(string);
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         private static IList<string> FormatList(IList<string> cols, string prefix = "", string suffix = "")
         {
             IList<string> _cols = new List<string>();
