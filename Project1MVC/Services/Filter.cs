@@ -60,7 +60,7 @@ namespace Project1MVC.Services
             string s1 = list[2].Trim();
             string s2 = list[3].Trim();
             
-            if (s1 != "" && s2 != "")
+            if (!(s1 == "" && s2 == ""))
             {
                 // TODO: check if enum is valid
                 return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
