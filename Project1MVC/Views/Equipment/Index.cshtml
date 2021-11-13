@@ -35,7 +35,19 @@
 
                 <div class="form-group form-inline">
                     <label>@columnText: </label>
-                    <input type="text" placeholder="@columnText" id="@{@columnText}S1" class="form-control search mb-0" />
+
+                    @{
+                        if (ServicesHelper.IsColumnOfTypeString<Equipment>(col))
+                        {
+                            <input type="text" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0" />
+                        }
+                        else
+                        {
+                            <input type="text" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0" />
+                            <p> - </p>
+                            <input type="text" placeholder="@columnText" id="filter@{@col}S2" class="form-control search mb-0" />
+                        }
+                    }
                 </div>
                 <br />
             }
