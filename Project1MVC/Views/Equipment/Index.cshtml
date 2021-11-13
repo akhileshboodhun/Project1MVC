@@ -267,7 +267,7 @@
     });
 
     document.getElementById('buttonFilter').addEventListener('click', function() {
-        goIndex(@{@pageNumber}, this.value, '@{@sortBy}', '@{@sortOrder}');
+        goIndex(@{@pageNumber}, @{@ViewBag.pageSize}, '@{@sortBy}', '@{@sortOrder}');
     });
 
     document.querySelectorAll('.filter-range-min, .filter-range-max').forEach((el) =>
