@@ -59,11 +59,13 @@ namespace Project1MVC.Services
             string type = list[1].Trim();
             string s1 = list[2].Trim();
             string s2 = list[3].Trim();
-            
+
+            // TODO: check if enum is valid
+            FilterType _filterType = (FilterType)Enum.Parse(typeof(FilterType), type);
+
             if (!(s1 == "" && s2 == ""))
             {
-                // TODO: check if enum is valid
-                return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
+                return new Filter(col, s1, s2, _filterType);
             }
             else
             {
