@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace Project1MVC.Services
@@ -37,20 +38,27 @@ namespace Project1MVC.Services
 
         public override string ToString()
         {
-            return $"{{[{ColumnName}],[{SearchValue1}],[{SearchValue2}],[{FilterType}]}}";
+            return $"{{\"{ColumnName}\", \"{FilterType}\", \"{SearchValue1}\", \"{SearchValue2}\"}}";
         }
 
         public static Filter FromString(string filterString)
         {
             // TODO: check if startswith and endswith { and } respectively
-            List<string> list = filterString.TrimStart('{').TrimEnd('}').Split(',').ToList();
+            Regex regCSV = new Regex("(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)", RegexOptions.Compiled);
+            List<string> list = new List<string>();
+
+            foreach (Match match in regCSV.Matches(filterString.TrimStart('{').TrimEnd('}')))
+            {
+                string field = match.Value.TrimStart(',').TrimStart('"').TrimEnd('"');
+                list.Add(field.Replace("\"", ""));
+            }
 
             // TODO: check if list.count == 4
             // TODO: check if if startswith and endswith [ and ] respectively
-            string col = list[0].TrimStart('[').TrimEnd(']');
-            string type = list[1].TrimStart('[').TrimEnd(']');
-            string s1 = list[2].TrimStart('[').TrimEnd(']');
-            string s2 = list[3].TrimStart('[').TrimEnd(']');
+            string col = list[0];
+            string type = list[1];
+            string s1 = list[2];
+            string s2 = list[3];
             
             // TODO: check if enum is valid
             return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
