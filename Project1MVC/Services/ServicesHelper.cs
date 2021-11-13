@@ -204,6 +204,69 @@ namespace Project1MVC.Services
             return _cols;
         }
 
+        private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
+        {
+            string whereClause = "";
+            string chain = orFilters ? " OR " : " AND ";
+
+            if (filters != null && filters.Count != 0)
+            {
+                StringBuilder sb_where = new StringBuilder();
+                sb_where.Append("WHERE (");
+
+                for (int i = 0; i < filters.Count; i++)
+                {
+                    Filter filter = filters[i];
+                    string filterCol = filter.ColumnName;
+                    string filterS1 = filter.SearchValue1.Trim();
+                    string filterS2 = filter.SearchValue2.Trim();
+                    string op = "";
+
+                    if (filter.FilterType == FilterType.Contains)
+                    {
+                        op = $"LIKE '%{filterS1}%'";
+                    }
+                    else if (filter.FilterType == FilterType.Range)
+                    {
+                        if (filterS1 != "" && filterS2 != "")
+                        {
+                            op = $"BETWEEN {filterS1} AND {filterS2}";
+                        }
+                        else if (filterS1 != "" && filterS2 == "")
+                        {
+                            op = $">= {filterS1}";
+                        }
+                        else if (filterS1 == "" && filterS2 != "")
+                        {
+                            op = $"<= {filterS2}";
+                        }
+                    }
+
+                    if (op == "")
+                    {
+                        continue;
+                    }
+
+                    sb_where.Append("(");
+                    sb_where.Append($"{filterCol} ");
+                    sb_where.Append(op);
+                    sb_where.Append(")");
+
+                    // TODO: handle case for when previous filter is invalid => we're adding "chain" in 
+                    // advance. => get all ops first in a list, then add chain.
+                    if (i != filters.Count - 1)
+                    {
+                        sb_where.Append(chain);
+                    }
+                }
+
+                sb_where.Append(")");
+                whereClause = sb_where.ToString();
+            }
+
+            return whereClause;
+        }
+
         private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
         {
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
@@ -303,64 +366,7 @@ namespace Project1MVC.Services
             string _cols = StringifyColumns<T>(cols);
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
-            string _whereClause = "";
-            string chain = orFilters ? " OR " : " AND ";
-
-            // TODO: Refactor this into GenerateWhereClauseFromFilters()
-            if (filters != null && filters.Count != 0)
-            {
-                StringBuilder sb_where = new StringBuilder();
-                sb_where.Append("WHERE (");
-
-                for (int i = 0; i < filters.Count; i++)
-                {
-                    Filter filter = filters[i];
-                    string filterCol = filter.ColumnName;
-                    string filterS1 = filter.SearchValue1.Trim();
-                    string filterS2 = filter.SearchValue2.Trim();
-                    string op = "";
-
-                    if (filter.FilterType == FilterType.Contains)
-                    {
-                        op = $"LIKE '%{filterS1}%'";
-                    }
-                    else if(filter.FilterType == FilterType.Range)
-                    {
-                        if (filterS1 != "" && filterS2 != "")
-                        {
-                            op = $"BETWEEN {filterS1} AND {filterS2}";
-                        }
-                        else if (filterS1 != "" && filterS2 == "")
-                        {
-                            op = $">= {filterS1}";
-                        }
-                        else if (filterS1 == "" && filterS2 != "")
-                        {
-                            op = $"<= {filterS2}";
-                        }
-                    }
-
-                    if (op == "")
-                    {
-                        continue;
-                    }
-
-                    sb_where.Append("(");
-                    sb_where.Append($"{filterCol} ");
-                    sb_where.Append(op);
-                    sb_where.Append(")");
-
-                    // TODO: handle case for when previous filter is invalid => we're adding "chain" in 
-                    // advance. => get all ops first in a list, then add chain.
-                    if (i != filters.Count - 1)
-                    {
-                        sb_where.Append(chain);
-                    }
-                }
-
-                sb_where.Append(")");
-                _whereClause = sb_where.ToString();
-            }
+            string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
             switch (dbms)
             {
@@ -368,7 +374,7 @@ namespace Project1MVC.Services
                     sb.Append($"SELECT ");
                     sb.Append($"{_cols} ");
                     sb.Append($"FROM {_table} ");
-                    sb.Append($"{_whereClause} ");
+                    sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
