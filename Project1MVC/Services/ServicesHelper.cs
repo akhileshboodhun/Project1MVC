@@ -234,27 +234,27 @@ namespace Project1MVC.Services
                 {
                     Filter filter = filters[i];
                     string filterCol = filter.ColumnName;
-                    string filterS1 = filter.SearchValue1.Trim();
-                    string filterS2 = filter.SearchValue2.Trim();
+                    string s1 = filter.SearchValue1.Trim();
+                    string s2 = filter.SearchValue2.Trim();
                     string op = "";
 
                     if (filter.FilterType == FilterType.Contains)
                     {
-                        op = $"LIKE '%{filterS1}%'";
+                        op = $"LIKE '%{s1}%'";
                     }
                     else if (filter.FilterType == FilterType.Range)
                     {
-                        if (filterS1 != "" && filterS2 != "")
+                        if (s1 != "" && s2 != "" && s1.All(char.IsDigit) && s2.All(char.IsDigit))
                         {
-                            op = $"BETWEEN {filterS1} AND {filterS2}";
+                            op = $"BETWEEN {s1} AND {s2}";
                         }
-                        else if (filterS1 != "" && filterS2 == "")
+                        else if (s1 != "" && s2 == "" && s1.All(char.IsDigit))
                         {
-                            op = $">= {filterS1}";
+                            op = $">= {s1}";
                         }
-                        else if (filterS1 == "" && filterS2 != "")
+                        else if (s1 == "" && s2 != "" && s2.All(char.IsDigit))
                         {
-                            op = $"<= {filterS2}";
+                            op = $"<= {s2}";
                         }
                     }
 
