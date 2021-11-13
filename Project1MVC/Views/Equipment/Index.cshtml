@@ -44,9 +44,9 @@
                         }
                         else
                         {
-                            <input type="text" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0" />
+                            <input type="number" pattern="[0-9]+" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
                             <p> - </p>
-                            <input type="text" placeholder="@columnText" id="filter@{@col}S2" class="form-control search mb-0" />
+                            <input type="number" pattern="[0-9]+" placeholder="@columnText" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
                         }
                     }
                 </div>
@@ -225,7 +225,14 @@
 
     function goIndex(pageNumber, pageSize, sortBy, sortOrder) {
 
-        const filter_inputs = document.querySelectorAll('[id^="filter"]');
+        let dict = {};
+
+        document.querySelectorAll('[id^="filter"]').forEach((element) =>
+        {
+            let key = element.id.replace(/^(filter)/, "");
+            let value = element.value.replace("|", "");
+            dict[key] = value;
+        });
 
         // sort filter_inputs in ascending order
         // for each item in filter_inputs, get its value and remove | (pipe) character from the input values
@@ -252,11 +259,19 @@
         int pageNumber = ViewBag.pageNumber;
     }
 
-    document.getElementById('selectPageSize').addEventListener('change', function () {
+    document.getElementById('selectPageSize').addEventListener('change', function() {
         goIndex(@{@pageNumber}, this.value, '@{@sortBy}', '@{@sortOrder}');
     });
 
-    document.getElementById('buttonFilter').addEventListener('click', function () {
+    document.getElementById('buttonFilter').addEventListener('click', function() {
         goIndex(@{@pageNumber}, this.value, '@{@sortBy}', '@{@sortOrder}');
+    });
+
+    document.querySelectorAll('.filter-range-min, .filter-range-max').forEach((el) =>
+    {
+        el.addEventListener('input', function()
+        {
+            this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+        });
     });
 </script>
