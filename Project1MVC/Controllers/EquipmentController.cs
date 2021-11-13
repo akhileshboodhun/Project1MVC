@@ -43,6 +43,7 @@ namespace Project1MVC.Controllers
 
             filterString = fc["filterString"] != null ? fc["filterString"] : filterString;
             orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
+            // TODO: handle case when orFilters is a string not equal to "true", then set it to false
 
             // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
