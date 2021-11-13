@@ -296,7 +296,7 @@ namespace Project1MVC.Services
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "", IList<Filter> filters = null)
+        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
@@ -304,6 +304,7 @@ namespace Project1MVC.Services
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = "";
+            string chain = orFilters ? " OR " : " AND ";
 
             // TODO: Refactor this into GenerateWhereClauseFromFilters()
             if (filters != null && filters.Count != 0)
@@ -315,23 +316,45 @@ namespace Project1MVC.Services
                 {
                     Filter filter = filters[i];
                     string filterCol = filter.ColumnName;
-                    string filterS1 = filter.SearchValue1.ToString();
-                    string filterS2 = filter.SearchValue2.ToString();
+                    string filterS1 = filter.SearchValue1.Trim();
+                    string filterS2 = filter.SearchValue2.Trim();
+                    string op = "";
+
+                    if (filter.FilterType == FilterType.Contains)
+                    {
+                        op = $"LIKE '%{filterS1}%'";
+                    }
+                    else if(filter.FilterType == FilterType.Range)
+                    {
+                        if (filterS1 != "" && filterS2 != "")
+                        {
+                            op = $"BETWEEN {filterS1} AND {filterS2}";
+                        }
+                        else if (filterS1 != "" && filterS2 == "")
+                        {
+                            op = $">= {filterS1}";
+                        }
+                        else if (filterS1 == "" && filterS2 != "")
+                        {
+                            op = $"<= {filterS2}";
+                        }
+                    }
+
+                    if (op == "")
+                    {
+                        continue;
+                    }
 
                     sb_where.Append("(");
                     sb_where.Append($"{filterCol} ");
-                    string op = filter.FilterType == FilterType.Contains ? 
-                        $"LIKE '%{filterS1}%'" : $"BETWEEN {filterS1} AND {filterS2}";
-                    // if s2 == null, then find col >= s1
-                    // if s1 == null, then find col <= s2
-                    // if s1 and s2 exists, then find BETWEEN s1 and s2
-                    // if both s1 and s2 are null, then discard filter
                     sb_where.Append(op);
                     sb_where.Append(")");
 
+                    // TODO: handle case for when previous filter is invalid => we're adding "chain" in 
+                    // advance. => get all ops first in a list, then add chain.
                     if (i != filters.Count - 1)
                     {
-                        sb_where.Append(" OR ");
+                        sb_where.Append(chain);
                     }
                 }
 
@@ -358,9 +381,9 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "", IList<Filter> filters = null)
+        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
-            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder, filters);
+            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder, filters, orFilters);
                     
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
             cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);

@@ -23,39 +23,40 @@ namespace Project1MVC.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(FormCollection fc)
         {
-            int pageNumber;
-            int pageSize;
-            string sortBy;
-            string sortOrder;
+            int pageNumber = 1;
+            int pageSize = ServicesHelper.DefaultPageSize;
+            string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
+            string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
-            if (fc["pageNumber"] != null && fc["pageNumber"].All(Char.IsDigit))
+            string filterString = "";
+            bool orFilters = true;
+
+            if (fc["pageNumber"] != null && fc["pageNumber"].All(char.IsDigit))
             {
                 pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
             }
-            else
-            {
-                pageNumber = 1;
-            }
 
-            if (fc["pageSize"] != null && fc["pageSize"].All(Char.IsDigit))
+            if (fc["pageSize"] != null && fc["pageSize"].All(char.IsDigit))
             {
                 pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
             }
-            else
-            {
-                pageSize = ServicesHelper.DefaultPageSize;
-            }
-            
-            sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
-            sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
+            filterString = fc["filterString"] != null ? fc["filterString"] : filterString;
+            orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
+
+            orFilters = false;
+
+            filterString = "{\"CurrentStockCount\", \"Range\", \"30\", \"\"}";
+            filterString += "|{\"ReStockThreshold\", \"Range\", \"10\", \"50\"}";
+
+            // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
             int pageCount = equipmentsCount / pageSize;
             pageCount = pageCount < 1 ? 1 : pageCount;
             pageNumber = (equipmentsCount - (pageNumber * pageSize)) <= 0 ? 1 : pageNumber;
 
             IList<string> cols = new List<string>();
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder);
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filterString, orFilters);
 
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;
