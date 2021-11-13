@@ -55,13 +55,20 @@ namespace Project1MVC.Services
 
             // TODO: check if list.count == 4
             // TODO: check if if startswith and endswith [ and ] respectively
-            string col = list[0];
-            string type = list[1];
-            string s1 = list[2];
-            string s2 = list[3];
+            string col = list[0].Trim();
+            string type = list[1].Trim();
+            string s1 = list[2].Trim();
+            string s2 = list[3].Trim();
             
-            // TODO: check if enum is valid
-            return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
+            if (s1 != "" && s2 != "")
+            {
+                // TODO: check if enum is valid
+                return new Filter(col, s1, s2, (FilterType)Enum.Parse(typeof(FilterType), type));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static IList<Filter> FromComplexString(string complexString)
@@ -72,10 +79,18 @@ namespace Project1MVC.Services
             }
 
             IList<Filter> list = new List<Filter>();
-                
-            foreach(string filter in complexString.Split('|'))
+
+            foreach (string filterString in complexString.Split('|'))
             {
-                list.Add(Filter.FromString(filter));
+                if (!String.IsNullOrEmpty(filterString))
+                {
+                    Filter filter = Filter.FromString(filterString);
+                    
+                    if (filter != null)
+                    {
+                        list.Add(filter);
+                    }
+                }
             }
 
             return list;
