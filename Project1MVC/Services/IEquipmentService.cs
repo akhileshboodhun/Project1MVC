@@ -19,7 +19,7 @@ namespace Project1MVC.Services
 
         IList<Equipment> GetAll();
 
-        IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", string complexFilterString = "", bool orFilters = true);
+        IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true);
 
         bool Update(Equipment obj);
     }
