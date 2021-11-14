@@ -448,6 +448,12 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
+        public static SqlCommand GenerateSqlCommandForGetCount<T>(IDBProvider dbProvider, IList<Filter> filters = null, bool orFilters = true)
+        {
+            string sql = GenerateSqlQueryForGetCount<T>(dbProvider.DBMS, filters, orFilters);
+            return new SqlCommand(sql, dbProvider.Connection);
+        }
+
         private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols = null)
         {
             StringBuilder sb = new StringBuilder();
