@@ -41,9 +41,9 @@ namespace Project1MVC.Services
             return status;
         }
 
-        public int GetCount()
+        public int GetCount(IList<Filter> filters = null, bool orFilters = true)
         {
-            return equipmentRepo.GetCount();
+            return equipmentRepo.GetCount(filters, orFilters);
         }
 
         public Equipment Get(int id)

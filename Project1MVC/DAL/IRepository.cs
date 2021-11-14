@@ -18,7 +18,7 @@ namespace Project1MVC.DAL
 
         IList<T> GetPaginatedList(out int count, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true);
 
-        int GetCount();
+        int GetCount(IList<Filter> filters = null, bool orFilters = true);
 
         bool Update(T obj);
     }

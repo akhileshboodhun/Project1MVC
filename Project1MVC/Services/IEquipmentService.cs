@@ -11,7 +11,7 @@ namespace Project1MVC.Services
 
         bool Add(Equipment obj);
 
-        int GetCount();
+        int GetCount(IList<Filter> filters = null, bool orFilters = true);
 
         Equipment Get(int id);
 
