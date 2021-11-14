@@ -29,8 +29,6 @@ namespace Project1MVC.Controllers
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
             string complexFilterString = fc["complexFilterString"] != null ? fc["complexFilterString"] : "";
-            IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
-
             bool orFilters = (fc["orFilters"] != null && fc["orFilters"].ToString().ToLower() == "true") ? true : false;
 
             // TODO: perform this block inside EquipmentRepository 
@@ -41,9 +39,10 @@ namespace Project1MVC.Controllers
 
             // TODO: pass in actual list of columns to be displayed
             IList<string> cols = new List<string>();
+            IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
             IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
 
-            ViewBag.filterCols = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
+            ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
 
             ViewBag.pageNumber = pageNumber;

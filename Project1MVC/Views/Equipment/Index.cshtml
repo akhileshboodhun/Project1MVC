@@ -29,7 +29,7 @@
 <div style="margin: 2em auto;">
     <div style="float: left;">
         @{
-            foreach (string col in ViewBag.filterCols)
+            foreach (string col in ViewBag.filterOptions)
             {
                 string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
 
@@ -59,7 +59,7 @@
                 <br />
             }
 
-            if (ViewBag.filterCols.Count != 0)
+            if (ViewBag.filterOptions.Count != 0)
             {
                 // Display checkbox here whether to OR or AND filters
 
