@@ -28,7 +28,7 @@ namespace Project1MVC.Controllers
             string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
-            string filterString = "";
+            string complexFilterString = "";
             bool orFilters = true;
 
             // TODO: refactor this into SanitizePageNumber(string)
@@ -43,7 +43,9 @@ namespace Project1MVC.Controllers
                 pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
             }
 
-            filterString = fc["filterString"] != null ? fc["filterString"] : filterString;
+            complexFilterString = fc["complexFilterString"] != null ? fc["complexFilterString"] : complexFilterString;
+            IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
+
             orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
             // TODO: handle case when orFilters is a string not equal to "true", then set it to false
             // Use SanitizeOrFilters(string)
@@ -55,16 +57,12 @@ namespace Project1MVC.Controllers
             pageNumber = (equipmentsCount - (pageNumber * pageSize)) <= 0 ? 1 : pageNumber;
 
             IList<string> cols = new List<string>();
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filterString, orFilters);
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
 
             IList<string> cols_filters = new List<string>()
             { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterCols = cols_filters;
-            
-            // TODO: a dictionary with the value to display in each input boxes
-            // Extract the values from filterString (Write a helper method)
-            // Then, from View, display the values in inputboxes by accessing the Dictionary from ViewBag
-            // ViewBag.filterInputValues = 
+            ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
 
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;

@@ -37,16 +37,22 @@
                     <label>@columnText: </label>
 
                     @{
+
+                        IDictionary<string, string> dict = ViewBag.filterInputValues;
+
+                        string valS1 = ViewBag.filterInputValues[$"{col}S1"];
+                        string valS2 = ViewBag.filterInputValues[$"{col}S2"];
+
                         if (ServicesHelper.IsColumnOfTypeString<Equipment>(col))
                         {
-                            <input type="text" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0" />
-                            <input type="text" placeholder="@columnText" id="filter@{@col}S2" class="form-control search mb-0" style="display: none;" />
+                            <input type="text" placeholder="@columnText" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0" />
+                            <input type="text" placeholder="@columnText" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0" style="display: none;" />
                         }
                         else
                         {
-                            <input type="number" pattern="[0-9]+" placeholder="@columnText" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
+                            <input type="number" pattern="[0-9]+" placeholder="@columnText" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
                             <p> - </p>
-                            <input type="number" pattern="[0-9]+" placeholder="@columnText" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
+                            <input type="number" pattern="[0-9]+" placeholder="@columnText" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
                         }
                     }
                 </div>
@@ -208,7 +214,7 @@
     @Html.Hidden("pageSize", null, new { id = "formIndexPageSizeField" })
     @Html.Hidden("sortBy", null, new { id = "formIndexSortByField" })
     @Html.Hidden("sortOrder", null, new { id = "formIndexSortOrderField" })
-    @Html.Hidden("filterString", null, new { id = "formIndexFilterStringField" })
+    @Html.Hidden("complexFilterString", null, new { id = "formIndexComplexFilterStringField" })
     @Html.Hidden("orFilters", null, new { id = "formIndexOrFiltersField" })
 }
 
@@ -235,7 +241,7 @@
             arr.push(new Array(key, value, type));
         });
 
-        let filterString = "";
+        let complexFilterString = "";
         let orFilters = "false";
 
         for (let i = 0; i < arr.length; i = i + 2)
@@ -244,14 +250,14 @@
             let arr_s2 = arr[i + 1];
 
             let filter = `{"${arr_s1[0]}", "${arr_s1[2]}", "${arr_s1[1]}", "${arr_s2[1]}"}`;
-            filterString += filter + "|";
+            complexFilterString += filter + "|";
         }
 
         document.getElementById('formIndexPageNumberField').value = pageNumber;
         document.getElementById('formIndexPageSizeField').value = pageSize;
         document.getElementById('formIndexSortByField').value = sortBy;
         document.getElementById('formIndexSortOrderField').value = sortOrder;
-        document.getElementById('formIndexFilterStringField').value = filterString;
+        document.getElementById('formIndexComplexFilterStringField').value = complexFilterString;
         document.getElementById('formIndexOrFiltersField').value = orFilters;
         document.getElementById('formIndex').submit();
     }
