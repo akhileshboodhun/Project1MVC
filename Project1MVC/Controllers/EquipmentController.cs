@@ -23,32 +23,15 @@ namespace Project1MVC.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(FormCollection fc)
         {
-            int pageNumber = 1;
-            int pageSize = ServicesHelper.DefaultPageSize;
+            int pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"]);
+            int pageSize = ServicesHelper.SanitizePageNumber(fc["pageSize"]);
             string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
-            string complexFilterString = "";
-            bool orFilters = true;
-
-            // TODO: refactor this into SanitizePageNumber(string)
-            if (fc["pageNumber"] != null && fc["pageNumber"].All(char.IsDigit))
-            {
-                pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"].ToInt());
-            }
-
-            // TODO: refactor this into SanitizePageSize(string)
-            if (fc["pageSize"] != null && fc["pageSize"].All(char.IsDigit))
-            {
-                pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"].ToInt());
-            }
-
-            complexFilterString = fc["complexFilterString"] != null ? fc["complexFilterString"] : complexFilterString;
+            string complexFilterString = fc["complexFilterString"] != null ? fc["complexFilterString"] : "";
             IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
 
-            orFilters = fc["orFilters"] != null ? Convert.ToBoolean(fc["orFilters"]) : orFilters;
-            // TODO: handle case when orFilters is a string not equal to "true", then set it to false
-            // Use SanitizeOrFilters(string)
+            bool orFilters = (fc["orFilters"] != null && fc["orFilters"].ToString().ToLower() == "true") ? true : false;
 
             // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
@@ -56,12 +39,11 @@ namespace Project1MVC.Controllers
             pageCount = pageCount < 1 ? 1 : pageCount;
             pageNumber = (equipmentsCount - (pageNumber * pageSize)) <= 0 ? 1 : pageNumber;
 
+            // TODO: pass in actual list of columns to be displayed
             IList<string> cols = new List<string>();
             IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
 
-            IList<string> cols_filters = new List<string>()
-            { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
-            ViewBag.filterCols = cols_filters;
+            ViewBag.filterCols = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
 
             ViewBag.pageNumber = pageNumber;

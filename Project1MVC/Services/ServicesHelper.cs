@@ -101,16 +101,16 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        public static int SanitizePageNumber(int? pageNumber)
+        public static int SanitizePageNumber(string pageNumber)
         {
-            int _pageNumber = pageNumber ?? 1;
-            return _pageNumber > 0 ? _pageNumber : 1;
+            int _pageNumber = (pageNumber != null && pageNumber.All(char.IsDigit)) ? pageNumber.ToInt() : 1;
+            return (_pageNumber > 0) ? _pageNumber : 1;
         }
 
-        public static int SanitizePageSize(int? pageSize)
+        public static int SanitizePageSize(string pageSize)
         {
-            int _pageSize = pageSize ?? DefaultPageSize;
-            return _pageSize > 0 ? _pageSize : DefaultPageSize;
+            int _pageSize = (pageSize != null && pageSize.All(char.IsDigit)) ? pageSize.ToInt() : DefaultPageSize;
+            return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }
 
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
