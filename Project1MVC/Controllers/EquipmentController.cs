@@ -30,17 +30,17 @@ namespace Project1MVC.Controllers
 
             string complexFilterString = ServicesHelper.SanitizeString(fc["complexFilterString"]);
             bool orFilters = ServicesHelper.SanitizeBoolean(fc["orFilters"]);
-
-            // TODO: perform this block inside EquipmentRepository 
-            int equipmentsCount = equipmentService.GetCount();
-            int pageCount = equipmentsCount / pageSize;
-            pageCount = pageCount < 1 ? 1 : pageCount;
-            pageNumber = (equipmentsCount - (pageNumber * pageSize)) <= 0 ? 1 : pageNumber;
-
+            
             // TODO: pass in actual list of columns to be displayed
             IList<string> cols = new List<string>();
             IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
+
+            int records_count = 0;
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(out records_count, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
+
+            int pageCount = records_count / pageSize;
+            pageCount = pageCount < 1 ? 1 : pageCount;
+            pageNumber = (records_count - (pageNumber * pageSize)) < 0 ? 1 : pageNumber;
 
             ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
