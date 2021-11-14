@@ -175,7 +175,7 @@ namespace Project1MVC.DAL
 
             if (cols == null || cols.Count == 0)
             {
-                count = records_count;
+                count = 0;
                 return list;
             }
 
