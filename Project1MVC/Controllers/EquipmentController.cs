@@ -28,8 +28,8 @@ namespace Project1MVC.Controllers
             string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
-            string complexFilterString = fc["complexFilterString"] != null ? fc["complexFilterString"] : "";
-            bool orFilters = (fc["orFilters"] != null && fc["orFilters"].ToString().ToLower() == "true") ? true : false;
+            string complexFilterString = ServicesHelper.SanitizeString(fc["complexFilterString"]);
+            bool orFilters = ServicesHelper.SanitizeBoolean(fc["orFilters"]);
 
             // TODO: perform this block inside EquipmentRepository 
             int equipmentsCount = equipmentService.GetCount();
