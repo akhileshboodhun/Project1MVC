@@ -54,7 +54,6 @@ namespace Project1MVC.Services
             }
 
             // TODO: check if list.count == 4
-            // TODO: check if if startswith and endswith [ and ] respectively
             string col = list[0].Trim();
             string type = list[1].Trim();
             string s1 = list[2].Trim();
@@ -71,6 +70,28 @@ namespace Project1MVC.Services
             {
                 return null;
             }
+        }
+
+        public static IDictionary<string, string> GetFieldsDictionaryFromFiltersList<T>(IList<Filter> filters)
+        {
+            IDictionary<string, string> dict = new Dictionary<string, string>();
+
+            foreach (string col in ServicesHelper.GetColumns<T>())
+            {
+                dict.Add($"{col}S1", "");
+                dict.Add($"{col}S2", "");
+            }
+
+            if (filters != null && filters.Count != 0)
+            {
+                foreach (Filter filter in filters)
+                {
+                    dict[$"{filter.ColumnName}S1"] = $"{filter.SearchValue1}";
+                    dict[$"{filter.ColumnName}S2"] = $"{filter.SearchValue2}";
+                }
+            }
+
+            return dict;
         }
 
         public static IList<Filter> FromComplexString(string complexString)
