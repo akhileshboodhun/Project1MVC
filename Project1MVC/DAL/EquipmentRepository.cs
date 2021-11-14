@@ -171,7 +171,6 @@ namespace Project1MVC.DAL
         public IList<Equipment> GetPaginatedList(out int count, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
-            int records_count = 0;
 
             if (cols == null || cols.Count == 0)
             {
@@ -179,10 +178,11 @@ namespace Project1MVC.DAL
                 return list;
             }
 
+            int records_count = GetCount(filters, orFilters);
+
             try
             {
                 SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, pageNumber, pageSize, sortBy, sortOrder, filters, orFilters);
-                records_count = GetCount(filters, orFilters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
