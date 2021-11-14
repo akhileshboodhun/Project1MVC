@@ -24,7 +24,7 @@ namespace Project1MVC.Controllers
         public ActionResult Index(FormCollection fc)
         {
             int pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"]);
-            int pageSize = ServicesHelper.SanitizePageNumber(fc["pageSize"]);
+            int pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"]);
             string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
 
