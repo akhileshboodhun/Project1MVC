@@ -43,7 +43,11 @@ namespace Project1MVC.Services
 
         public static Filter FromString(string filterString)
         {
-            // TODO: check if startswith and endswith { and } respectively
+            if (!(filterString.StartsWith("{") && filterString.EndsWith("}")))
+            {
+                return null;
+            }
+
             Regex regCSV = new Regex("(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)", RegexOptions.Compiled);
             List<string> list = new List<string>();
 
@@ -53,14 +57,35 @@ namespace Project1MVC.Services
                 list.Add(field.Replace("\"", ""));
             }
 
-            // TODO: check if list.count == 4
+            if (list.Count != 4)
+            {
+                return null;
+            }
+
             string col = list[0].Trim();
             string type = list[1].Trim();
             string s1 = list[2].Trim();
             string s2 = list[3].Trim();
 
-            // TODO: check if enum is valid
+            if (!Enum.IsDefined(typeof(FilterType), type))
+            {
+                return null;
+            }
+
             FilterType _filterType = (FilterType)Enum.Parse(typeof(FilterType), type);
+
+            if (_filterType == FilterType.Range)
+            {
+                if (s1 != "" && !s1.All(char.IsDigit))
+                {
+                    return null;
+                }
+
+                if (s2 != "" && !s2.All(char.IsDigit))
+                {
+                    return null;
+                }
+            }            
 
             if (!(s1 == "" && s2 == ""))
             {
