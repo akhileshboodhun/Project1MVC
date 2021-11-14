@@ -62,10 +62,10 @@ namespace Project1MVC.Services
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
+        public IList<Equipment> GetPaginatedList(int pageNumber, int pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
-            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
-            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
+            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber.ToString());
+            int _pageSize = ServicesHelper.SanitizePageSize(pageSize.ToString());
 
             string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
             string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
