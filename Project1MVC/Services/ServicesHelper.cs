@@ -424,6 +424,30 @@ namespace Project1MVC.Services
             return cmd;
         }
 
+        private static string GenerateSqlQueryForGetCount<T>(DBMS dbms, IList<Filter> filters = null, bool orFilters = true)
+        {
+            StringBuilder sb = new StringBuilder();
+            string _primaryColumn = GetDefaultColumn<T>();
+            string _table = typeof(T).Name;
+            string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
+            _whereClause = _whereClause != "" ? $" {_whereClause}" : "";
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"SELECT COUNT({_primaryColumn}) AS [Total] ");
+                    sb.Append($"FROM {_table}");
+                    sb.Append(_whereClause);
+                    sb.Append(";");
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
+            }
+
+            return sb.ToString();
+        }
+
         private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols = null)
         {
             StringBuilder sb = new StringBuilder();
