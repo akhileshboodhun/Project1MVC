@@ -113,6 +113,16 @@ namespace Project1MVC.Services
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }
 
+        public static string SanitizeString(string str)
+        {
+            return str != null ? str : "";
+        }
+
+        public static bool SanitizeBoolean(string str)
+        {
+            return (str != null && str.ToString().Trim().ToLower() == "true") ? true : false;
+        }
+
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
         {
             IList<string> _cols = cols ?? GetColumns<T>();
