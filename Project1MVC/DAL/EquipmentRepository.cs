@@ -171,6 +171,11 @@ namespace Project1MVC.DAL
         public IList<Equipment> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
+
+            if (cols == null || cols.Count == 0)
+            {
+                return list;
+            }
             
             try
             {
