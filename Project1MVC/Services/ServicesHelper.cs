@@ -79,8 +79,11 @@ namespace Project1MVC.Services
 
         public static IList<int> GetPageSizeList()
         {
-            return new List<int>()
+            List<int> list = new List<int>()
             {2, 4, 10, 25, 50, 100, 250, 500, 1000};
+            
+            list.Sort();
+            return list;
         }
 
         public static IList<string> SanitizeColumns<T>(IList<string> cols)
@@ -101,16 +104,26 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        public static int SanitizePageNumber(int? pageNumber)
+        public static int SanitizePageNumber(string pageNumber)
         {
-            int _pageNumber = pageNumber ?? 1;
-            return _pageNumber > 0 ? _pageNumber : 1;
+            int _pageNumber = (pageNumber != null && pageNumber.All(char.IsDigit)) ? pageNumber.ToInt() : 1;
+            return (_pageNumber > 0) ? _pageNumber : 1;
         }
 
-        public static int SanitizePageSize(int? pageSize)
+        public static int SanitizePageSize(string pageSize)
         {
-            int _pageSize = pageSize ?? DefaultPageSize;
-            return _pageSize > 0 ? _pageSize : DefaultPageSize;
+            int _pageSize = (pageSize != null && pageSize.All(char.IsDigit)) ? pageSize.ToInt() : DefaultPageSize;
+            return (_pageSize > 0) ? _pageSize : DefaultPageSize;
+        }
+
+        public static string SanitizeString(string str)
+        {
+            return str != null ? str : "";
+        }
+
+        public static bool SanitizeBoolean(string str)
+        {
+            return (str != null && str.ToString().Trim().ToLower() == "false") ? false : true;
         }
 
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
@@ -192,6 +205,22 @@ namespace Project1MVC.Services
             return name;
         }
 
+        public static bool IsColumnOfTypeString<T>(string columnName)
+        {
+            bool result = false;
+
+            foreach (PropertyInfo info in typeof(T).GetProperties())
+            {
+                if (info.Name == columnName)
+                {
+                    result = info.PropertyType == typeof(string);
+                    break;
+                }
+            }
+
+            return result;
+        }
+
         private static IList<string> FormatList(IList<string> cols, string prefix = "", string suffix = "")
         {
             IList<string> _cols = new List<string>();
@@ -202,6 +231,85 @@ namespace Project1MVC.Services
             }
 
             return _cols;
+        }
+
+        public static void GetPageCountAndAdjustedPageNumber(out int pageCount, out int adjustedPageNumber, int recordsCount, int pageNumber, int pageSize)
+        {
+            int remainder = 0;
+            int _pageCount = Math.DivRem(recordsCount, pageSize, out remainder);
+            _pageCount = (remainder == 0) ? _pageCount : _pageCount + 1;
+            _pageCount = _pageCount < 1 ? 1 : _pageCount;
+            
+            int _adjustedPageNumber = 
+                ((recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != _pageCount) ? 
+                1 : pageNumber;
+
+            pageCount = _pageCount;
+            adjustedPageNumber = _adjustedPageNumber;
+        }
+           
+
+        private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
+        {
+            string whereClause = "";
+            string chain = orFilters ? " OR " : " AND ";
+
+            if (filters != null && filters.Count != 0)
+            {
+                StringBuilder sb_where = new StringBuilder();
+                sb_where.Append("WHERE (");
+
+                for (int i = 0; i < filters.Count; i++)
+                {
+                    Filter filter = filters[i];
+                    string filterCol = filter.ColumnName;
+                    string s1 = filter.SearchValue1.Trim();
+                    string s2 = filter.SearchValue2.Trim();
+                    string op = "";
+
+                    if (filter.FilterType == FilterType.Contains)
+                    {
+                        op = $"LIKE '%{s1}%'";
+                    }
+                    else if (filter.FilterType == FilterType.Range)
+                    {
+                        if (s1 != "" && s2 != "" && s1.All(char.IsDigit) && s2.All(char.IsDigit))
+                        {
+                            op = $"BETWEEN {s1} AND {s2}";
+                        }
+                        else if (s1 != "" && s2 == "" && s1.All(char.IsDigit))
+                        {
+                            op = $">= {s1}";
+                        }
+                        else if (s1 == "" && s2 != "" && s2.All(char.IsDigit))
+                        {
+                            op = $"<= {s2}";
+                        }
+                    }
+
+                    if (op == "")
+                    {
+                        continue;
+                    }
+
+                    sb_where.Append("(");
+                    sb_where.Append($"{filterCol} ");
+                    sb_where.Append(op);
+                    sb_where.Append(")");
+
+                    // TODO: handle case for when previous filter is invalid => we're adding "chain" in 
+                    // advance. => get all ops first in a list, then add chain.
+                    if (i != filters.Count - 1)
+                    {
+                        sb_where.Append(chain);
+                    }
+                }
+
+                sb_where.Append(")");
+                whereClause = sb_where.ToString();
+            }
+
+            return whereClause;
         }
 
         private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
@@ -296,13 +404,14 @@ namespace Project1MVC.Services
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "")
+        private static string GenerateSqlQueryForGetPaginatedList<T>(DBMS dbms, IList<string> cols, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
             string _cols = StringifyColumns<T>(cols);
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
+            string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
             switch (dbms)
             {
@@ -310,6 +419,7 @@ namespace Project1MVC.Services
                     sb.Append($"SELECT ");
                     sb.Append($"{_cols} ");
                     sb.Append($"FROM {_table} ");
+                    sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
@@ -322,15 +432,45 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "")
+        public static SqlCommand GenerateSqlCommandForGetPaginatedList<T>(IDBProvider dbProvider, IList<string> cols, int pageNumber, int pageSize, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
-            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder);
+            string sql = GenerateSqlQueryForGetPaginatedList<T>(dbProvider.DBMS, cols, sortBy, sortOrder, filters, orFilters);
                     
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
             cmd.Parameters.AddWithValue("@Offset", (pageNumber - 1) * pageSize);
             cmd.Parameters.AddWithValue("@PageSize", pageSize);
 
             return cmd;
+        }
+
+        private static string GenerateSqlQueryForGetCount<T>(DBMS dbms, IList<Filter> filters = null, bool orFilters = true)
+        {
+            StringBuilder sb = new StringBuilder();
+            string _primaryColumn = GetDefaultColumn<T>();
+            string _table = typeof(T).Name;
+            string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
+            _whereClause = _whereClause != "" ? $" {_whereClause}" : "";
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"SELECT COUNT({_primaryColumn}) AS [Total] ");
+                    sb.Append($"FROM {_table}");
+                    sb.Append(_whereClause);
+                    sb.Append(";");
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
+            }
+
+            return sb.ToString();
+        }
+
+        public static SqlCommand GenerateSqlCommandForGetCount<T>(IDBProvider dbProvider, IList<Filter> filters = null, bool orFilters = true)
+        {
+            string sql = GenerateSqlQueryForGetCount<T>(dbProvider.DBMS, filters, orFilters);
+            return new SqlCommand(sql, dbProvider.Connection);
         }
 
         private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols = null)

@@ -23,67 +23,175 @@
 
 <h2>All @{@controller}s</h2>
 <p>
-    @Html.ActionLink("Add New", "Add")
+    <a href="/Equipment/Add" role="button" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
+        </svg>
+        Add New
+    </a>
 </p>
 
-<div style="float: right; margin-bottom: 20px; display: flex; align-items: center;">
-    <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
-        @{
-            foreach (int pageSize in ServicesHelper.GetPageSizeList())
-            {
-                string selected = "";
+<div style="margin: 2em auto;">
 
-                if (pageSize == ViewBag.pageSize)
+    <div style="float: left;">
+
+        <button class="btn btn-danger" style="margin-bottom: 3em;" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z" />
+            </svg>
+            Filters
+        </button>
+
+        <div id="collapseFilters" class="collapse">
+            @{
+                foreach (string col in ViewBag.filterOptions)
                 {
-                    selected = " selected";
+                    string columnText = ServicesHelper.GetDisplayName<Equipment>(col); <div class="form-group form-inline">
+                    <label>@columnText: </label>
+
+                    @{
+
+                        IDictionary<string, string> dict = ViewBag.filterInputValues;
+
+                        string valS1 = ViewBag.filterInputValues[$"{col}S1"];
+                        string valS2 = ViewBag.filterInputValues[$"{col}S2"];
+
+                        if (ServicesHelper.IsColumnOfTypeString<Equipment>(col))
+                        {
+                            <input type="text" placeholder="@columnText" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0" />
+                            <input type="text" placeholder="@columnText" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0" style="display: none;" />
+                        }
+                        else
+                        {
+                            <div style="display: flex;">
+                                <input type="number" style="width: 6em;" pattern="[0-9]+" placeholder="Min" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
+                                <p style="margin: 0em 1em;"> - </p>
+                                <input type="number" style="width: 6em;" pattern="[0-9]+" placeholder="Max" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
+                            </div>
+                        }
+                    }
+                    </div>
+                    <br />
                 }
 
-                <option value="@pageSize" @selected>@pageSize</option>
-            }
-         }
-    </select>
-    <p style="vertical-align: middle; margin: 5px;">records per page</p>
-</div>
+                if (ViewBag.filterOptions.Count != 0)
+                {
+                    string checkAllFiltersStatus = (ViewBag.orFilters == false) ? " checked" : "";
 
-<table class="table">
-    <tr>
-        @{
-            foreach (string col in ViewBag.displayCols)
-            {
-                <th>
-                    @{
-                        string nextSortOrder = ViewBag.nextSortOrders[col];
-                        string columnURL = $"goIndex({ViewBag.pageNumber}, {ViewBag.pageSize}, '{col}', '{nextSortOrder}');return false;";
-                        string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
-                    }
-                    <a href="/Equipment/Index" onclick="@columnURL">
-                        @columnText
-                    </a>
-                </th>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkAllFilters" @checkAllFiltersStatus>
+                        <label class="form-check-label" for="checkAllFilters">Match all filters</label>
+                    </div>
+
+                    <br />
+
+                    <button type="button" id="buttonFilter" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                        </svg>
+                        Apply Filters
+                    </button>
+                    <br /><br />
+                }
+            }
+        </div>
+    </div>
+        <div style="float: right; display: flex; align-items: center;">
+            <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
+                @{
+                    foreach (int pageSize in ServicesHelper.GetPageSizeList())
+                    {
+                        string selected = "";
+
+                        if (pageSize == ViewBag.pageSize)
+                        {
+                            selected = " selected";
                         }
-        }
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+                        <option value="@pageSize" @selected>@pageSize</option>
+                    }
+                }
+            </select>
+            <p style="vertical-align: middle; margin: 5px;">records per page</p>
+        </div>
+    </div>
+
+
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
-            @foreach (string col in ViewBag.displayCols)
-            {
-                <td>
-                    @item[col]
-                </td>
-            }
-            <td>
-                @Html.ActionLink("Edit", "Edit", null, new { onClick = $"goEdit({item.EquipId});return false;" }) |
-                @Html.ActionLink("Details", "Details", null, new { onClick = $"goDetails({item.EquipId});return false;" })
-            </td>
+            @{
+                foreach (string col in ViewBag.displayCols)
+                {
+                        <th>
+                            @{
+                                string nextSortOrder = ViewBag.nextSortOrders[col];
+                                string columnURL = $"goIndex({ViewBag.pageNumber}, {ViewBag.pageSize}, '{col}', '{nextSortOrder}');return false;";
+                                string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
 
+                                <a href="/Equipment/Index" onclick="@columnURL">
+                                    @columnText
+                                </a>
+
+                                if (col == ViewBag.sortBy)
+                                {
+                                    if (nextSortOrder != "asc")
+                                    {
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-sort-up-alt" viewBox="0 0 16 16">
+                                            <path d="M3.5 13.5a.5.5 0 0 1-1 0V4.707L1.354 5.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 4.707V13.5zm4-9.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z" />
+                                        </svg>
+                                    }
+                                    else
+                                    {
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                                            <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z" />
+                                        </svg>
+                                    }
+                                }
+                            }
+                        </th>
+                                }
+            }
+            <th></th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @foreach (string col in ViewBag.displayCols)
+                {
+                    <td>
+                        @item[col]
+                    </td>
+                }
+            <td>
+                <button type="button" class="btn btn-warning" onclick="goEdit(@item.EquipId);return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                    </svg>
+                </button>
+
+                <button type="button" class="btn btn-info" onclick="goDetails(@item.EquipId);return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                    </svg>
+                </button>
+            </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<nav aria-label="Page navigation example">
+<nav aria-label="Page navigation">
+    @{ 
+        int firstRecordRange = ((ViewBag.pageNumber - 1) * ViewBag.pageSize) + 1;
+        int lastRecordRange = firstRecordRange + ViewBag.pageSize - 1;
+        lastRecordRange = lastRecordRange > ViewBag.recordsCount ? ViewBag.recordsCount : lastRecordRange;
+    }
+    <p> Showing records @firstRecordRange to @lastRecordRange (out of @ViewBag.recordsCount total)</p>
+    <p>Page @ViewBag.pageNumber of @ViewBag.pageCount</p>
     <ul class="pagination">
         @{
             string firstPageURL = $"goIndex(1, {ViewBag.pageSize}, '{ViewBag.sortBy}', '{ViewBag.sortOrder}');return false;";
@@ -124,7 +232,7 @@
                     if (i == ViewBag.pageNumber)
                     {
                         <li class="page-item active">
-                            <a class="page-link" href="/Equipment/Index" onclick="@pageURL">@i<span class="sr-only">(current)</span></a>
+                            <a class="page-link">@i<span class="sr-only">(current)</span></a>
                         </li>
                     }
                     else
@@ -160,6 +268,8 @@
     @Html.Hidden("pageSize", null, new { id = "formIndexPageSizeField" })
     @Html.Hidden("sortBy", null, new { id = "formIndexSortByField" })
     @Html.Hidden("sortOrder", null, new { id = "formIndexSortOrderField" })
+    @Html.Hidden("complexFilterString", null, new { id = "formIndexComplexFilterStringField" })
+    @Html.Hidden("orFilters", null, new { id = "formIndexOrFiltersField" })
 }
 
 <script>
@@ -174,10 +284,35 @@
     }
 
     function goIndex(pageNumber, pageSize, sortBy, sortOrder) {
+
+        let arr = [];
+
+        document.querySelectorAll('[id^="filter"]').forEach((element) =>
+        {
+            let key = element.id.replace(/^(filter)/, "").slice(0, -2);
+            let value = element.value.replace("|", "");
+            let type = element.classList.contains("filter-range-min") | element.classList.contains("filter-range-max") ? "Range" : "Contains";
+            arr.push(new Array(key, value, type));
+        });
+
+        let complexFilterString = "";
+        let orFilters = !document.querySelector("#checkAllFilters").checked;
+
+        for (let i = 0; i < arr.length; i = i + 2)
+        {
+            let arr_s1 = arr[i];
+            let arr_s2 = arr[i + 1];
+
+            let filter = `{"${arr_s1[0]}", "${arr_s1[2]}", "${arr_s1[1]}", "${arr_s2[1]}"}`;
+            complexFilterString += filter + "|";
+        }
+
         document.getElementById('formIndexPageNumberField').value = pageNumber;
         document.getElementById('formIndexPageSizeField').value = pageSize;
         document.getElementById('formIndexSortByField').value = sortBy;
         document.getElementById('formIndexSortOrderField').value = sortOrder;
+        document.getElementById('formIndexComplexFilterStringField').value = complexFilterString;
+        document.getElementById('formIndexOrFiltersField').value = orFilters;
         document.getElementById('formIndex').submit();
     }
 
@@ -187,7 +322,19 @@
         int pageNumber = ViewBag.pageNumber;
     }
 
-    document.getElementById('selectPageSize').addEventListener('change', function () {
+    document.getElementById('selectPageSize').addEventListener('change', function() {
         goIndex(@{@pageNumber}, this.value, '@{@sortBy}', '@{@sortOrder}');
+    });
+
+    document.getElementById('buttonFilter').addEventListener('click', function() {
+        goIndex(@{@pageNumber}, @{@ViewBag.pageSize}, '@{@sortBy}', '@{@sortOrder}');
+    });
+
+    document.querySelectorAll('.filter-range-min, .filter-range-max').forEach((el) =>
+    {
+        el.addEventListener('input', function()
+        {
+            this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+        });
     });
 </script>

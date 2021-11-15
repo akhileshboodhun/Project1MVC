@@ -168,13 +168,26 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder)
+        public IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
-            
+
+            if (cols == null || cols.Count == 0)
+            {
+                recordsCount = 0;
+                pageCount = 0;
+                adjustedPageNumber = 1;
+                return list;
+            }
+
+            int _pageCount = 0;
+            int _adjustedPageNumber = 0;
+            int _recordsCount = GetCount(filters, orFilters);
+            ServicesHelper.GetPageCountAndAdjustedPageNumber(out _pageCount, out _adjustedPageNumber, _recordsCount, pageNumber, pageSize);
+
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, pageNumber, pageSize, sortBy, sortOrder);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, _adjustedPageNumber, pageSize, sortBy, sortOrder, filters, orFilters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -199,46 +212,40 @@ namespace Project1MVC.DAL
             finally
             {
                 dbProvider.Connection.Close();
-            }
 
+                recordsCount = _recordsCount;
+                pageCount = _pageCount;
+                adjustedPageNumber = _adjustedPageNumber;
+            }
+            
             return list;
         }
 
-        public int GetCount()
+        public int GetCount(IList<Filter> filters = null, bool orFilters = true)
         {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.GetCount;
-            int count = -1;
-
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-                    string sql = "SELECT COUNT(EquipId) AS [Total] FROM Equipment;";
-
-            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
+            int count = 0;
 
             try
+            {
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetCount<Equipment>(dbProvider, filters, orFilters);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                count = reader["Total"].ToInt();
-                            }
-                        }
+                        count = reader["Total"].ToInt();
                     }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"FAILED: {opType} {modelName}");
-                        Logger.Log($"{ex.ToString()}");
-                    }
-            //        finally
-            //        {
-            //            conn.Close();
-            //        }
-            //    }
-            //}
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {MethodBase.GetCurrentMethod().Name} {this.GetType().Name.Replace(rep, "")}");
+                Logger.Log($"{ex.ToString()}");
+            }
+            finally
+            {
+                dbProvider.Connection.Close();
+            }
 
             return count;
         }

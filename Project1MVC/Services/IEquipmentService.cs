@@ -11,7 +11,7 @@ namespace Project1MVC.Services
 
         bool Add(Equipment obj);
 
-        int GetCount();
+        int GetCount(IList<Filter> filters = null, bool orFilters = true);
 
         Equipment Get(int id);
 
@@ -19,7 +19,7 @@ namespace Project1MVC.Services
 
         IList<Equipment> GetAll();
 
-        IList<Equipment> GetPaginatedList(int? pageNumber, int? pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "");
+        IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, int pageNumber, int pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true);
 
         bool Update(Equipment obj);
     }
