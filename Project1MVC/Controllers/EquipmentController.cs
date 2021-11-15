@@ -35,12 +35,21 @@ namespace Project1MVC.Controllers
             IList<string> cols = new List<string>();
             IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
 
-            int records_count = 0;
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(out records_count, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
+            ////////////// TODO: Do this inside equipmentRepository //////////////////////
+            int recordsCount = equipmentService.GetCount(filters, orFilters);
 
-            int pageCount = records_count / pageSize;
+            // TODO: refactor this into a helper method called GetPageNumberAndPageCount(int recordsCount, int pageSize, out int pageNumber, out int pageCount)
+            int r = 0;
+            int pageCount = Math.DivRem(recordsCount, pageSize, out r);
+            pageCount = (r == 0) ? pageCount : pageCount + 1;
             pageCount = pageCount < 1 ? 1 : pageCount;
-            pageNumber = (records_count - (pageNumber * pageSize)) < 0 ? 1 : pageNumber;
+            pageNumber = ((recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != pageCount) 
+                         ? 1 : pageNumber;
+
+            ///////////////////////////////////////////////////////////////////////////////////
+
+            // TODO: Make this returns recordsCount, pageCount, adjustedPageNumber
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(out r, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
 
             ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
