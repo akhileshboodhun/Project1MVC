@@ -40,6 +40,7 @@ namespace Project1MVC.Controllers
 
             ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
+            ViewBag.orFilters = orFilters;
 
             ViewBag.pageNumber = adjustedPageNumber;
             ViewBag.pageSize = pageSize;
