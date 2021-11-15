@@ -62,7 +62,7 @@ namespace Project1MVC.Services
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(out int count, int pageNumber, int pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
+        public IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, int pageNumber, int pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
         {
             int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber.ToString());
             int _pageSize = ServicesHelper.SanitizePageSize(pageSize.ToString());
@@ -73,10 +73,14 @@ namespace Project1MVC.Services
             IList<string> _cols = cols ?? ServicesHelper.GetColumns<Equipment>();
             _cols = ServicesHelper.SanitizeColumns<Equipment>(_cols);
 
-            int records_count = 0;
-            IList<Equipment> list = equipmentRepo.GetPaginatedList(out records_count, _cols, _pageNumber, _pageSize, _sortBy, _sortOrder, filters, orFilters);
+            int _recordsCount = 0;
+            int _pageCount = 0;
+            int _adjustedPageNumber = 1;
+            IList<Equipment> list = equipmentRepo.GetPaginatedList(out _recordsCount, out _pageCount, out _adjustedPageNumber, _cols, _pageNumber, _pageSize, _sortBy, _sortOrder, filters, orFilters);
 
-            count = records_count;
+            recordsCount = _recordsCount;
+            pageCount = _pageCount;
+            adjustedPageNumber = _adjustedPageNumber;
             return list;        
         }
 
