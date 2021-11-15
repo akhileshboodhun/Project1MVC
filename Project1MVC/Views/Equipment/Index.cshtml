@@ -32,13 +32,21 @@
 </p>
 
 <div style="margin: 2em auto;">
-    <div style="float: left;">
-        @{
-            foreach (string col in ViewBag.filterOptions)
-            {
-                string columnText = ServicesHelper.GetDisplayName<Equipment>(col);
 
-                <div class="form-group form-inline">
+    <div style="float: left;">
+
+        <button class="btn btn-danger" style="margin-bottom: 3em;" type="button" data-toggle="collapse" data-target="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z" />
+            </svg>
+            Filters
+        </button>
+
+        <div id="collapseFilters" class="collapse">
+            @{
+                foreach (string col in ViewBag.filterOptions)
+                {
+                    string columnText = ServicesHelper.GetDisplayName<Equipment>(col); <div class="form-group form-inline">
                     <label>@columnText: </label>
 
                     @{
@@ -55,54 +63,56 @@
                         }
                         else
                         {
-                            <input type="number" pattern="[0-9]+" placeholder="Min" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
-                            <p> - </p>
-                            <input type="number" pattern="[0-9]+" placeholder="Max" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
+                            <div style="display: flex;">
+                                <input type="number" style="width: 6em;" pattern="[0-9]+" placeholder="Min" value="@valS1" id="filter@{@col}S1" class="form-control search mb-0 filter-range-min" />
+                                <p style="margin: 0em 1em;"> - </p>
+                                <input type="number" style="width: 6em;" pattern="[0-9]+" placeholder="Max" value="@valS2" id="filter@{@col}S2" class="form-control search mb-0 filter-range-max" />
+                            </div>
                         }
                     }
-                </div>
-                <br />
-            }
+                    </div>
+                    <br />
+                }
 
-            if (ViewBag.filterOptions.Count != 0)
-            {
-                string checkAllFiltersStatus = (ViewBag.orFilters == false) ? " checked" : "";
-
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="checkAllFilters"@checkAllFiltersStatus>
-                    <label class="form-check-label" for="checkAllFilters">Match all filters</label>
-                </div>
-
-                <button type="button" id="buttonFilter" class="btn btn-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-                    </svg>
-                    Apply Filters
-                </button>
-                <br /><br />
-            }
-        }
-    </div>
-
-    <div style="float: right; display: flex; align-items: center;">
-        <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
-            @{
-                foreach (int pageSize in ServicesHelper.GetPageSizeList())
+                if (ViewBag.filterOptions.Count != 0)
                 {
-                    string selected = "";
+                    string checkAllFiltersStatus = (ViewBag.orFilters == false) ? " checked" : "";
 
-                    if (pageSize == ViewBag.pageSize)
-                    {
-                        selected = " selected";
-                    }
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkAllFilters" @checkAllFiltersStatus>
+                        <label class="form-check-label" for="checkAllFilters">Match all filters</label>
+                    </div>
 
-                    <option value="@pageSize" @selected>@pageSize</option>
+                    <button type="button" id="buttonFilter" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                        </svg>
+                        Apply Filters
+                    </button>
+                    <br /><br />
                 }
             }
-        </select>
-        <p style="vertical-align: middle; margin: 5px;">records per page</p>
+        </div>
     </div>
-</div>
+        <div style="float: right; display: flex; align-items: center;">
+            <select id="selectPageSize" style="vertical-align: middle; width: 75px; margin: 5px; padding: 5px; cursor: pointer;">
+                @{
+                    foreach (int pageSize in ServicesHelper.GetPageSizeList())
+                    {
+                        string selected = "";
+
+                        if (pageSize == ViewBag.pageSize)
+                        {
+                            selected = " selected";
+                        }
+
+                        <option value="@pageSize" @selected>@pageSize</option>
+                    }
+                }
+            </select>
+            <p style="vertical-align: middle; margin: 5px;">records per page</p>
+        </div>
+    </div>
 
 
 <table class="table table-striped">
@@ -138,7 +148,7 @@
                                 }
                             }
                         </th>
-                }
+                                }
             }
             <th></th>
         </tr>
@@ -173,6 +183,13 @@
 </table>
 
 <nav aria-label="Page navigation">
+    @{ 
+        int firstRecordRange = ((ViewBag.pageNumber - 1) * ViewBag.pageSize) + 1;
+        int lastRecordRange = firstRecordRange + ViewBag.pageSize - 1;
+        lastRecordRange = lastRecordRange > ViewBag.recordsCount ? ViewBag.recordsCount : lastRecordRange;
+    }
+    <p> Showing records @firstRecordRange to @lastRecordRange (out of @ViewBag.recordsCount total)</p>
+    <p>Page @ViewBag.pageNumber of @ViewBag.pageCount</p>
     <ul class="pagination">
         @{
             string firstPageURL = $"goIndex(1, {ViewBag.pageSize}, '{ViewBag.sortBy}', '{ViewBag.sortOrder}');return false;";
