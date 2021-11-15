@@ -79,8 +79,11 @@ namespace Project1MVC.Services
 
         public static IList<int> GetPageSizeList()
         {
-            return new List<int>()
+            List<int> list = new List<int>()
             {2, 4, 10, 25, 50, 100, 250, 500, 1000};
+            
+            list.Sort();
+            return list;
         }
 
         public static IList<string> SanitizeColumns<T>(IList<string> cols)
@@ -120,7 +123,7 @@ namespace Project1MVC.Services
 
         public static bool SanitizeBoolean(string str)
         {
-            return (str != null && str.ToString().Trim().ToLower() == "true") ? true : false;
+            return (str != null && str.ToString().Trim().ToLower() == "false") ? false : true;
         }
 
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
