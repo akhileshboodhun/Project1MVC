@@ -27,36 +27,24 @@ namespace Project1MVC.Controllers
             int pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"]);
             string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
             string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
-
             string complexFilterString = ServicesHelper.SanitizeString(fc["complexFilterString"]);
             bool orFilters = ServicesHelper.SanitizeBoolean(fc["orFilters"]);
             
             // TODO: pass in actual list of columns to be displayed
             IList<string> cols = new List<string>();
             IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
-
-            ////////////// TODO: Do this inside equipmentRepository //////////////////////
-            int recordsCount = equipmentService.GetCount(filters, orFilters);
-
-            // TODO: refactor this into a helper method called GetPageNumberAndPageCount(int recordsCount, int pageSize, out int pageNumber, out int pageCount)
-            int r = 0;
-            int pageCount = Math.DivRem(recordsCount, pageSize, out r);
-            pageCount = (r == 0) ? pageCount : pageCount + 1;
-            pageCount = pageCount < 1 ? 1 : pageCount;
-            pageNumber = ((recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != pageCount) 
-                         ? 1 : pageNumber;
-
-            ///////////////////////////////////////////////////////////////////////////////////
-
-            // TODO: Make this returns recordsCount, pageCount, adjustedPageNumber
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(out r, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
+            int recordsCount = 0;
+            int adjustedPageNumber = 0;
+            int pageCount = 0;
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(out recordsCount, out pageCount, out adjustedPageNumber, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
 
             ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
             ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
 
-            ViewBag.pageNumber = pageNumber;
+            ViewBag.pageNumber = adjustedPageNumber;
             ViewBag.pageSize = pageSize;
             ViewBag.pageCount = pageCount;
+            ViewBag.recordsCount = recordsCount;
 
             ViewBag.displayPrimaryColumn = false;
             ViewBag.displayCols = cols;

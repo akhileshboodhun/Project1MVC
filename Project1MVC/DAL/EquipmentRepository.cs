@@ -168,21 +168,31 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(out int count, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
+        public IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
 
             if (cols == null || cols.Count == 0)
             {
-                count = 0;
+                recordsCount = 0;
+                pageCount = 0;
+                adjustedPageNumber = 1;
                 return list;
             }
 
-            int records_count = GetCount(filters, orFilters);
+            int _recordsCount = GetCount(filters, orFilters);
+
+            // TODO: refactor this into a helper method called GetPageNumberAndPageCount(out int pageCount, out int adjustedPageNumber, int recordsCount, int pageSize)
+            int r = 0;
+            int _pageCount = Math.DivRem(_recordsCount, pageSize, out r);
+            _pageCount = (r == 0) ? _pageCount : _pageCount + 1;
+            _pageCount = _pageCount < 1 ? 1 : _pageCount;
+            int _adjustedPageNumber = ((_recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != _pageCount)
+                         ? 1 : pageNumber;
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, pageNumber, pageSize, sortBy, sortOrder, filters, orFilters);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, _adjustedPageNumber, pageSize, sortBy, sortOrder, filters, orFilters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -207,9 +217,12 @@ namespace Project1MVC.DAL
             finally
             {
                 dbProvider.Connection.Close();
-            }
 
-            count = records_count;
+                recordsCount = _recordsCount;
+                pageCount = _pageCount;
+                adjustedPageNumber = _adjustedPageNumber;
+            }
+            
             return list;
         }
 
