@@ -180,15 +180,10 @@ namespace Project1MVC.DAL
                 return list;
             }
 
+            int _pageCount = 0;
+            int _adjustedPageNumber = 0;
             int _recordsCount = GetCount(filters, orFilters);
-
-            // TODO: refactor this into a helper method called GetPageNumberAndPageCount(out int pageCount, out int adjustedPageNumber, int recordsCount, int pageSize)
-            int r = 0;
-            int _pageCount = Math.DivRem(_recordsCount, pageSize, out r);
-            _pageCount = (r == 0) ? _pageCount : _pageCount + 1;
-            _pageCount = _pageCount < 1 ? 1 : _pageCount;
-            int _adjustedPageNumber = ((_recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != _pageCount)
-                         ? 1 : pageNumber;
+            ServicesHelper.GetPageCountAndAdjustedPageNumber(out _pageCount, out _adjustedPageNumber, _recordsCount, pageNumber, pageSize);
 
             try
             {
