@@ -16,7 +16,6 @@
 /// <amd-dependency path="dojo/dom-construct" name="domConstruct"/>
 /// <amd-dependency path="dojo/dom" name="dom"/>
 
-import { AsyncKeyword } from "../../node_modules/typescript/lib/typescript";
 import { ITile } from "./ITile";
 
 declare let dojo_declare;

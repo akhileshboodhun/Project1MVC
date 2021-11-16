@@ -65,7 +65,20 @@
         </tr>
     }
 
+<tr><td colspan="8"><b>Grand Total: Rs @string.Format("{0:#,##0.00}", Convert.ToDecimal(ViewBag.GrandTotal))</b></td></tr>
 </table>
 
 
-<h4>Grand Total: Rs @string.Format("{0:#,##0.00}", Convert.ToDecimal(ViewBag.GrandTotal))</h4>
+
+
+<br />
+<input type="button" class="btn btn-primary" onclick="generate()" value="Export To PDF" />
+<script type="text/javascript">
+    function generate() {
+        var doc = new jsPDF('p', 'pt', 'letter');
+        doc.autoTable({
+            html: '.table'
+        });
+        doc.save('FutureStock.pdf');
+    }
+</script>

@@ -1,19 +1,16 @@
 ﻿@model IEnumerable<Project1MVC.Models.UserRole>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manage Roles";
 }
 
-<h2>User Roles</h2>
+<h2>Manage Roles</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UserRoleId)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.RoleName)
         </th>
@@ -22,9 +19,6 @@
 
 @foreach (var item in Model) {
 <tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.UserRoleId)
-    </td>
     <td>
         @Html.DisplayFor(modelItem => item.RoleName)
     </td>

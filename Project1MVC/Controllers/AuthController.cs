@@ -1,4 +1,5 @@
-﻿using Project1MVC.Models;
+﻿using Project1MVC.DAL;
+using Project1MVC.Models;
 using Project1MVC.Services;
 using System;
 using System.Collections.Generic;
@@ -15,31 +16,43 @@ namespace Project1MVC.Controllers
         // GET: Auth/Login
         public ActionResult Login(string ReturnUrl)
         {
-            if (ReturnUrl != null) {
+            if (User.Identity.IsAuthenticated && User.Identity.Name != null) return RedirectToAction("Index","Home");
+            if (ReturnUrl != null)
+            {
                 ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
                 GlobalReturnUrl = ReturnUrl;
             }
-
-            var emp = new Employee("", "", DateTime.Now, "", "", "", null);
-            return View(emp);
+            return View();
         }
 
 
 
         // POST: Auth/Login
         [HttpPost]
-        public ActionResult Login(string Email, string Password)
+        public ActionResult Login(UserCredentials userCredentials)
         {
             try
             {
                 // TODO: Add insert logic here
-                var emp_db = InMemoryEmployees.GetInstance();
-                var employees = emp_db.GetAll();
-                var employee = employees.FirstOrDefault(el => el.Email == Email && el.Password == Password);
-                if (!(employee is null))
+                var userDB =  UserDAL.Instance;
+                var users = userDB.GetAll();
+                var crypto = new CryptographyProcessor(size: 10);
+                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
+                if (!(user is null))
                 {
-                    Session["EmployeeFirstName"] = employee?.FirstName;
-                    FormsAuthentication.SetAuthCookie(employee.Email, true);
+                    HttpCookie UserFullName = new HttpCookie("UserFullName");
+                    UserFullName.Value = user?.FName + " " + user?.LName;
+                    UserFullName.Expires = DateTime.Now.AddDays(90);
+                    Response.Cookies.Add(UserFullName);
+
+                    FormsAuthentication.SetAuthCookie(user.Email, true);
+
+                    HttpCookie UserIdCookie = new HttpCookie("UserIdCookie");
+                    UserIdCookie.Value = user.UserId.ToString();
+                    UserIdCookie.Expires = DateTime.Now.AddDays(90);
+                    Response.Cookies.Add(UserIdCookie);
+
+
                     System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
                     if (GlobalReturnUrl?.Length > 0)
                     {
@@ -65,6 +78,8 @@ namespace Project1MVC.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+            Request.Cookies.Remove("UserIdCookie");
+            Response.Cookies.Remove("UserIdCookie");
             return RedirectToAction("Index", "Home");
         }
     }

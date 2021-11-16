@@ -1,4 +1,5 @@
 ﻿@model Project1MVC.Models.Employee
+
 @{
     ViewBag.Title = "Edit";
 }
@@ -14,29 +15,22 @@
     <h4>Employee</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
+
+    @Html.HiddenFor(model => model.UserId)
 
     <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.FName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.FName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FName, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.LName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.LName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.LName, "", new { @class = "text-danger" })
         </div>
     </div>
 
@@ -49,39 +43,55 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+            @Html.PasswordFor(model => model.HashedPassword, new { @class = "form-control", @placeholder = "unchanged" })
+            @Html.ValidationMessageFor(model => model.HashedPassword, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.EmployeeStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("Role", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.EmployeeStatus, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.EmployeeStatus, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.UserRoleId, ViewBag.SelectListRoles as SelectList, "Select Role", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.UserRoleId, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Equipments, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-6">
+        @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-            <div class="row">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-                <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.Equipments, new SelectList(ViewBag.SelectListEquipments, "Value", "Text"), "Select Equipment", new { @class = "form-control equipment-form", @id = "equipment-form", @onchange = "DisableButton(this)" })
-                    @*@Html.ValidationMessageFor(model => model.EmployeeStatus, "", new { @class = "text-danger" })*@
-                </div>
-                <div class="col-md-2">
-                    <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Add" onclick="AddToList()" title="Select Equipment First" disabled="disabled"/>
-                </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control"} })
+            @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.CheckBoxFor(model => model.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning"})
+
+                @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
-
-    @Html.Partial("_ManageAssignedPartial", Model.Equipments)
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

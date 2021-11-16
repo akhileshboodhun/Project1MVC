@@ -9,7 +9,7 @@ using Project1MVC.Services;
 
 namespace Project1MVC.Controllers
 {
-    [AuthorizeEmployee(Roles = "Admin")]
+    [AuthorizeUser(Roles = "Admin")]
     public class EquipmentController : Controller
     {
         private readonly IEquipmentService equipmentService;

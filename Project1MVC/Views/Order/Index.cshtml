@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Project1MVC.Models.OrderWrapper>
+
+@{
+    ViewBag.Title = "Manage Orders";
+}
+
+<h2>Manage Orders</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderProp.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderProp.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderProp.IsOrderComplete)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderProp.SupplierName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.OrderProp.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.OrderProp.OrderDate)
+    </td>
+    <td>
+        <p>@((item.OrderProp.IsOrderComplete)?"Yes":"No")</p>
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.OrderProp.SupplierName)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id=item.OrderProp.Id  }) |
+        @Html.ActionLink("Details", "Details", new { id = item.OrderProp.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.OrderProp.Id })
+    </td>
+</tr>
+}
+
+</table>

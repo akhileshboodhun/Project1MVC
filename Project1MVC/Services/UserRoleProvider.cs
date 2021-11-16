@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project1MVC.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,9 +7,9 @@ using System.Web.Security;
 
 namespace Project1MVC.Services
 {
-    public class EmployeeRoleProvider : RoleProvider
+    public class UserRoleProvider : RoleProvider
     {
-        public EmployeeRoleProvider() { }
+        public UserRoleProvider() { }
 
         public override string ApplicationName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -34,41 +35,35 @@ namespace Project1MVC.Services
 
         public override string[] GetAllRoles()
         {
-            throw new NotImplementedException();
+            var userRoleDB = UserRoleDAL.Instance;
+            var userRoles = userRoleDB.GetAll();
+            string[] roleNames = userRoles.Select(el => el.RoleName).ToArray();
+            return roleNames;
         }
 
         public override string[] GetRolesForUser(string username)
         {
-            var db = InMemoryEmployees.GetInstance();
-            var employees = db.GetAll();
-            var employee = employees.FirstOrDefault(el => el.Email == username);
-            string role = employee.Role;
-            List<string> roles = new List<string>(){ };
-            roles.Add(role);
+            var userDB = UserDAL.Instance;
+            var user = userDB.Get(username);
+            List<string> roles = new List<string>() { };
+            roles.Add(user.RoleName);
             return roles.ToArray();
-            
+
         }
 
         public override string[] GetUsersInRole(string roleName)
         {
-            var db = InMemoryEmployees.GetInstance();
-            var employees = db.GetAll();
-            var employeesInRole = employees.Where(el => el.Role == roleName);
-            string[] emails = employeesInRole.Select(el => el.Email).ToArray();
+            var userDB = UserDAL.Instance;
+            var users = userDB.GetAll();
+            var usersInRole = users.Where(el => el.RoleName == roleName);
+            string[] emails = usersInRole.Select(el => el.Email).ToArray();
             return emails;
         }
 
         public override bool IsUserInRole(string username, string roleName)
         {
             string[] roles = GetRolesForUser(username);
-            foreach (string role in roles)
-            {
-                if(roleName.Equals(role, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return roles.Any(role => roleName.Equals(role, StringComparison.OrdinalIgnoreCase));
         }
 
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
@@ -78,9 +73,9 @@ namespace Project1MVC.Services
 
         public override bool RoleExists(string roleName)
         {
-            var db = InMemoryRoles.GetInstance();
-            var roles = db.GetAll();
-            return roles.Any(el => el.Name == roleName);
+            var userRoleDB = UserRoleDAL.Instance;
+            var userRole = userRoleDB.GetRoleByName(roleName);
+            return (userRole != null);
         }
     }
 }

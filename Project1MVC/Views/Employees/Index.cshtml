@@ -1,69 +1,104 @@
 ﻿@model IEnumerable<Project1MVC.Models.Employee>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Manage Employees";
 }
 
-<h2>Employees</h2>
+<h2>Manage Employees</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("\0", "Create", new { }, new { @class = "btn btn-success fa fas fa-user-plus fa-2x", @title = "Create" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.FName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
+            @Html.DisplayNameFor(model => model.LName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Role)
+            @Html.DisplayNameFor(model => model.DateOfBirth)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EmployeeStatus)
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Age)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleName)
+        </th>
         <th></th>
+        @{ if (User.IsInRole("Admin"))
+            {
+                <th></th>
+                <th>Actions</th>
+                <th></th>
+            }
+        }
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfBirth)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Age)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNo)
+            </td>
+            <td>
+                @Html.CheckBoxFor(modelItem => item.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                @Html.ActionLink("Assign Equipments", "Index", "EquipmentAssignment", new { id = item.UserId }, new { @class = "btn btn-primary" })
+            </td>
+            @{
+                if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("\0", "Edit", new { id = item.UserId },new { @class = "btn btn-warning fa far fa-edit", @title="Edit"})
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("\0", "Details", new { id = item.UserId }, new { @class = "btn btn-primary fa fas fa-info-circle", @title = "Details" })
+                    </td>
+
+                    <td>
+                        @Html.ActionLink("\0", "Delete", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-trash", @title = "Delete" })
+                    </td>
+                }
+            }
+        </tr>
+    }
 
 </table>
+

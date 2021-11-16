@@ -13,6 +13,14 @@ namespace Project1MVC
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/ParticlesJS").Include(
+            "~/Scripts/ParticlesJS/particles*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jsPDF").Include(
+                        "~/Scripts/jsPDF/jspdf.min.js",
+                        "~/Scripts/jsPDF/jspdf.plugin.autotable.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/userscripts").Include(
                         "~/Scripts/AddDeleteList.js"));
 
@@ -22,11 +30,24 @@ namespace Project1MVC
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap4-toggle.js"
+                      ));
+
+            bundles.Add(new ScriptBundle("~/bundles/sweetalert2").Include(
+                      "~/Scripts/sweetalert2.all.js",
+                      "~/Scripts/sweetalert2.js"
+                      ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/sweetalert2.css",
+                      "~/Content/font-awesome.css",
+                      "~/Content/bootstrap4-toggle.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/Error").Include(
+          "~/Content/Error/Error.css"));
 
             bundles.Add(new StyleBundle("~/Content/tiles").Include(
                       "~/Content/CustomWidgetsCSS/Tiles.css"));
