@@ -1,11 +1,11 @@
-﻿@model Project1MVC.Models.Employee
+﻿@model Project1MVC.Models.UserCredentials
 @using (Html.BeginForm())
 {
 
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h2>Login</h2>
+        <h4>Login</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">

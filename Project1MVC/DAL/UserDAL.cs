@@ -106,7 +106,8 @@ namespace Project1MVC.DAL
             return status;
         }
 
-        public User Get(int id)
+        public User Get(int id) => Get(id.ToString());
+        public User Get(string query)
         {
             string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
             string opType = "Select";
@@ -116,10 +117,15 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User] WHERE [UserId] = @Id;";
+                    var byId = "[UserId] = @Id";
+                    var byEmail = "[Email] = @Email";
+                    int id;
+                    var byCondition = (int.TryParse(query, out id)) ? byId : byEmail;
+                    string sql = $"SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName] FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId WHERE {byCondition};";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Email", query);
 
                     try
                     {
@@ -129,7 +135,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                User = new User(reader["UserId"].ToInt(),reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt());
+                                User = new User(reader["UserId"].ToInt(),reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt(), reader["RoleName"].ToString());
                             }
                         }
 
@@ -157,7 +163,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [UserId], [FName], [LName], [Email], [Salt], [HashedPassword], [UserRoleId] FROM [User];";
+                    string sql = "SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName] FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -169,7 +175,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new User(reader["UserId"].ToInt(), reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt())); }
+                                list.Add(new User(reader["UserId"].ToInt(), reader["FName"].ToString(), reader["LName"].ToString(), reader["Email"].ToString(), reader["Salt"].ToString(), reader["HashedPassword"].ToString(), reader["UserRoleId"].ToInt(), reader["RoleName"].ToString())); }
                         }
 
                         Logger.Log("Closing the SqlConnection" + Environment.NewLine);

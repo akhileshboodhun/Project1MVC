@@ -1,0 +1,227 @@
+﻿@model Project1MVC.Models.Order
+
+@{
+    ViewBag.Title = "Create Order";
+}
+
+<h2>Create Order</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Order</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.IsOrderComplete, new { @class = "form-control", @type = "checkbox" })
+            @Html.ValidationMessageFor(model => model.IsOrderComplete, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "EquipId", "DisplayName"), new { @class = "form-control", @id = "equipmentSelect" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Quantity", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "equipmentQty" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Unit Price", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-8">
+            @Html.Editor("Unit Price", new { htmlAttributes = new { @class = "form-control", @type = "number", @id = "unitPrice" } })
+        </div>
+        <div class="col-md-2">
+            <button class="btn" id="addEquipmentBtn" type="button">Add</button>
+        </div>
+    </div>
+
+    <table id="addedEquipments" class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Equipment")
+            </th>
+            <th>
+                @Html.DisplayName("Quantity")
+            </th>
+            <th>
+                @Html.DisplayName("Unit Price (Rs)")
+            </th>
+            <th></th>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="submitBtn" type="submit" value="Create" class="btn btn-default"/>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+        const addEquipBtn = document.querySelector("#addEquipmentBtn");
+        const addedEquipmentsSection = document.querySelector("#addedEquipments");
+        const equipmentSelectEl = document.querySelector("#equipmentSelect");
+        const equipmentQuantityEl = document.querySelector("#equipmentQty");
+        const unitPriceEl = document.querySelector("#unitPrice");
+        const form = document.querySelector("form");
+        let equipmentsData = [];
+
+        addEquipBtn.addEventListener("click", () => {
+            const equipmentSelectedText = equipmentSelectEl.options[equipmentSelectEl.selectedIndex].text
+            const equipmentQty = +equipmentQuantityEl.value;
+            const unitPrice = +unitPriceEl.value;
+            if (equipmentSelectEl.value == "") {
+                alert("Please select an equipment");
+                
+            }
+            else if (equipmentQty <= 0) {
+                //alert("Please enter a valid quantity");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a valid quantity!',
+                });
+            }
+            else if (unitPrice <= 0) {
+                alert("Please enter a valid unit price");
+            }
+            else if (equipmentsData.some(equipment => equipment.equipmentId == +equipmentSelectEl.value)) {
+                alert("This equipment has already been added. Add another one");
+                clearFields();
+            }
+            else
+            {
+                addedEquipmentsSection.innerHTML += `
+                                                        <tr>
+                                                            <td>
+                                                               ${equipmentSelectedText}
+                                                            </td>
+                                                            <td>
+                                                               ${equipmentQty}
+                                                            </td>
+                                                            <td>
+                                                                ${unitPrice}
+                                                            </td>
+                                                            <td>
+                                                                <button data-id="${equipmentSelectEl.value}" class="btn btn-danger remove-btn" type="button">Remove</button>
+                                                            </td>
+                                                        </tr>
+                                                `;
+                equipmentsData.push({
+                    equipmentId: +equipmentSelectEl.value,
+                    qty: equipmentQty,
+                    unitPrice: unitPrice
+                })
+
+                clearFields();
+
+                const removeBtns = document.querySelectorAll(".remove-btn");
+
+                removeBtns.forEach(removeBtn => {
+                    removeBtn.addEventListener("click", (e) => {
+                        const target = e.target;
+                        equipmentsData = equipmentsData.filter(equipment => equipment.equipmentId != +target.dataset.id);
+                        const row = target.parentElement.parentElement;
+                        row.remove();
+                    })
+                });
+            }
+        })
+
+        function clearFields() {
+            equipmentSelectEl.value = "";
+            equipmentQuantityEl.value = "";
+            unitPriceEl.value = "";
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const supplier = document.querySelector("#SupplierId").value;
+            const orderDate = document.querySelector("#OrderDate").value;
+            const isOrderCompleted = document.querySelector("#IsOrderComplete").checked;
+            const orderData = {
+                isOrderComplete: isOrderCompleted,
+                orderDate,
+                supplierId: supplier
+            }
+            if (equipmentsData.length < 1) {
+                alert("Please add at least one equipment");
+            }
+            else
+            {
+                console.log(JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }));
+                $.ajax({
+                    type: "POST",
+                    url: "/Order/Create",
+                    data: JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
+                        
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Your work could not be saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
+                    },
+                })
+
+            }
+        })
+
+</script>
+}

@@ -16,5 +16,13 @@ namespace Project1MVC.Services
         {
             return Convert.ToInt32(obj);
         }
+        public static DateTime ToDateTime(this object obj)
+        {
+            return Convert.ToDateTime(obj);
+        }
+        public static Boolean ToBoolean(this object obj)
+        {
+            return Convert.ToBoolean(obj);
+        }
     }
 }

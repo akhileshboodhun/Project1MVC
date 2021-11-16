@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -23,6 +24,7 @@ namespace Project1MVC.Models
 
         public int? UserRoleId { get; set; }
 
+        [Display(Name="Role Name")]
         public string RoleName { get; set; }
     }
 }

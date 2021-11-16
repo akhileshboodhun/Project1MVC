@@ -1,52 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web;
 
 namespace Project1MVC.Models
 {
-    public class Employee : IUser
+    public class Employee : User
     {
         public Employee()
         {
-            Id = Guid.NewGuid();
         }
 
-        public Employee(string firstName, string lastName, DateTime dateOfBirth, string email, string role, string employeeStatus, [Optional] ICollection<Equipment> equipments, string password="")
+        public Employee(string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive) : base(fName, lName, email, salt, hashedPassword, userRoleId, roleName)
         {
-            Id = Guid.NewGuid();
-            FirstName = firstName;
-            LastName = lastName;
-            DateOfBirth =  dateOfBirth;
-            Email = email;
-            Role = role;
-            EmployeeStatus = employeeStatus;
-            Equipments = equipments ?? new List<Equipment>();
-            Password = password;
+            this.DateOfBirth = dateOfBirth;
+            this.Address = address;
+            this.PhoneNo = phoneNo;
+            this.IsActive = isActive;
         }
 
-        public Guid Id { get;}
-        [Required(AllowEmptyStrings = false, ErrorMessage = "First Name is required")]
-        public string FirstName { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name is required")]
-        public string LastName { get; set; }
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateOfBirth { get; set; }
-        [Required(AllowEmptyStrings = false)]
-        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Invalid Email")]
-        public string Email { get; set; }
-        [Required(AllowEmptyStrings = false)]
-        [RegularExpression("Developer|TE|BA|PO|QA|Admin|Technician", ErrorMessage = "Invalid Role")]
-        public string Role { get; set; }
+        public Employee(int? userId, string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive) : this( fName,  lName,  email,  salt,  hashedPassword,  userRoleId, roleName, dateOfBirth,  address,  phoneNo,  isActive)
+        {
+            this.UserId = userId;
+        }
 
-        [Required(AllowEmptyStrings = false)]
-        [RegularExpression("Active|Inactive", ErrorMessage = "Invalid Status")]
-        public string EmployeeStatus { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date Of Birth")]
+        public DateTime DateOfBirth { get; set; }
+        public string Address { get; set; }
+        [Display(Name = "Phone No")]
+        public string PhoneNo { get; set; }
+        [Display(Name = "Status")]
+        public bool IsActive { get; set; }
         public int Age { get => Convert.ToInt32(DateTime.Now.Subtract(this.DateOfBirth).TotalDays / 365.2425); }
 
-        public virtual ICollection<Equipment> Equipments { get; set; }
-        public string Password { get; set; }
     }
 }

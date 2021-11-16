@@ -1,0 +1,42 @@
+﻿@model Project1MVC.Models.Error
+@Styles.Render("~/Content/css")
+@Styles.Render("~/Content/Error")
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/ParticlesJS")
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.Message
+    </title>
+</head>
+<body>
+    <div class="d-flex flex-row justify-content-center align-items-center">
+        <div class="error-page">
+            <div>
+                <!--h1(data-h1='400') 400-->
+                <!--p(data-p='BAD REQUEST') BAD REQUEST-->
+                <!--h1(data-h1='401') 401-->
+                <!--p(data-p='UNAUTHORIZED') UNAUTHORIZED-->
+                <!--h1(data-h1='403') 403-->
+                <!--p(data-p='FORBIDDEN') FORBIDDEN-->
+                <h1 data-h1="
+                    @Model.StatusCode
+                    ">@Model.StatusCode
+                </h1>
+                <p data-p="
+                   @Model.Message
+                   ">@Model.Message
+                </p>
+                <!--h1(data-h1='500') 500-->
+                <!--p(data-p='SERVER ERROR') SERVER ERROR-->
+            </div>
+        </div>
+        <div id="particles-js"></div>
+        <!--a(href="#").back GO BACK-->
+    </div>
+</body>
+</html>

@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - @BL.ApplicationTitle</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/sweetalert2")
+    @Scripts.Render("~/bundles/jsPDF")
     <link rel="stylesheet" href="~/Scripts/dojoLibrary/dijit/themes/claro/claro.css" media="screen">
     <link rel="stylesheet" href="~/Scripts/dojoLibrary/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="~/Scripts/dojoLibrary/dojox/grid/resources/claroGrid.css">
@@ -63,14 +65,71 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Equipment", "Index", "Equipment")</li>
-                    <li>@Html.ActionLink("Employee", "Index", "Employee")</li>
-                    <li>@Html.ActionLink("Supplier", "Index", "Supplier")</li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a>@HttpContext.Current.User.Identity.Name</a></li>
-                        <li>@Html.ActionLink("Logout", "Logout", "Auth")</li>
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li>@Html.ActionLink("Equipment", "Index", "Equipment")</li>
+                        }
+                        if (User.IsInRole("Admin") || User.IsInRole("Technician"))
+                        {
+                            <li class="user-management dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    User Management
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>@Html.ActionLink("Roles", "Index", "UserRoles")</li>
+                                        <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                                    }
+
+                                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                                </ul>
+                            </li>
+                        }
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li class="order-management dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Order Management
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li>@Html.ActionLink("Supplier", "Index", "Supplier")</li>
+                                    <li>@Html.ActionLink("Order", "Index", "Order")</li>
+                                </ul>
+                            </li>
+                        }
+                        if (User.IsInRole("Admin") || User.IsInRole("Technician"))
+                        {
+                            <li class="report dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Report
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>@Html.ActionLink("Current Stock", "Index", "EquipmentsInStock")</li>
+                                    <li>@Html.ActionLink("Future Stock", "Index", "FutureStock")</li>
+                                </ul>
+                            </li>
+                        }
+
+                        @*<li><a href="/Users/Details/@{@Request.Cookies["UserIdCookie"].Value;}">@HttpContext.Current.User.Identity.Name</a></li>*@
+                        <li>
+                            <a href="#" onclick="       Swal.fire({
+                               icon: 'success' ,
+                               title: 'Logged Out' ,
+                               showConfirmButton: false,
+                               timer: 1500
+                               }).then((result)=>
+                                {
+                                window.location.href = '/Auth/Logout';
+                                });">Logout
+                            </a>
+                        </li>
 
                     }
                     else
@@ -78,7 +137,12 @@
                         <li>@Html.ActionLink("Login", "Login", "Auth")</li>
 
                     }
-
+                </ul>
+                <ul class="nav navbar-nav navbar-right ml-auto">
+                    @if (User.Identity.IsAuthenticated && Request.Cookies["UserFullName"] != null)
+                    {
+                        <li style="float:right;"><a>@{@Request.Cookies["UserFullName"].Value;}</a></li>
+                    }
                 </ul>
             </div>
         </div>
