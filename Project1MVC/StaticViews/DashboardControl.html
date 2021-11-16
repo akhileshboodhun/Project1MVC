@@ -1,0 +1,22 @@
+﻿<div style="height:100%;width: 100%">
+    <div data-dojo-type="dojox/mvc/Group"
+         data-dojo-props="target: at(this, 'searchRecords')">
+
+        <div class="tiles-container center">
+            <div class="title">
+                <p>Dashboard</p>
+            </div>
+            <div class="grid-container grid"
+                 data-dojo-type="dojox/mvc/WidgetList"
+                 data-dojo-props="children: at('rel:', 'items')"
+                 data-mvc-child-type="js/Tiles"
+                 data-mvc-child-props="label: at(this.target, 'label'), icon: at(this.target, 'icon'), desc: at(this.target, 'desc'), location: at(this.target, 'location')">
+            </div>
+        </div>
+
+    </div>
+
+    <script type="dojo/require">
+        at:'dojox/mvc/at'
+    </script>
+</div>

@@ -29,7 +29,7 @@ namespace Project1MVC
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/tiles").Include(
-                      "~/Content/CustomWidgetsCSS/Tiles.less"));
+                      "~/Content/CustomWidgetsCSS/Tiles.css"));
         }
     }
 }

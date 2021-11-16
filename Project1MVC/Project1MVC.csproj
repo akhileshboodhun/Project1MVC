@@ -140,6 +140,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="BL.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\EquipmentsInStockController.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DAL\UserRoleDAL.cs" />
     <Compile Include="Models\FutureStock.cs" />
+    <Compile Include="Models\Tile.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Services\CryptographyProcessor.cs" />
@@ -205,6 +207,14 @@
     <Content Include="Scripts\AddDeleteList.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <TypeScriptCompile Include="Scripts\CustomWidgets\Dashboard.ts" />
+    <Content Include="Scripts\CustomWidgets\js\Dashboard.js" />
+    <Content Include="Scripts\CustomWidgets\js\ITile.js" />
+    <Content Include="Scripts\CustomWidgets\js\Tiles.js" />
+    <Content Include="Scripts\CustomWidgets\PDashboard.txt" />
+    <TypeScriptCompile Include="Scripts\CustomWidgets\DashboardControl.ts" />
+    <TypeScriptCompile Include="Scripts\CustomWidgets\ITile.ts" />
+    <TypeScriptCompile Include="Scripts\CustomWidgets\Tiles.ts" />
     <Content Include="Scripts\dojoLibrary\dijit\bower.json" />
     <Content Include="Scripts\dojoLibrary\dijit\CONTRIBUTING.md" />
     <Content Include="Scripts\dojoLibrary\dijit\LICENSE" />
@@ -772,14 +782,16 @@
     <Content Include="Scripts\dojoLibrary\dojo\README.md" />
     <Content Include="Scripts\dojoLibrary\dojo\resources\LICENSE" />
     <Content Include="Scripts\dojoLibrary\dojo\store\README" />
-    <Content Include="Content\CustomWidgetsCSS\Tiles.less" />
+    <Content Include="Content\CustomWidgetsCSS\Tiles.css" />
+    <Content Include="package.json" />
+    <Content Include="package-lock.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\CustomWidgets\DataGridFilterWidget.js" />
     <Content Include="Scripts\CustomWidgets\EmployeeSearch.js" />
     <Content Include="Scripts\CustomWidgets\FilterControlWidget.js" />
     <Content Include="Scripts\CustomWidgets\FilterPane.js" />
     <Content Include="Scripts\CustomWidgets\LandingPage.js" />
-    <Content Include="Scripts\CustomWidgets\Tiles.js" />
+    <Content Include="Scripts\CustomWidgets\PTiles.txt" />
     <Content Include="Scripts\dojoLibrary\build-report.txt" />
     <Content Include="Scripts\dojoLibrary\dijit\a11y.js" />
     <Content Include="Scripts\dojoLibrary\dijit\a11y.js.uncompressed.js" />
@@ -10529,8 +10541,10 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\js\UserLogin.js" />
+    <Content Include="Scripts\CustomWidgets\js\UserLogin.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="StaticViews\Dashboard.html" />
+    <Content Include="StaticViews\DashboardControl.html" />
     <Content Include="StaticViews\DataGridFilterWidget.html" />
     <Content Include="StaticViews\EmployeeSearch.html" />
     <Content Include="StaticViews\FilterControlWidget.html" />
@@ -10581,9 +10595,11 @@
     <Content Include="Views\UserRoles\Index.cshtml" />
     <Content Include="Views\FutureStock\Index.cshtml" />
     <Content Include="Views\EquipmentsInStock\Index.cshtml" />
+    <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\ManageStocks\" />
   </ItemGroup>
   <ItemGroup>

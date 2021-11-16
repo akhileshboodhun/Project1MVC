@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "alwaysStrict": false,
+    "noImplicitUseStrict": true,
+    "module": "amd",
+    "outDir": "Scripts/CustomWidgets/js",
+    "lib": [ "es5", "es2015.promise", "DOM", "ScriptHost" ]
+  },
+  "include": [
+    "Scripts/CustomWidgets/*",
+    "js/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}

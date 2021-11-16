@@ -1,19 +1,9 @@
-﻿<div style="height:100%;width: 100%">
-   <!-- <div id="programmaticRepeat1"></div>-->
-    <div class="container">
-        <div class="row tile">
-            <div class="col-sm">
-                One of three columns
-            </div>
-            <div class="col-sm">
-                One of three columns
-            </div>
-            <div class="col-sm">
-                One of three columns
-            </div>
-        </div>
-    </div>
+﻿    <div class="item" data-dojo-attach-event="onClick: _onClick">
+        <i class= "fa fas ${icon} fa-2x" ></i>
+        <p class="item-title" data-dojo-attach-point="label">${label}</p>
+        <p class="item-desc" data-dojo-attach-point="desc">${desc}</p>
     <script type="dojo/require">
         at:'dojox/mvc/at'
     </script>
-</div>
+    </div>
+

@@ -1,0 +1,82 @@
+﻿////interface Tile {
+////    label: string,
+////    icon: string,
+////    desc: string
+////}
+
+define(['dojo/_base/declare',
+    'dojo/_base/lang',
+    'dijit/_Widget',
+    'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
+    'dojox/mvc/getStateful',
+    'dojo/text!StaticViews/Dashboard.html',
+    'dojox/mvc/WidgetList',
+    'dojox/mvc/at',
+    "dojox/mvc/Group",
+    "CustomWidgets/Tiles"
+],
+    function (dojo_declare, lang, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, getStateful, template) {
+
+        var proto = {
+
+            searchRecords: null,
+            templateString: template,
+
+
+            postCreate: function () {
+                this.inherited(arguments);
+                //console.log(this.data);
+                var data = {
+                    "identifier": "label",
+                    "items": [
+                        { label: 'Equipment8', icon: '', desc: 'no desc8' },
+                        { label: 'Order4', icon: '', desc: 'doscriktion' }]
+                };
+                this.searchRecords = getStateful(data);
+                //parser.parse();
+                //console.log(this.searchRecords);
+
+                //parser.parse();
+            },
+
+            startup: function () {
+                this.inherited(arguments);
+
+            },
+
+            //_onClick: function (e) {
+            //    console.log('you clicked me: ' + this.countClicked++);
+            //},
+
+            //_getRequestData: function () {
+            //},
+
+            //_processJsonData: function (data) {
+
+            //    var store = new ItemFileWriteStore();
+            //    this.set('store', store);
+            //},
+
+            //_requestDataLayout: function () {
+            //    var layout = [[
+            //    ]];
+
+            //    this.set('layout', layout);
+            //},
+
+            //_buildData: function () {
+            //    var store = new ItemFileWriteStore();
+
+            //    this.set('store', store);
+            //},
+
+            //_buildLayout: function () {
+            //    var layout = [[
+            //    ]];
+
+            //    this.set('layout', layout);
+            //}
+        }
+        return dojo_declare("",[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], proto);
+    });
