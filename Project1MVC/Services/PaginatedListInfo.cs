@@ -8,10 +8,11 @@ namespace Project1MVC.Services
 {
     public class PaginatedListInfo<T>
     {
-        public PaginatedListInfo(string pageNumber, string pageSize, int recordsCount, string sortBy, string sortOrder)
+        public PaginatedListInfo(IList<string> cols, string pageNumber, string pageSize, int recordsCount, string sortBy, string sortOrder)
         {
-            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber);
-            int _pageSize = ServicesHelper.SanitizePageSize(pageSize);
+            IList<string> _cols = ServicesHelper.SanitizeColumns<T>(cols);
+            int _pageNumber = SanitizePageNumber(pageNumber);
+            int _pageSize = SanitizePageSize(pageSize);
             string _sortBy = ServicesHelper.SanitizeSortBy<T>(sortBy);
             string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
 
@@ -30,8 +31,8 @@ namespace Project1MVC.Services
             this.RecordsCount = recordsCount;
             this.SortBy = _sortBy;
             this.SortOrder = _sortOrder;
+            this.DisplayColumns = _cols;
             this.DisplayPrimaryColumn = false;
-            this.DisplayColumns = new List<string>();
         }
 
         public int PageNumber
@@ -79,7 +80,45 @@ namespace Project1MVC.Services
 
         public IList<string> DisplayColumns
         {
+            // TODO: This setter needs to validate the list of cols supplied
             get; set;
+        }
+
+        public static int PageIncrement
+        {
+            get
+            {
+                return 3;
+            }
+        }
+
+        public static int DefaultPageSize
+        {
+            get
+            {
+                return GetPageSizeList()[0];
+            }
+        }
+
+        public static IList<int> GetPageSizeList()
+        {
+            List<int> list = new List<int>()
+            {2, 4, 10, 25, 50, 100, 250, 500, 1000};
+
+            list.Sort();
+            return list;
+        }
+
+        public static int SanitizePageNumber(string pageNumber)
+        {
+            int _pageNumber = (pageNumber != null && pageNumber.All(char.IsDigit)) ? pageNumber.ToInt() : 1;
+            return (_pageNumber > 0) ? _pageNumber : 1;
+        }
+
+        public static int SanitizePageSize(string pageSize)
+        {
+            int _pageSize = (pageSize != null && pageSize.All(char.IsDigit)) ? pageSize.ToInt() : DefaultPageSize;
+            return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }
     }
 }
