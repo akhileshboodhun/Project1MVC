@@ -15,6 +15,25 @@ namespace Project1MVC.Services
 {
     public static class ServicesHelper
     {
+        public static int PageIncrement = 3;
+       
+        public static int DefaultPageSize
+        {
+            get
+            {
+                return GetPageSizeList()[0];
+            }
+        }
+
+        public static IList<int> GetPageSizeList()
+        {
+            List<int> list = new List<int>()
+            {2, 4, 10, 25, 50, 100, 250, 500, 1000};
+
+            list.Sort();
+            return list;
+        }
+
         public static string SanitizeSortOrder(string sortOrder)
         {
             string defaultOrder = "asc";
@@ -93,6 +112,18 @@ namespace Project1MVC.Services
         {
             return (str != null && str.ToString().Trim().ToLower() == "false") ? false : true;
         }
+
+        public static int SanitizePageNumber(string pageNumber)
+        {
+            int _pageNumber = (pageNumber != null && pageNumber.All(char.IsDigit)) ? pageNumber.ToInt() : 1;
+            return (_pageNumber > 0) ? _pageNumber : 1;
+        }
+
+        public static int SanitizePageSize(string pageSize)
+        {
+            int _pageSize = (pageSize != null && pageSize.All(char.IsDigit)) ? pageSize.ToInt() : DefaultPageSize;
+            return (_pageSize > 0) ? _pageSize : DefaultPageSize;
+        }       
 
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
         {
