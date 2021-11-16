@@ -6,6 +6,49 @@
     <title>@ViewBag.Title - @BL.ApplicationTitle</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Scripts/dojoLibrary/dijit/themes/claro/claro.css" media="screen">
+    <link rel="stylesheet" href="~/Scripts/dojoLibrary/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="~/Scripts/dojoLibrary/dojox/grid/resources/claroGrid.css">
+    @Styles.Render("~/Content/tiles")
+    <script>
+        @{
+            string dojoBaseDirectory = Url.Content("~/Scripts/dojoLibrary");
+        }
+
+        var dojoConfig = {
+            async: true,
+            parseOnLoad: true,
+
+            packages: [
+                { name: "dojo", location: '@Url.Content(dojoBaseDirectory + "/dojo")'},
+                { name: "dijit", location: '@Url.Content(dojoBaseDirectory + "/dijit")'},
+                { name: "dojox", location: '@Url.Content(dojoBaseDirectory + "/dojox")' },
+                { name: 'CustomWidgets', location: '@Url.Content("~/Scripts/CustomWidgets")' },
+                { name: 'js', location: '@Url.Content("~/Scripts/CustomWidgets/js")' },
+                { name: 'StaticViews', location: '@Url.Content("~/StaticViews")'}
+            ]
+            ,
+            staticHasFeatures: {
+                'config-dojo-loader-catches': 0,
+                'config-tlmSiblingOfDojo': 0,
+                'dojo-log-api': 0,
+                'dojo-sync-loader': 0,
+                'dojo-timeout-api': 0,
+                'dojo-sniff': 0,
+                'dojo-cdn': 0,
+                'dojo-loader-eval-hint-url': 1,
+                'config-stripStrict': 1,
+                'ie-event-behavior': 1,
+                'dojo-config-api': 1
+            }
+
+        }
+    </script>
+    <script src="~/Scripts/dojoLibrary/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true"></script>
+
+    <script>
+        require(["dojo/parser", "dojo/domReady!"]);
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">

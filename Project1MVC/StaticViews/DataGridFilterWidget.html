@@ -1,0 +1,57 @@
+﻿<div style="height:100%;width: 100%">
+
+    <!--<div class="row"
+         data-dojo-type="CustomWidgets/FilterPane"
+         data-dojo-attach-point="filterPane"
+         data-dojo-props="filters: at(this,'filters'), gridToFilter: at(this,'grid')"></div>-->
+    <div class="row" style="margin-bottom: 15px">
+        <span>Employee Id</span>
+        <span data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="txtSearchEmployeeId"></span>
+        <span id="btnApplyFilter" data-dojo-type="dijit/form/Button" data-dojo-attach-event="onClick: _onbtnApplyFilter" data-dojo-attach-point="btnApplyFilter" data-dojo-props="label: 'Apply Filter'"></span>
+
+    </div>
+
+    <div data-dojo-type="dojox/mvc/Group" style="margin-bottom: 15px" data-dojo-props="target:at(this, 'employeeData')">
+        <div class="row" style="margin-bottom: 10px">
+            <span style="color: black; float: left; width: 100px">Employee Id</span>
+            <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="txtEmployeeId" data-dojo-props="value: at('rel:', 'EmployeeId'), disabled:true"></span>
+        </div>
+        <div class="row" style="margin-bottom: 10px">
+            <span style="color: black; float: left; width: 100px">Employee Name</span>
+            <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="txtEmployeeName" data-dojo-props="value: at('rel:', 'DisplayName'), disabled:true"></span>
+        </div>
+        <div class="row" style="margin-bottom: 10px">
+            <span style="color: black; float: left; width: 100px">Reference Code</span>
+            <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="txtXRefCode" data-dojo-props="value: at('rel:', 'XRefCode'), disabled:true"></span>
+        </div>
+        <div class="row" style="margin-bottom: 10px">
+            <span style="color: black; float: left; width: 100px">State</span>
+            <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="txtState" data-dojo-props="value: at('rel:', 'StateCode'), disabled:true"></span>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 10px">
+        <div style="height:25rem"
+             data-dojo-attach-point="grid"
+             data-dojo-type="dojox/grid/DataGrid"
+             data-dojo-props="structure: at(this,'layout'), store: at(this,'store')"></div>
+    </div>
+    <div class="row" style="margin-bottom: 10px">
+        <span style="color: black; float: left; width: 100px">Category</span>
+        <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/ComboBox" data-dojo-attach-event="onChange: _onCategoryChange"
+              data-dojo-attach-point="cmbCategory"
+              data-dojo-props="store: at(this, 'categoryStore'), searchAttr: 'CategoryName'"></span>
+    </div>
+    <div class="row" style="margin-bottom: 10px">
+        <span style="color: black; float: left; width: 100px">Equipment</span>
+        <span style="width: 25%; margin-left: 25px" data-dojo-type="dijit/form/ComboBox" data-dojo-attach-point="cmbEquipment" data-dojo-props="store: at(this, 'equipmentStore'), searchAttr: 'NameSerialNumber'"></span>
+    </div>
+
+    <div class="row">
+        <div id="btnAssignToEmployee" data-dojo-type="dijit/form/Button" data-dojo-attach-event="onClick: _onAssignEquipmentToEmployee" data-dojo-attach-point="btnAssignToEmployee" data-dojo-props="label: 'Assign Equipment to Employee'"></div>
+    </div>
+
+    <script type="dojo/require">
+        at:'dojox/mvc/at'
+    </script>
+</div>
