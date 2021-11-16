@@ -62,7 +62,6 @@ class Dashboard {
             var dashboardCtrl = new DashboardControl({
                 searchRecords : this.searchRecords
             });
-            debugger;
             domConstruct.place(dashboardCtrl.domNode, domNode, "last");
             dashboardCtrl.startup();
 
