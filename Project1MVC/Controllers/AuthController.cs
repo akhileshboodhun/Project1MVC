@@ -22,7 +22,7 @@ namespace Project1MVC.Controllers
                 ModelState.AddModelError("", $"You need to be logged in to access {ReturnUrl}");
                 GlobalReturnUrl = ReturnUrl;
             }
-            return View();
+            return View(new UserCredentials());
         }
 
 
@@ -37,7 +37,7 @@ namespace Project1MVC.Controllers
                 var userDB =  UserDAL.Instance;
                 var users = userDB.GetAll();
                 var crypto = new CryptographyProcessor(size: 10);
-                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
+                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email));
                 if (!(user is null))
                 {
                     HttpCookie UserFullName = new HttpCookie("UserFullName");
@@ -66,12 +66,12 @@ namespace Project1MVC.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid Credentials");
-                    return View();
+                    return View(new UserCredentials());
                 }
             }
             catch
             {
-                return View();
+                return View(new UserCredentials());
             }
         }
 
