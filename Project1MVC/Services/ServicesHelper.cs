@@ -100,7 +100,6 @@ namespace Project1MVC.Services
                 }
             }
 
-            _cols = _cols.Count != 0 ? _cols : validCols;
             return _cols;
         }
 
