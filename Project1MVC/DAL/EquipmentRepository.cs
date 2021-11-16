@@ -175,16 +175,16 @@ namespace Project1MVC.DAL
 
             if (_cols.Count == 0)
             {
-                paginatedListInfo = new PaginatedListInfo<Equipment>(pageNumber, pageSize, 0, sortBy, sortOrder);
+                paginatedListInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, 0, sortBy, sortOrder);
                 return list;
             }
 
             int recordsCount = GetCount(filters, orFilters);
-            PaginatedListInfo<Equipment> pgInfo = new PaginatedListInfo<Equipment>(pageNumber, pageSize, recordsCount, sortBy, sortOrder);
+            PaginatedListInfo<Equipment> pgInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, recordsCount, sortBy, sortOrder);
             
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, _cols, pgInfo.PageNumber, pgInfo.PageSize, pgInfo.SortBy, pgInfo.SortOrder, filters, orFilters);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, pgInfo.DisplayColumns, pgInfo.PageNumber, pgInfo.PageSize, pgInfo.SortBy, pgInfo.SortOrder, filters, orFilters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
