@@ -93,6 +93,8 @@ namespace Project1MVC.DAL
             //{
             //    if (conn != null)
             //    {
+
+            // TODO: if stringify columns result is empty, then we don't execute the query
             string sql = 
                 "SELECT " +
                 ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
@@ -192,7 +194,7 @@ namespace Project1MVC.DAL
                     {
                         Equipment equipment = new Equipment();
 
-                        foreach (string col in cols)
+                        foreach (string col in _cols)
                         {
                             equipment[col] = reader[col];
                         }
