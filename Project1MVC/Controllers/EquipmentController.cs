@@ -23,36 +23,12 @@ namespace Project1MVC.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult Index(FormCollection fc)
         {
-            int pageNumber = ServicesHelper.SanitizePageNumber(fc["pageNumber"]);
-            int pageSize = ServicesHelper.SanitizePageSize(fc["pageSize"]);
-            string sortBy = ServicesHelper.SanitizeSortBy<Equipment>(fc["sortBy"]);
-            string sortOrder = ServicesHelper.SanitizeSortOrder(fc["sortOrder"]);
-            string complexFilterString = ServicesHelper.SanitizeString(fc["complexFilterString"]);
-            bool orFilters = ServicesHelper.SanitizeBoolean(fc["orFilters"]);
-            
-            // TODO: pass in actual list of columns to be displayed
-            IList<string> cols = new List<string>();
-            IList<Services.Filter> filters = Services.Filter.FromComplexString(complexFilterString);
-            int recordsCount = 0;
-            int adjustedPageNumber = 0;
-            int pageCount = 0;
-            IList<Equipment> equipments = equipmentService.GetPaginatedList(out recordsCount, out pageCount, out adjustedPageNumber, pageNumber, pageSize, cols, sortBy, sortOrder, filters, orFilters);
+            PaginatedListInfo<Equipment> paginatedListInfo;
+            FilteringInfo<Equipment> filteringInfo;
+            IList<Equipment> equipments = equipmentService.GetPaginatedList(out paginatedListInfo, out filteringInfo, fc["pageNumber"], fc["pageSize"], fc["sortBy"], fc["sortOrder"], fc["complexFilterString"], fc["orFilters"]);
 
-            ViewBag.filterOptions = new List<string>(){ "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
-            ViewBag.filterInputValues = Services.Filter.GetFieldsDictionaryFromFiltersList<Equipment>(filters);
-            ViewBag.orFilters = orFilters;
-
-            ViewBag.pageNumber = adjustedPageNumber;
-            ViewBag.pageSize = pageSize;
-            ViewBag.pageCount = pageCount;
-            ViewBag.recordsCount = recordsCount;
-
-            ViewBag.displayPrimaryColumn = false;
-            ViewBag.displayCols = cols;
-
-            ViewBag.sortBy = sortBy;
-            ViewBag.sortOrder = sortOrder;
-            ViewBag.nextSortOrders = ServicesHelper.GetNextSortParams<Equipment>(sortBy, sortOrder);
+            ViewBag.paginatedListInfo = paginatedListInfo;
+            ViewBag.filteringInfo = filteringInfo;
             
             return View(equipments);
         }
