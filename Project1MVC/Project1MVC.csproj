@@ -189,6 +189,7 @@
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
     <Compile Include="Services\Filter.cs" />
+    <Compile Include="Services\FilteringInfo.cs" />
     <Compile Include="Services\FilterType.cs" />
     <Compile Include="Services\IEquipmentService.cs" />
     <Compile Include="Services\Logger.cs" />
