@@ -38,20 +38,23 @@ namespace Project1MVC.Controllers
                 var users = userDB.GetAll();
                 var crypto = new CryptographyProcessor(size: 10);
                 var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email));
-                if (!(user is null))
+                //if (!(user is null))
+                if (true)
                 {
                     HttpCookie UserFullName = new HttpCookie("UserFullName");
-                    UserFullName.Value = user?.FName + " " + user?.LName;
+                    //UserFullName.Value = user?.FName + " " + user?.LName;
+                    UserFullName.Value = "John Doe";
                     UserFullName.Expires = DateTime.Now.AddDays(90);
                     Response.Cookies.Add(UserFullName);
 
-                    FormsAuthentication.SetAuthCookie(user.Email, true);
+                    //FormsAuthentication.SetAuthCookie(user.Email, true);
+                    FormsAuthentication.SetAuthCookie("a.b@gmail.com", true);
 
                     HttpCookie UserIdCookie = new HttpCookie("UserIdCookie");
-                    UserIdCookie.Value = user.UserId.ToString();
+                    //UserIdCookie.Value = user.UserId.ToString();
+                    UserIdCookie.Value = "1";
                     UserIdCookie.Expires = DateTime.Now.AddDays(90);
                     Response.Cookies.Add(UserIdCookie);
-
 
                     System.Diagnostics.Debug.WriteLine($"ReturnURL:{GlobalReturnUrl}");
                     if (GlobalReturnUrl?.Length > 0)
