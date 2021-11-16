@@ -232,23 +232,7 @@ namespace Project1MVC.Services
 
             return _cols;
         }
-
-        public static void GetPageCountAndAdjustedPageNumber(out int pageCount, out int adjustedPageNumber, int recordsCount, int pageNumber, int pageSize)
-        {
-            int remainder = 0;
-            int _pageCount = Math.DivRem(recordsCount, pageSize, out remainder);
-            _pageCount = (remainder == 0) ? _pageCount : _pageCount + 1;
-            _pageCount = _pageCount < 1 ? 1 : _pageCount;
-            
-            int _adjustedPageNumber = 
-                ((recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != _pageCount) ? 
-                1 : pageNumber;
-
-            pageCount = _pageCount;
-            adjustedPageNumber = _adjustedPageNumber;
-        }
-           
-
+                
         private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
         {
             string whereClause = "";
