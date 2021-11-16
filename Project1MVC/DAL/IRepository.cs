@@ -16,7 +16,7 @@ namespace Project1MVC.DAL
 
         IList<T> GetAll();
 
-        IList<T> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true);
+        IList<T> GetPaginatedList(out PaginatedListInfo<T> paginatedListInfo, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true);
 
         int GetCount(IList<Filter> filters = null, bool orFilters = true);
 
