@@ -15,14 +15,23 @@ namespace Project1MVC.Services
 {
     public static class ServicesHelper
     {
-        public static readonly int DefaultPageIncrement = 3;
-
+        public static int PageIncrement = 3;
+       
         public static int DefaultPageSize
         {
             get
             {
                 return GetPageSizeList()[0];
             }
+        }
+
+        public static IList<int> GetPageSizeList()
+        {
+            List<int> list = new List<int>()
+            {2, 4, 10, 25, 50, 100, 250, 500, 1000};
+
+            list.Sort();
+            return list;
         }
 
         public static string SanitizeSortOrder(string sortOrder)
@@ -77,15 +86,6 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        public static IList<int> GetPageSizeList()
-        {
-            List<int> list = new List<int>()
-            {2, 4, 10, 25, 50, 100, 250, 500, 1000};
-            
-            list.Sort();
-            return list;
-        }
-
         public static IList<string> SanitizeColumns<T>(IList<string> cols)
         {
             IList<string> colsParam = cols == null ? new List<string>() : cols;
@@ -100,8 +100,17 @@ namespace Project1MVC.Services
                 }
             }
 
-            _cols = _cols.Count != 0 ? _cols : validCols;
             return _cols;
+        }
+
+        public static string SanitizeString(string str)
+        {
+            return str != null ? str : "";
+        }
+
+        public static bool SanitizeBoolean(string str)
+        {
+            return (str != null && str.ToString().Trim().ToLower() == "false") ? false : true;
         }
 
         public static int SanitizePageNumber(string pageNumber)
@@ -114,17 +123,7 @@ namespace Project1MVC.Services
         {
             int _pageSize = (pageSize != null && pageSize.All(char.IsDigit)) ? pageSize.ToInt() : DefaultPageSize;
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
-        }
-
-        public static string SanitizeString(string str)
-        {
-            return str != null ? str : "";
-        }
-
-        public static bool SanitizeBoolean(string str)
-        {
-            return (str != null && str.ToString().Trim().ToLower() == "false") ? false : true;
-        }
+        }       
 
         public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
         {
@@ -232,23 +231,7 @@ namespace Project1MVC.Services
 
             return _cols;
         }
-
-        public static void GetPageCountAndAdjustedPageNumber(out int pageCount, out int adjustedPageNumber, int recordsCount, int pageNumber, int pageSize)
-        {
-            int remainder = 0;
-            int _pageCount = Math.DivRem(recordsCount, pageSize, out remainder);
-            _pageCount = (remainder == 0) ? _pageCount : _pageCount + 1;
-            _pageCount = _pageCount < 1 ? 1 : _pageCount;
-            
-            int _adjustedPageNumber = 
-                ((recordsCount - (pageNumber * pageSize)) < 0) && (pageNumber != _pageCount) ? 
-                1 : pageNumber;
-
-            pageCount = _pageCount;
-            adjustedPageNumber = _adjustedPageNumber;
-        }
-           
-
+                
         private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
         {
             string whereClause = "";

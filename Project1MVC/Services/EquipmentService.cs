@@ -48,7 +48,7 @@ namespace Project1MVC.Services
 
         public Equipment Get(int id)
         {
-            return this.Get(id, new List<string>());
+            return equipmentRepo.Get(id);
         }
 
         public Equipment Get(int id, IList<string> cols)
@@ -62,25 +62,18 @@ namespace Project1MVC.Services
             return equipmentRepo.GetAll();
         }
 
-        public IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, int pageNumber, int pageSize, IList<string> cols = null, string sortBy = "", string sortOrder = "", IList<Filter> filters = null, bool orFilters = true)
+        public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            int _pageNumber = ServicesHelper.SanitizePageNumber(pageNumber.ToString());
-            int _pageSize = ServicesHelper.SanitizePageSize(pageSize.ToString());
+            // TODO: pass in actual list of columns to be displayed
+            IList<string> displayCols = new List<string>() { "Type", "Brand", "Description", "CurrentStockCount", "ReStockThreshol" };
+            IList<string> filterCols = new List<string>() { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
 
-            string _sortBy = ServicesHelper.SanitizeSortBy<Equipment>(sortBy);
-            string _sortOrder = ServicesHelper.SanitizeSortOrder(sortOrder);
+            FilteringInfo<Equipment> filInfo = new FilteringInfo<Equipment>(filterCols, complexFilterString, orFilters);
+            PaginatedListInfo<Equipment> pgInfo;
+            IList<Equipment> list = equipmentRepo.GetPaginatedList(out pgInfo, displayCols, pageNumber, pageSize, sortBy, sortOrder, filInfo.Filters, filInfo.OrFilters);
 
-            IList<string> _cols = cols ?? ServicesHelper.GetColumns<Equipment>();
-            _cols = ServicesHelper.SanitizeColumns<Equipment>(_cols);
-
-            int _recordsCount = 0;
-            int _pageCount = 0;
-            int _adjustedPageNumber = 1;
-            IList<Equipment> list = equipmentRepo.GetPaginatedList(out _recordsCount, out _pageCount, out _adjustedPageNumber, _cols, _pageNumber, _pageSize, _sortBy, _sortOrder, filters, orFilters);
-
-            recordsCount = _recordsCount;
-            pageCount = _pageCount;
-            adjustedPageNumber = _adjustedPageNumber;
+            paginatedListInfo = pgInfo;
+            filteringInfo = filInfo;
             return list;        
         }
 

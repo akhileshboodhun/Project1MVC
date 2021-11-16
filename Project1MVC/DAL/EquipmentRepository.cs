@@ -93,6 +93,8 @@ namespace Project1MVC.DAL
             //{
             //    if (conn != null)
             //    {
+
+            // TODO: if stringify columns result is empty, then we don't execute the query
             string sql = 
                 "SELECT " +
                 ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
@@ -168,26 +170,23 @@ namespace Project1MVC.DAL
             return list;
         }
 
-        public IList<Equipment> GetPaginatedList(out int recordsCount, out int pageCount, out int adjustedPageNumber, IList<string> cols, int pageNumber, int pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
+        public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, IList<string> cols, string pageNumber, string pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
 
-            if (cols == null || cols.Count == 0)
+            if (_cols.Count == 0)
             {
-                recordsCount = 0;
-                pageCount = 0;
-                adjustedPageNumber = 1;
+                paginatedListInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, 0, sortBy, sortOrder);
                 return list;
             }
 
-            int _pageCount = 0;
-            int _adjustedPageNumber = 0;
-            int _recordsCount = GetCount(filters, orFilters);
-            ServicesHelper.GetPageCountAndAdjustedPageNumber(out _pageCount, out _adjustedPageNumber, _recordsCount, pageNumber, pageSize);
-
+            int recordsCount = GetCount(filters, orFilters);
+            PaginatedListInfo<Equipment> pgInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, recordsCount, sortBy, sortOrder);
+            
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, cols, _adjustedPageNumber, pageSize, sortBy, sortOrder, filters, orFilters);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, pgInfo.DisplayColumns, pgInfo.PageNumber, pgInfo.PageSize, pgInfo.SortBy, pgInfo.SortOrder, filters, orFilters);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -195,7 +194,7 @@ namespace Project1MVC.DAL
                     {
                         Equipment equipment = new Equipment();
 
-                        foreach (string col in cols)
+                        foreach (string col in _cols)
                         {
                             equipment[col] = reader[col];
                         }
@@ -212,10 +211,7 @@ namespace Project1MVC.DAL
             finally
             {
                 dbProvider.Connection.Close();
-
-                recordsCount = _recordsCount;
-                pageCount = _pageCount;
-                adjustedPageNumber = _adjustedPageNumber;
+                paginatedListInfo = pgInfo;
             }
             
             return list;

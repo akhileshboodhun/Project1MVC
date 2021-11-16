@@ -189,6 +189,7 @@
     <Compile Include="Services\EquipmentService.cs" />
     <Compile Include="Services\ExtensionMethods.cs" />
     <Compile Include="Services\Filter.cs" />
+    <Compile Include="Services\FilteringInfo.cs" />
     <Compile Include="Services\FilterType.cs" />
     <Compile Include="Services\IEquipmentService.cs" />
     <Compile Include="Services\Logger.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Services\IManageData.cs" />
     <Compile Include="Services\IManageEmployees.cs" />
     <Compile Include="Services\IManageRoles.cs" />
+    <Compile Include="Services\PaginatedListInfo.cs" />
     <Compile Include="Services\ServicesHelper.cs" />
     <Compile Include="Services\UserRoleProvider.cs" />
     <Compile Include="Services\Utilities.cs" />
