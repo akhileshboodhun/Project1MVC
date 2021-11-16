@@ -21,7 +21,7 @@ namespace Project1MVC.Controllers
 
             var equipDB = EquipmentDAL.Instance;
             var equipmentsList = equipDB.GetAll();
-            ViewBag.EquipmentsList = equipmentsList;
+            ViewBag.EquipmentsList = equipmentsList.Select(el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() }) ;
             List<Equipment> equipments = equipmentsList.Where(el1 => assignedEquipmentsIds.Contains(el1.EquipId)).ToList();
 
             var empDB = EmployeeDAL.Instance;

@@ -92,7 +92,7 @@ namespace Project1MVC.Controllers
 
         [AuthorizeUser(Roles = "Admin")]
         // POST: Employees/Edit/5
-        [HttpPost]
+        [HttpPut]
         public ActionResult Edit(int id, Employee employee)
         {
             var empDB = EmployeeDAL.Instance;
@@ -137,7 +137,7 @@ namespace Project1MVC.Controllers
 
         [AuthorizeUser(Roles = "Admin")]
         // POST: Employees/Delete/5
-        [HttpPost]
+        [HttpDelete]
         public ActionResult Delete(int id, FormCollection collection)
         {
             var empDB = EmployeeDAL.Instance;
@@ -146,6 +146,28 @@ namespace Project1MVC.Controllers
             {
                 // TODO: Add delete logic here
                 empDB.Delete(id);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                var employee = empDB.Get(id);
+                return View(employee);
+            }
+        }
+
+        [AuthorizeUser(Roles = "Admin")]
+        // POST: Employees/Delete/5
+        [HttpPatch]
+        public ActionResult Terminate(int id, bool status)
+        {
+            var empDB = EmployeeDAL.Instance;
+
+            try
+            {
+                // TODO: Add delete logic here
+                var employee = empDB.Get(id);
+                employee.IsActive = status;
+                empDB.Update(employee);
                 return RedirectToAction("Index");
             }
             catch
