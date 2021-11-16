@@ -37,15 +37,22 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Details(string id)
         {
+            // TODO: This check for null etc needs to go in service
             if (id != null && id.All(char.IsDigit))
             {
                 var equipment = equipmentService.Get(id.ToInt());
 
-                // TODO: if equipment is null, we need to display "not found" error in view
-
-                ViewBag.displayPrimaryColumn = false;
-                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
-                return View(equipment);
+                if (equipment != null)
+                {
+                    ViewBag.displayPrimaryColumn = false;
+                    ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
+                    return View(equipment);
+                }
+                else
+                {
+                    // TODO: show error message
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
