@@ -58,6 +58,13 @@ namespace Project1MVC.DAL
                 return null;
             }
 
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
+            }
+
             try
             {
                 SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGet<Equipment>(obj, _cols, dbProvider);
@@ -96,6 +103,13 @@ namespace Project1MVC.DAL
             if (_cols.Count == 0)
             {
                 return list;
+            }
+
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
             }
 
             try
