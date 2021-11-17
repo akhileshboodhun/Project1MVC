@@ -58,6 +58,13 @@ namespace Project1MVC.DAL
                 return null;
             }
 
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
+            }
+
             try
             {
                 SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGet<Equipment>(obj, _cols, dbProvider);
@@ -96,6 +103,13 @@ namespace Project1MVC.DAL
             if (_cols.Count == 0)
             {
                 return list;
+            }
+
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
             }
 
             try
@@ -141,9 +155,18 @@ namespace Project1MVC.DAL
                 return list;
             }
 
+            bool primaryKeyInjected = false;
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+            
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
+                primaryKeyInjected = true;
+            }
+
             int recordsCount = GetCount(filters, orFilters);
             PaginatedListInfo<Equipment> pgInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, recordsCount, sortBy, sortOrder);
-            
+                      
             try
             {
                 SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, pgInfo.DisplayColumns, pgInfo.PageNumber, pgInfo.PageSize, pgInfo.SortBy, pgInfo.SortOrder, filters, orFilters);
@@ -171,6 +194,12 @@ namespace Project1MVC.DAL
             finally
             {
                 dbProvider.Connection.Close();
+
+                if (primaryKeyInjected)
+                {
+                    pgInfo.DisplayColumns.Remove(primaryColumn);
+                }
+
                 paginatedListInfo = pgInfo;
             }
             
