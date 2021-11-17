@@ -237,14 +237,14 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_pure, out IDictionary<string, string> cols_calc)
+        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_native, out IDictionary<string, string> cols_calc)
         {
-            IList<string> _cols_pure = new List<string>();
+            IList<string> _cols_native = new List<string>();
             IDictionary<string, string> _cols_calc = new Dictionary<string, string>();
 
             if (cols == null || cols.Count == 0)
             {
-                cols_pure = _cols_pure;
+                cols_native = _cols_native;
                 cols_calc = _cols_calc;
                 return;
             }
@@ -276,11 +276,11 @@ namespace Project1MVC.Services
                 }
                 else
                 {
-                    _cols_pure.Add(property.Name);
+                    _cols_native.Add(property.Name);
                 }
             }
 
-            cols_pure = _cols_pure;
+            cols_native = _cols_native;
             cols_calc = _cols_calc;
         }
                 
@@ -447,14 +447,14 @@ namespace Project1MVC.Services
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
-            IList<string> cols_pure;
+            IList<string> cols_native;
             IDictionary<string, string> cols_calc;
-            SeparateColumns<T>(cols, out cols_pure, out cols_calc);
+            SeparateColumns<T>(cols, out cols_native, out cols_calc);
 
-            string _cols = StringifyColumns<T>(cols_pure, cols_calc.Count != 0);
+            string _cols = StringifyColumns<T>(cols_native, cols_calc.Count != 0);
             _cols = (cols_calc.Count == 0) ? _cols : _cols + ", " + StringifyColumns<T>(cols_calc.Keys.ToList(), false);
 
-            string _groupBy = StringifyColumns<T>(cols_pure, true);
+            string _groupBy = StringifyColumns<T>(cols_native, true);
 
             switch (dbms)
             {
