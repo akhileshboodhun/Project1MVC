@@ -86,11 +86,11 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        public static IList<string> SanitizeColumns<T>(IList<string> cols)
+        public static IList<string> SanitizeColumns<T>(IList<string> cols, bool tolerateCalculatedColumns = false)
         {
             IList<string> colsParam = cols == null ? new List<string>() : cols;
             IList<string> _cols = new List<string>();
-            IList<string> validCols = GetColumns<T>();
+            IList<string> validCols = GetColumns<T>(tolerateCalculatedColumns);
 
             foreach (string entry in colsParam)
             {
@@ -145,7 +145,7 @@ namespace Project1MVC.Services
             return sb.ToString().Substring(0, sb.Length - 2);
         }
 
-        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool tolerateCalculatedColumns = false)
+        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool includeCalculatedColumns = false)
         {
             IList<string> list = new List<string>();
 
@@ -162,7 +162,7 @@ namespace Project1MVC.Services
                 }
 
                 // TODO: Check for ICalculatedAttribute instead
-                if (!tolerateCalculatedColumns && Attribute.IsDefined(property, typeof(DirectCountAttribute)))
+                if (!includeCalculatedColumns && Attribute.IsDefined(property, typeof(DirectCountAttribute)))
                 {
                     continue;
                 }
