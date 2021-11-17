@@ -236,6 +236,40 @@ namespace Project1MVC.Services
 
             return _cols;
         }
+
+        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_pure, out IList<string> cols_calc)
+        {
+            IList<string> _cols_pure = new List<string>();
+            IList<string> _cols_calc = new List<string>();
+
+            if (cols == null || cols.Count == 0)
+            {
+                cols_pure = _cols_pure;
+                cols_calc = _cols_calc;
+                return;
+            }
+
+            foreach (PropertyInfo property in typeof(T).GetProperties())
+            {
+                if (property.Name == "Item")
+                {
+                    continue;
+                }
+
+                // TODO: Check for ICalculatedAttribute instead
+                if (Attribute.IsDefined(property, typeof(DirectCountAttribute)))
+                {
+                    _cols_calc.Add(property.Name);
+                }
+                else
+                {
+                    _cols_pure.Add(property.Name);
+                }
+            }
+
+            cols_pure = _cols_pure;
+            cols_calc = _cols_calc;
+        }
                 
         private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
         {
@@ -401,10 +435,11 @@ namespace Project1MVC.Services
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
-            // TODO:
-            // Modify StringifyColumns<T> to specify whether to include table name as prefix
-            // Iterate through cols to determine which columns are calculated
-            // Create one list for pure columns, and another for calculated columns names only
+            IList<string> cols_pure;
+            IList<string> cols_calc;
+            SeparateColumns<T>(cols, out cols_pure, out cols_calc);
+
+                        
             // Set _cols = stringify(pure_cols, true) + ", " + stringify(calc_cols, true);
             // ForEach col in calc_cols, store the calculated column name, table name, foreign key name
 
