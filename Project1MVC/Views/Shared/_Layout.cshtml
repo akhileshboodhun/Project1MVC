@@ -143,7 +143,6 @@
                     @if (User.Identity.IsAuthenticated && Request.Cookies["UserFullName"] != null)
                     {
                         <li style="float:right;"><a>@{@Request.Cookies["UserFullName"].Value;}</a></li>
-                        <li style="float:right;"><a>@{@User.IsInRole("Admin");}</a></li>
                     }
                 </ul>
             </div>

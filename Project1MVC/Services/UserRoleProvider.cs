@@ -46,8 +46,7 @@ namespace Project1MVC.Services
             var userDB = UserDAL.Instance;
             var user = userDB.Get(username);
             List<string> roles = new List<string>() { };
-            //roles.Add(user.RoleName);
-            roles.Add("Admin");
+            roles.Add(user.RoleName);
             return roles.ToArray();
 
         }

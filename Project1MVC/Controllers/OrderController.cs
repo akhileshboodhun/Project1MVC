@@ -48,7 +48,7 @@ namespace Project1MVC.Controllers
             var equipments = equipmentDB.GetAll();
             //SupplierDAL supplierDB = SupplierDAL.Instance;
             var suppliers = supplierDB.GetAll();
-            ViewBag.EquipmentsList = equipments;
+            ViewBag.EquipmentsList = equipments.Select( el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
             ViewBag.SuppliersList = suppliers;
             return View();
         }
@@ -84,7 +84,7 @@ namespace Project1MVC.Controllers
             var equipments = equipmentDB.GetAll();
             //SupplierDAL supplierDB = SupplierDAL.Instance;
             var suppliers = supplierDB.GetAll();
-            ViewBag.EquipmentsList = equipments;
+            ViewBag.EquipmentsList = equipments.Select(el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
             ViewBag.SuppliersList = suppliers;
             return View(orderWrapper);
         }
