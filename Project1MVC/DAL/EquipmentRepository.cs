@@ -141,9 +141,18 @@ namespace Project1MVC.DAL
                 return list;
             }
 
+            bool primaryKeyInjected = false;
+            string primaryColumn = ServicesHelper.GetDefaultColumn<Equipment>();
+            
+            if (!_cols.Contains(primaryColumn))
+            {
+                _cols.Add(primaryColumn);
+                primaryKeyInjected = true;
+            }
+
             int recordsCount = GetCount(filters, orFilters);
             PaginatedListInfo<Equipment> pgInfo = new PaginatedListInfo<Equipment>(_cols, pageNumber, pageSize, recordsCount, sortBy, sortOrder);
-            
+                      
             try
             {
                 SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetPaginatedList<Equipment>(dbProvider, pgInfo.DisplayColumns, pgInfo.PageNumber, pgInfo.PageSize, pgInfo.SortBy, pgInfo.SortOrder, filters, orFilters);
@@ -171,6 +180,12 @@ namespace Project1MVC.DAL
             finally
             {
                 dbProvider.Connection.Close();
+
+                if (primaryKeyInjected)
+                {
+                    pgInfo.DisplayColumns.Remove(primaryColumn);
+                }
+
                 paginatedListInfo = pgInfo;
             }
             
