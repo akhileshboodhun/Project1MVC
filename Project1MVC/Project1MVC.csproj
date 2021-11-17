@@ -166,7 +166,6 @@
     <Compile Include="Models\AssignedEquipment.cs" />
     <Compile Include="Models\DirectCountAttribute.cs" />
     <Compile Include="Models\EquipmentOrder.cs" />
-    <Compile Include="Models\EquipmentType.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\ICalculatedAttribute.cs" />
     <Compile Include="Models\Model.cs" />
