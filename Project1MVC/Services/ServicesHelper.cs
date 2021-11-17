@@ -86,7 +86,7 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        public static IList<string> SanitizeColumns<T>(IList<string> cols, bool tolerateCalculatedColumns = false)
+        public static IList<string> SanitizeColumns<T>(IList<string> cols, bool tolerateCalculatedColumns = true)
         {
             IList<string> colsParam = cols == null ? new List<string>() : cols;
             IList<string> _cols = new List<string>();
@@ -144,7 +144,7 @@ namespace Project1MVC.Services
             return sb.ToString().Substring(0, sb.Length - 2);
         }
 
-        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool includeCalculatedColumns = false)
+        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool includeCalculatedColumns = true)
         {
             IList<string> list = new List<string>();
 
@@ -251,7 +251,7 @@ namespace Project1MVC.Services
 
             foreach (PropertyInfo property in typeof(T).GetProperties())
             {
-                if (property.Name == "Item")
+                if (property.Name == "Item" || !cols.Contains(property.Name))
                 {
                     continue;
                 }
@@ -268,7 +268,7 @@ namespace Project1MVC.Services
                         string f_col = attributes.Cast<DirectCountAttribute>().Single().ForeignColumn;
                         string f_key = attributes.Cast<DirectCountAttribute>().Single().ForeignKey;
 
-                        string col = $"COUNT({f_table}.{f_col}) AS [{property}]";
+                        string col = $"COUNT({f_table}.{f_col}) AS [{property.Name}]";
                         string join = $"LEFT JOIN [{f_table}] ON [{c_table}].{f_key} = [{f_table}].{f_key}";
 
                         _cols_calc.Add(col, join);
@@ -474,7 +474,7 @@ namespace Project1MVC.Services
                         }
 
                         sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
-                        sb.Append($"{_groupBy} ");
+                        sb.Append($"GROUP BY {_groupBy} ");
                     }
 
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
@@ -486,6 +486,7 @@ namespace Project1MVC.Services
                     throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
+            string test = sb.ToString();
             return sb.ToString();
         }
 
