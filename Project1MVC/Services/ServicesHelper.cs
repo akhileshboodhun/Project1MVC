@@ -484,5 +484,31 @@ namespace Project1MVC.Services
             string sql = GenerateSqlQueryForGet<T>(dbProvider.DBMS, cols);
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
+
+        private static string GenerateSqlQueryForGetAll<T>(DBMS dbms, IList<string> cols)
+        {
+            StringBuilder sb = new StringBuilder();
+            string _cols = StringifyColumns<T>(cols);
+            string _table = typeof(T).Name;
+
+            switch (dbms)
+            {
+                case DBMS.SQLServer:
+                    sb.Append($"SELECT {_cols} ");
+                    sb.Append($"FROM [{_table}];");
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid value for parameter 'dbms'");
+            }
+
+            return sb.ToString();
+        }
+
+        public static SqlCommand GenerateSqlCommandForGetAll<T>(IDBProvider dbProvider, IList<string> cols)
+        {
+            string sql = GenerateSqlQueryForGetAll<T>(dbProvider.DBMS, cols);
+            return new SqlCommand(sql, dbProvider.Connection);
+        }
     }
 }
