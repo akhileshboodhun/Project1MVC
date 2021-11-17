@@ -145,7 +145,7 @@ namespace Project1MVC.Services
             return sb.ToString().Substring(0, sb.Length - 2);
         }
 
-        public static IList<string> GetColumns<T>(bool includePrimaryKey = true)
+        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool tolerateCalculatedColumns = false)
         {
             IList<string> list = new List<string>();
 
@@ -157,6 +157,12 @@ namespace Project1MVC.Services
                 }
 
                 if (!includePrimaryKey && Attribute.IsDefined(property, typeof(KeyAttribute)))
+                {
+                    continue;
+                }
+
+                // TODO: Check for ICalculatedAttribute instead
+                if (!tolerateCalculatedColumns && Attribute.IsDefined(property, typeof(DirectCountAttribute)))
                 {
                     continue;
                 }
