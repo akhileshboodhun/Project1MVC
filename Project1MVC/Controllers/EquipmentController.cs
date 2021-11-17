@@ -37,10 +37,10 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Details(string id)
         {
-            // TODO: This check for null etc needs to go in service
+            // TODO: Remove this null check and digit check, put try catch instead
             if (id != null && id.All(char.IsDigit))
             {
-                var equipment = equipmentService.Get(id.ToInt());
+                var equipment = equipmentService.Get(id);
 
                 if (equipment != null)
                 {
@@ -71,9 +71,10 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Add(FormCollection fc)
         {
+            // TODO: pass in fc directly to service
             try
             {
-                // TODO: validate fields
+                // TODO: validate fields inside service
                 string type = fc["[Type]"];
                 string brand = fc["[Brand]"];
                 string model = fc["[Model]"];
@@ -101,7 +102,7 @@ namespace Project1MVC.Controllers
         {
             if (fc["id"] != null && fc["id"].All(char.IsDigit))
             {
-                var equipment = equipmentService.Get(fc["id"].ToInt());
+                var equipment = equipmentService.Get(fc["id"]);
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
@@ -125,6 +126,7 @@ namespace Project1MVC.Controllers
                 try
                 {
                     // TODO: validate fields other than primaryKey
+                    // TODO: move this into service
                     int id = fc[primaryKey].ToInt();
                     string type = fc["[Type]"];
                     string brand = fc["[Brand]"];
