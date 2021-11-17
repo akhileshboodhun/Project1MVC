@@ -125,7 +125,7 @@ namespace Project1MVC.Services
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }       
 
-        public static string StringifyColumns(IList<string> cols)
+        public static string StringifyColumns<T>(IList<string> cols, bool prefixWithTableName = false)
         {
             if (cols == null | cols.Count == 0)
             {
@@ -136,7 +136,9 @@ namespace Project1MVC.Services
 
             foreach (string col in cols)
             {
-                sb.Append(col + ", ");
+                string str = $"{col}, ";
+                str = prefixWithTableName ? $"{typeof(T).Name}.{str}" : str;
+                sb.Append(str);
             }
 
             return sb.ToString().Substring(0, sb.Length - 2);
@@ -335,8 +337,8 @@ namespace Project1MVC.Services
             }
 
             colsParam = colsParam.Count != 0 ? colsParam : GetColumns<T>(includePrimaryKey);
-            string _cols = StringifyColumns<T>(colsParam, false);
-            string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"), false);
+            string _cols = StringifyColumns<T>(colsParam);
+            string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"));
 
             switch (dbms)
             {
@@ -394,7 +396,7 @@ namespace Project1MVC.Services
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
-            string _cols = StringifyColumns<T>(cols);
+            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
@@ -472,7 +474,7 @@ namespace Project1MVC.Services
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
-            string _cols = StringifyColumns<T>(cols);
+            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string primaryColumn = GetDefaultColumn<T>();
 
             switch (dbms)
@@ -500,7 +502,7 @@ namespace Project1MVC.Services
         private static string GenerateSqlQueryForGetAll<T>(DBMS dbms, IList<string> cols)
         {
             StringBuilder sb = new StringBuilder();
-            string _cols = StringifyColumns<T>(cols);
+            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string _table = typeof(T).Name;
 
             switch (dbms)
