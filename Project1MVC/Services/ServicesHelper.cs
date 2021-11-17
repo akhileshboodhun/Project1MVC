@@ -338,7 +338,7 @@ namespace Project1MVC.Services
             switch (dbms)
             {
                 case DBMS.SQLServer:
-                    sb.Append($"INSERT INTO {typeof(T).Name} ({_cols}) ");
+                    sb.Append($"INSERT INTO [{typeof(T).Name}] ({_cols}) ");
                     sb.Append($"VALUES ({_colsParameterized});");
                     break;
 
@@ -364,7 +364,7 @@ namespace Project1MVC.Services
             switch (dbms)
             {
                 case DBMS.SQLServer:
-                    sb.Append($"UPDATE {typeof(T).Name} ");
+                    sb.Append($"UPDATE [{typeof(T).Name}] ");
                     sb.Append($"SET ");
                     foreach (string col in cols)
                     {
@@ -401,7 +401,7 @@ namespace Project1MVC.Services
                 case DBMS.SQLServer:
                     sb.Append($"SELECT ");
                     sb.Append($"{_cols} ");
-                    sb.Append($"FROM {_table} ");
+                    sb.Append($"FROM [{_table}] ");
                     sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
@@ -438,7 +438,7 @@ namespace Project1MVC.Services
             {
                 case DBMS.SQLServer:
                     sb.Append($"SELECT COUNT({_primaryColumn}) AS [Total] ");
-                    sb.Append($"FROM {_table}");
+                    sb.Append($"FROM [{_table}] ");
                     sb.Append(_whereClause);
                     sb.Append(";");
                     break;
@@ -468,7 +468,7 @@ namespace Project1MVC.Services
                 case DBMS.SQLServer:
                     sb.Append($"SELECT ");
                     sb.Append($"{_cols} ");
-                    sb.Append($"FROM {_table} ");
+                    sb.Append($"FROM [{_table}] ");
                     sb.Append($" WHERE ({primaryColumn} = @{primaryColumn});");
                     break;
 
