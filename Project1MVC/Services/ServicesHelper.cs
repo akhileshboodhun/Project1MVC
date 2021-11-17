@@ -256,17 +256,22 @@ namespace Project1MVC.Services
                     continue;
                 }
 
-                // TODO: Check for other ICalculatedAttribute later
+                // TODO: Handle other types of ICalculatedAttribute later
                 if (Attribute.IsDefined(property, typeof(DirectCountAttribute)))
                 {
                     object[] attributes = property.GetCustomAttributes(typeof(DirectCountAttribute), false);
 
                     if (attributes != null && attributes.Length > 0)
                     {
+                        string c_table = typeof(T).Name;
                         string f_table = attributes.Cast<DirectCountAttribute>().Single().ForeignTable;
                         string f_col = attributes.Cast<DirectCountAttribute>().Single().ForeignColumn;
                         string f_key = attributes.Cast<DirectCountAttribute>().Single().ForeignKey;
-                        _cols_calc.Add($"COUNT({f_table}.{f_col}) AS [{property}]", f_key);
+
+                        string col = $"COUNT({f_table}.{f_col}) AS [{property}]";
+                        string join = $"LEFT JOIN [{f_table}] ON [{c_table}].{f_key} = [{f_table}].{f_key}";
+
+                        _cols_calc.Add(col, join);
                     }
                 }
                 else
@@ -443,24 +448,35 @@ namespace Project1MVC.Services
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
             IList<string> cols_pure;
-            IList<string> cols_calc;
+            IDictionary<string, string> cols_calc;
             SeparateColumns<T>(cols, out cols_pure, out cols_calc);
 
             string _cols = StringifyColumns<T>(cols_pure, cols_calc.Count != 0);
-            _cols = (cols_calc.Count == 0) ? _cols : _cols + ", " + StringifyColumns<T>(cols_calc, false);
+            _cols = (cols_calc.Count == 0) ? _cols : _cols + ", " + StringifyColumns<T>(cols_calc.Keys.ToList(), false);
 
-            // Modify SeparateColumns to return "COUNT(Equipment.Serial) AS [GrandTotal]" instead of "GrandTotal"
-            // ForEach col in calc_cols, store the calculated column name, table name, foreign key name
+            string _groupBy = StringifyColumns<T>(cols_pure, true);
 
             switch (dbms)
             {
                 case DBMS.SQLServer:
-                    sb.Append($"SELECT ");
-                    sb.Append($"{_cols} ");
+                    sb.Append($"SELECT {_cols} ");
                     sb.Append($"FROM [{_table}] ");
-                    sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
-                    // Append left join here
-                    // Append Group by here
+                    
+                    if (cols_calc.Count == 0)
+                    {
+                        sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                    }
+                    else
+                    {
+                        foreach (string join in cols_calc.Values.Distinct().ToList())
+                        {
+                            sb.Append($"{join} ");
+                        }
+
+                        sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                        sb.Append($"{_groupBy} ");
+                    }
+
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
