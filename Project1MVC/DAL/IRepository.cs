@@ -8,13 +8,11 @@ namespace Project1MVC.DAL
     {
         bool Add(T obj);
 
-        bool Delete(int id);
+        bool Delete(T obj);
 
-        T Get(int id);
+        T Get(T obj, IList<string> cols);
 
-        T Get(int id, IList<string> cols);
-
-        IList<T> GetAll();
+        IList<T> GetAll(IList<string> cols);
 
         IList<T> GetPaginatedList(out PaginatedListInfo<T> paginatedListInfo, IList<string> cols, string pageNumber, string pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true);
 
