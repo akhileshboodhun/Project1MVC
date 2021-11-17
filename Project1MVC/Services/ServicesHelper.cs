@@ -237,10 +237,10 @@ namespace Project1MVC.Services
             return _cols;
         }
 
-        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_pure, out IList<string> cols_calc)
+        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_pure, out IDictionary<string, string> cols_calc)
         {
             IList<string> _cols_pure = new List<string>();
-            IList<string> _cols_calc = new List<string>();
+            IDictionary<string, string> _cols_calc = new Dictionary<string, string>();
 
             if (cols == null || cols.Count == 0)
             {
@@ -256,10 +256,18 @@ namespace Project1MVC.Services
                     continue;
                 }
 
-                // TODO: Check for ICalculatedAttribute instead
+                // TODO: Check for other ICalculatedAttribute later
                 if (Attribute.IsDefined(property, typeof(DirectCountAttribute)))
                 {
-                    _cols_calc.Add(property.Name);
+                    object[] attributes = property.GetCustomAttributes(typeof(DirectCountAttribute), false);
+
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        string f_table = attributes.Cast<DirectCountAttribute>().Single().ForeignTable;
+                        string f_col = attributes.Cast<DirectCountAttribute>().Single().ForeignColumn;
+                        string f_key = attributes.Cast<DirectCountAttribute>().Single().ForeignKey;
+                        _cols_calc.Add($"COUNT({f_table}.{f_col}) AS [{property}]", f_key);
+                    }
                 }
                 else
                 {
@@ -430,7 +438,6 @@ namespace Project1MVC.Services
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
-            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
@@ -439,8 +446,10 @@ namespace Project1MVC.Services
             IList<string> cols_calc;
             SeparateColumns<T>(cols, out cols_pure, out cols_calc);
 
-                        
-            // Set _cols = stringify(pure_cols, true) + ", " + stringify(calc_cols, true);
+            string _cols = StringifyColumns<T>(cols_pure, cols_calc.Count != 0);
+            _cols = (cols_calc.Count == 0) ? _cols : _cols + ", " + StringifyColumns<T>(cols_calc, false);
+
+            // Modify SeparateColumns to return "COUNT(Equipment.Serial) AS [GrandTotal]" instead of "GrandTotal"
             // ForEach col in calc_cols, store the calculated column name, table name, foreign key name
 
             switch (dbms)
