@@ -456,7 +456,7 @@ namespace Project1MVC.Services
             return new SqlCommand(sql, dbProvider.Connection);
         }
 
-        private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols = null)
+        private static string GenerateSqlQueryForGet<T>(DBMS dbms, IList<string> cols)
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
@@ -477,6 +477,12 @@ namespace Project1MVC.Services
             }
 
             return sb.ToString();
+        }
+
+        public static SqlCommand GenerateSqlCommandForGet<T>(Model<T> obj, IList<string> cols, IDBProvider dbProvider)
+        {
+            string sql = GenerateSqlQueryForGet<T>(dbProvider.DBMS, cols);
+            return GenerateSqlCommand(sql, obj, dbProvider);
         }
     }
 }
