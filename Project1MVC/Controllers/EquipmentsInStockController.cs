@@ -16,6 +16,7 @@ namespace Project1MVC.Controllers
         {
             var equipmentsDB = EquipmentDAL.Instance;
             var equipmentsInStockList = equipmentsDB.GetAllEquipmentsInStock();
+
             return View(equipmentsInStockList);
         }
     }

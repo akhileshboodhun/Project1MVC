@@ -36,8 +36,20 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        @"INSERT INTO [dbo].[EquipmentEmployee]([EmpId],[EquipId],[DateAssigned],[AssignorId])
-                            VALUES(@employeeId, @equipmentId, GETDATE(), @assignorId)";
+                        @"
+                        SELECT es.[SerialNo], eq.[EquipID], eq.[Type], eq.[Brand], eq.[Model], eq.[Description], eq.[ReStockThreshold]
+                        INTO #EquipmentInCurrentStock
+                        FROM [EquipmentInStock] es JOIN [Equipment] eq ON es.[EquipID] = eq.[EquipID]
+                        WHERE es.[SerialNo] NOT IN (
+                            SELECT [SerialNo]
+                            FROM [EquipmentEmployee]
+                            WHERE [DateReturned] IS NULL
+                        )
+                        DECLARE @SerialNo INT =  (SELECT TOP(1) SerialNo FROM #EquipmentInCurrentStock WHERE EquipId = @equipmentId)
+
+                        INSERT INTO [dbo].[EquipmentEmployee]([EquipId],[EmpId],[DateAssigned],[AssignorId],[SerialNo])
+                        VALUES (@equipmentId,@employeeId,GETDATE(),@assignorId, @SerialNo)
+                        ";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -49,7 +61,7 @@ namespace Project1MVC.DAL
                             cmd.Parameters.AddWithValue("@employeeId", equipment.EmployeeId);
                             cmd.Parameters.AddWithValue("@equipmentId", equipment.EquipmentId);
                             cmd.Parameters.AddWithValue("@assignorId", equipment.AssignorId);
-                            if (cmd.ExecuteNonQuery() == 1)
+                            if (cmd.ExecuteNonQuery() >= 1)
                             {
                                 status = true;
                                 Logger.Log($"SUCCESS: {opType} {modelName}");
@@ -85,7 +97,7 @@ namespace Project1MVC.DAL
                         @"UPDATE [dbo].[EquipmentEmployee]
                           SET [DateReturned] = GETDATE()
                           WHERE [EmpId] = @employeeId
-                          AND [EquipId] = @equipmentId
+                          AND [SerialNo] = @serialNo
                           AND [DateReturned]  is NULL;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -96,7 +108,7 @@ namespace Project1MVC.DAL
                         {
                             cmd.Parameters.Clear();
                             cmd.Parameters.AddWithValue("@employeeId", equipment.EmployeeId);
-                            cmd.Parameters.AddWithValue("@equipmentId", equipment.EquipmentId);
+                            cmd.Parameters.AddWithValue("@serialNo", equipment.SerialNo);
 
                             if (cmd.ExecuteNonQuery() >= 1)
                             {
@@ -131,7 +143,7 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
 
-                    string sql = @"SELECT [EmpId], [EquipId], [DateAssigned], [AssignorId]
+                    string sql = @"SELECT [EmpId], [EquipId], [DateAssigned], [AssignorId], [SerialNo]
                                    FROM [EquipmentEmployee]
                                    WHERE [DateReturned] is NULL
                                    AND [EmpId] = @employeeId";
@@ -147,7 +159,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new AssignedEquipment(employeeId: reader["EmpId"].ToInt(), equipmentId: reader["EquipId"].ToInt(), dateAssigned: reader["DateAssigned"].ToDateTime(), assignorId: reader["AssignorId"].ToInt()));
+                                list.Add(new AssignedEquipment(employeeId: reader["EmpId"].ToInt(), equipmentId: reader["EquipId"].ToInt(), dateAssigned: reader["DateAssigned"].ToDateTime(), assignorId: reader["AssignorId"].ToInt() , serialNo: reader["SerialNo"].ToInt()));
                             }
                         }
 

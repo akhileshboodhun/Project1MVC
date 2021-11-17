@@ -51,6 +51,7 @@
     <script>
         require(["dojo/parser", "dojo/domReady!"]);
     </script>
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -142,6 +143,7 @@
                     @if (User.Identity.IsAuthenticated && Request.Cookies["UserFullName"] != null)
                     {
                         <li style="float:right;"><a>@{@Request.Cookies["UserFullName"].Value;}</a></li>
+                        <li style="float:right;"><a>@{@User.IsInRole("Admin");}</a></li>
                     }
                 </ul>
             </div>

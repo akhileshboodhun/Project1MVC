@@ -37,22 +37,21 @@ namespace Project1MVC.Controllers
                 var userDB =  UserDAL.Instance;
                 var users = userDB.GetAll();
                 var crypto = new CryptographyProcessor(size: 10);
-                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email));
-                //if (!(user is null))
-                if (true)
+                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
+                if (!(user is null))
                 {
                     HttpCookie UserFullName = new HttpCookie("UserFullName");
-                    //UserFullName.Value = user?.FName + " " + user?.LName;
-                    UserFullName.Value = "John Doe";
+                    UserFullName.Value = user?.FName + " " + user?.LName;
+                    //UserFullName.Value = "John Doe";
                     UserFullName.Expires = DateTime.Now.AddDays(90);
                     Response.Cookies.Add(UserFullName);
 
-                    //FormsAuthentication.SetAuthCookie(user.Email, true);
-                    FormsAuthentication.SetAuthCookie("a.b@gmail.com", true);
+                    FormsAuthentication.SetAuthCookie(user.Email, true);
+                    //FormsAuthentication.SetAuthCookie("a.b@gmail.com", true);
 
                     HttpCookie UserIdCookie = new HttpCookie("UserIdCookie");
-                    //UserIdCookie.Value = user.UserId.ToString();
-                    UserIdCookie.Value = "1";
+                    UserIdCookie.Value = user.UserId.ToString();
+                    //UserIdCookie.Value = "1";
                     UserIdCookie.Expires = DateTime.Now.AddDays(90);
                     Response.Cookies.Add(UserIdCookie);
 

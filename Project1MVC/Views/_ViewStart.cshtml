@@ -1,3 +1,22 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@{
+    var equipmentsDB = Project1MVC.DAL.EquipmentDAL.Instance;
+    var equipmentsInStockList = equipmentsDB.GetAllEquipmentsInStock();
+
+    bool stockAlertStatus = equipmentsInStockList.Any(el => el.CurrentStockCount < el.ReStockThreshold);
+    if (User.Identity.IsAuthenticated && User.IsInRole("Admin") && stockAlertStatus)
+    {
+        <script>
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Partial Equipments Stock Outage',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true
+                });
+        </script>
+    }
+}
