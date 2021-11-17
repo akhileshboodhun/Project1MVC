@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Project1MVC.DAL;
 using Project1MVC.Models;
 
@@ -19,24 +20,24 @@ namespace Project1MVC.Services
             return equipmentRepo.Add(obj);
         }
 
-        public bool TakeFromEmployee(int equipId, int empId)
+        public bool TakeFromEmployee(string equipId, string empId)
         {
             throw new NotImplementedException();
         }
 
-        public bool AssignToEmployee(int equipId, int empId, int assignorId)
+        public bool AssignToEmployee(string equipId, string empId, string assignorId)
         {
-            Equipment equipment = equipmentRepo.Get(equipId, new List<string>() 
-            { "CurrentStockCount" });
+            //Equipment equipment = equipmentRepo.Get(equipId, new List<string>() 
+            //{ "CurrentStockCount" });
 
             bool status = false;
 
-            if (equipment.CurrentStockCount > 0)
-            {
-                // start trasaction
-                // 1.  Decrease currentstockcount
-                // 2. add an entry in EquipmentEmployee
-            }
+            //if (equipment.CurrentStockCount > 0)
+            //{
+            //    // start trasaction
+            //    // 1.  Decrease currentstockcount
+            //    // 2. add an entry in EquipmentEmployee
+            //}
 
             return status;
         }
@@ -46,25 +47,25 @@ namespace Project1MVC.Services
             return equipmentRepo.GetCount(filters, orFilters);
         }
 
-        public Equipment Get(int id)
+        public Equipment Get(string id)
         {
-            return equipmentRepo.Get(id);
+            IList<string> cols = ServicesHelper.GetColumns<Equipment>();
+            return Get(id, cols);
         }
 
-        public Equipment Get(int id, IList<string> cols)
+        public Equipment Get(string id, IList<string> cols)
         {
-            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
-            return equipmentRepo.Get(id, _cols);
+            Equipment obj = (id != null && id.All(char.IsDigit)) ? new Equipment(id.ToInt()) : null;
+            return (obj != null) ? equipmentRepo.Get(obj, cols) : null;
         }
 
-        public IList<Equipment> GetAll()
+        public IList<Equipment> GetAll(IList<string> cols)
         {
-            return equipmentRepo.GetAll();
+            return equipmentRepo.GetAll(cols);
         }
 
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            // TODO: pass in actual list of columns to be displayed
             IList<string> displayCols = new List<string>() { "Type", "Brand", "Description", "CurrentStockCount", "ReStockThreshol" };
             IList<string> filterCols = new List<string>() { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
 
@@ -79,6 +80,7 @@ namespace Project1MVC.Services
 
         public bool Update(Equipment obj)
         {
+            // TODO: check if equipmentId is not zero
             return equipmentRepo.Update(obj);
         }
     }
