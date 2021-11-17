@@ -164,8 +164,11 @@
     <Compile Include="DAL\EmployeeDAL.cs" />
     <Compile Include="DAL\OrderDAL.cs" />
     <Compile Include="Models\AssignedEquipment.cs" />
+    <Compile Include="Models\DirectCountAttribute.cs" />
     <Compile Include="Models\EquipmentOrder.cs" />
+    <Compile Include="Models\EquipmentType.cs" />
     <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\ICalculatedAttribute.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderWrapper.cs" />
