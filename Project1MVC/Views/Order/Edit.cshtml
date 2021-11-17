@@ -44,7 +44,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderProp.IsOrderComplete, new { @class = "form-control", @type = "checkbox" })
+            @Html.CheckBoxFor(model => model.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning",})
             @Html.ValidationMessageFor(model => model.OrderProp.IsOrderComplete, "", new { @class = "text-danger" })
         </div>
     </div>

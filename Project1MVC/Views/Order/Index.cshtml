@@ -35,7 +35,7 @@
         @Html.DisplayFor(modelItem => item.OrderProp.OrderDate)
     </td>
     <td>
-        <p>@((item.OrderProp.IsOrderComplete)?"Yes":"No")</p>
+        @Html.CheckBoxFor(modelItem => item.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.OrderProp.SupplierName)

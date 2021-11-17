@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
+
 <h2>Equipments In Stock</h2>
 
 <table class="table" id="simpleTable">
@@ -17,6 +18,9 @@
             @Html.DisplayNameFor(model => model.Model)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
@@ -29,26 +33,29 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentStockCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReStockThreshold)
-            </td>
-        </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.EquipId)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Brand)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Model)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Type)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CurrentStockCount)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReStockThreshold)
+    </td>
+</tr>
     }
 
 </table>

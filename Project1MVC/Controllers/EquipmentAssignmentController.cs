@@ -1,4 +1,5 @@
-﻿using Project1MVC.DAL;
+﻿using Newtonsoft.Json;
+using Project1MVC.DAL;
 using Project1MVC.Models;
 using Project1MVC.Services;
 using System;
@@ -17,12 +18,20 @@ namespace Project1MVC.Controllers
         {
             var assignEquipmentService = AssignEquipmentService.Instance;
             var assignedEquipments = assignEquipmentService.ViewAssigned(Id);
-            List<int> assignedEquipmentsIds = assignedEquipments.Select<AssignedEquipment, int>(el => el.EquipmentId.ToInt()).ToList();
+            List<int> assignedEquipmentsSerials = assignedEquipments.Select<AssignedEquipment, int>(el => el.SerialNo.ToInt()).ToList();
+
 
             var equipDB = EquipmentDAL.Instance;
-            var equipmentsList = equipDB.GetAll();
-            ViewBag.EquipmentsList = equipmentsList;
-            List<Equipment> equipments = equipmentsList.Where(el1 => assignedEquipmentsIds.Contains(el1.EquipId)).ToList();
+            var equipmentsList = equipDB.GetAllEquipmentsInStock();
+            ViewBag.EquipmentsList = equipmentsList.Select(element => new { EquipId = element.EquipId, DisplayName = element.DisplayName() });
+            //List<Equipment> equipments = equipmentsList.Where(el1 => assignedEquipmentsIds.Contains(el1.EquipId)).ToList();
+
+            var query = from assignedEquipment in assignedEquipments
+                        join equipment in equipmentsList
+                        on assignedEquipment.EquipmentId equals equipment.EquipId
+                        select JsonConvert.SerializeObject(new { SerialNo = assignedEquipment.SerialNo, DisplayName = equipment.DisplayName(), DateAssigned = assignedEquipment.DateAssigned.ToShortDateString()});
+
+            ViewBag.AssignedEquipmentList = query.ToList();
 
             var empDB = EmployeeDAL.Instance;
             var employee = empDB.Get(Id);
@@ -30,45 +39,14 @@ namespace Project1MVC.Controllers
             ViewBag.FName = employee.FName;
             ViewBag.LName = employee.LName;
 
-            return View(equipments);
+            return View();
         }
 
 
 
         // POST: EquipmentAssignment/Assign
         [HttpPost]
-        public ActionResult Assign(int UserId, List<int> EquipmentId)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-                System.Diagnostics.Debug.WriteLine(UserId.ToString());
-                System.Diagnostics.Debug.WriteLine(EquipmentId.ToString());
-
-                int assignorId = Request.Cookies["UserIdCookie"].Value.ToInt();
-
-                var equipments = new List<AssignedEquipment>();
-                EquipmentId.ForEach(equipId =>
-                equipments.Add(
-                    new AssignedEquipment(employeeId: UserId,
-                                          equipmentId: equipId,
-                                          assignorId: assignorId))
-                );
-
-                var assignEquipmentService = AssignEquipmentService.Instance;
-                assignEquipmentService.Assign(equipments);
-
-
-                return RedirectToAction("Index", "Employees");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        // POST: EquipmentAssignment/Return
-        [HttpPost]
-        public ActionResult Return(int UserId, int EquipmentId)
+        public ActionResult Assign(int UserId, int EquipmentId)
         {
             bool state = false;
             try
@@ -79,8 +57,37 @@ namespace Project1MVC.Controllers
 
                 int assignorId = Request.Cookies["UserIdCookie"].Value.ToInt();
 
+
+                var assignEquipmentService = AssignEquipmentService.Instance;
+                var assignedEquipment = new AssignedEquipment(employeeId: UserId,
+                                          equipmentId: EquipmentId,
+                                          assignorId: assignorId);
+                state = assignEquipmentService.Assign(assignedEquipment);
+
+
+                if (state) return Json(assignedEquipment);
+                return HttpNotFound();
+            }
+            catch
+            {
+                return HttpNotFound();
+            }
+        }
+        // POST: EquipmentAssignment/Return
+        [HttpPost]
+        public ActionResult Return(int UserId, int SerialNo)
+        {
+            bool state = false;
+            try
+            {
+                // TODO: Add insert logic here
+                System.Diagnostics.Debug.WriteLine(UserId.ToString());
+                System.Diagnostics.Debug.WriteLine(SerialNo.ToString());
+
+                int assignorId = Request.Cookies["UserIdCookie"].Value.ToInt();
+
                 var equipment = new AssignedEquipment(employeeId: UserId,
-                                                        equipmentId: EquipmentId,
+                                                        serialNo: SerialNo,
                                                         assignorId: assignorId);
 
                 var assignEquipmentService = AssignEquipmentService.Instance;

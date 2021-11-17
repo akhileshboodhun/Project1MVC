@@ -29,17 +29,65 @@ for (var i = 0; i < inputs.length; i++) { mylist.push({ id: $(inputs[i]).val(), 
     populateEquipments();
 }
 
-function ReturnFromList(obj) {
-    var parent = $(obj).parent();
-    var sibling2 = parent.siblings()[1];
-    var equipmentId = $(sibling2).val();
+function AssignEquipment() {
+    var obj = $('.equipment-form option:selected');
+    var equipmentId = obj.val();
     var userId = $('#UserId').val();
-    console.log('EquipmentID:' + equipmentId);
+    console.log('EquipmentId:' + equipmentId);
+    console.log('UserID:' + userId);
+    $.ajax({
+        type: "POST",
+        url: "/EquipmentAssignment/Assign",
+        data: JSON.stringify({ UserId: userId, EquipmentId: equipmentId }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Assigned Equipment Successfully.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
+        },
+        failure: function (response) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Assigned Equipment Failed.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
+        },
+        error: function (response) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Error: Assigned Equipment Failed.',
+                showConfirmButton: false,
+                timer: 1000
+            }).then((result) => {
+                window.location.href = '/EquipmentAssignment/Index/' + userId;
+            });
+        }
+    });
+}
+
+function ReturnEquipment(obj) {
+    var parent = $(obj).parent();
+    var sibling2 = parent.siblings()[3];
+    var serialNo = $(sibling2).val();
+    var userId = $('#UserId').val();
+    console.log('SerialNo:' + serialNo);
     console.log('UserID:' + userId);
     $.ajax({
         type: "POST",
         url: "/EquipmentAssignment/Return",
-        data: JSON.stringify({ UserId: userId, EquipmentId: equipmentId }),
+        data: JSON.stringify({ UserId: userId, SerialNo: serialNo }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {

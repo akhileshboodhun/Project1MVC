@@ -242,7 +242,20 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [EquipId], [Type], [Brand], [Model], [Description], [CurrentStockCount], [ReStockThreshold] FROM [Equipment] WHERE [CurrentStockCount] > 0;";
+                    string sql = @"
+                                  SELECT es.[SerialNo], eq.[EquipID], eq.[Type], eq.[Brand], eq.[Model], eq.[Description], eq.[ReStockThreshold]
+                                  INTO #EquipmentInCurrentStock
+                                FROM [EquipmentInStock] es JOIN [Equipment] eq ON es.[EquipID] = eq.[EquipID]
+                                WHERE es.[SerialNo] NOT IN (
+                                    SELECT [SerialNo]
+                                    FROM [EquipmentEmployee]
+                                    WHERE [DateReturned] IS NULL
+                                )
+
+                                SELECT DISTINCT [EquipID], [Type], [Brand], [Model], [Description], [ReStockThreshold], COUNT([SerialNo]) AS CurrentStockCount
+                                FROM #EquipmentInCurrentStock
+                                GROUP BY [EquipID], [Type], [Brand], [Model], [Description], [ReStockThreshold]
+                               ";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
