@@ -4,23 +4,27 @@
 <div class="form-group">
 
     <label class="control-label col-md-2">Equipments Assigned</label>
-    <div class="col-md-3">
+    <div class="col-md-7">
         <table class="table">
             <thead>
-                <th>Display Name</th>
-                @*<th>Type</th>
-                <th>Brand</th>
-                <th>Model</th>*@
-                <th>Action</th>
+            <th>Display Name</th>
+            <th>Serial No</th>
+            <th>Date Assigned</th>
+            @*<th>Type</th>
+        <th>Brand</th>
+        <th>Model</th>*@
+            <th>Action</th>
             </thead>
             <tbody id="equipments-assigned">
                 @foreach (var assignedEquipment in ViewBag.AssignedEquipmentList)
                 {
                 <tr>
                     <td>@JsonConvert.DeserializeObject(assignedEquipment).DisplayName</td>
+                    <td>@JsonConvert.DeserializeObject(assignedEquipment).SerialNo</td>
+                    <td>@JsonConvert.DeserializeObject(assignedEquipment).DateAssigned</td>
                     @*<td>@Model[i].Type</td>
-                    <td>@Model[i].Brand</td>
-                    <td>@Model[i].Model</td>*@
+        <td>@Model[i].Brand</td>
+        <td>@Model[i].Model</td>*@
                     <td><input type="button" name="delete-button" class="btn btn-danger" value="Return" onclick="ReturnEquipment(this)" /></td>
                     <input type="hidden" name="SerialNo" value="@JsonConvert.DeserializeObject(assignedEquipment).SerialNo">
                 </tr>

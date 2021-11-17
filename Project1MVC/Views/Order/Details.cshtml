@@ -23,7 +23,8 @@
         </dt>
 
         <dd>
-            <p>@((Model.OrderProp.IsOrderComplete)?"Yes":"No")</p>
+            @Html.CheckBoxFor(model => model.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
+
         </dd>
 
         <dt>
@@ -73,6 +74,6 @@
 
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderProp.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

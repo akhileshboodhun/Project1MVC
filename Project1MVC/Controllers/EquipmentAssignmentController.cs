@@ -29,7 +29,7 @@ namespace Project1MVC.Controllers
             var query = from assignedEquipment in assignedEquipments
                         join equipment in equipmentsList
                         on assignedEquipment.EquipmentId equals equipment.EquipId
-                        select JsonConvert.SerializeObject(new { SerialNo = assignedEquipment.SerialNo, DisplayName = equipment.DisplayName()});
+                        select JsonConvert.SerializeObject(new { SerialNo = assignedEquipment.SerialNo, DisplayName = equipment.DisplayName(), DateAssigned = assignedEquipment.DateAssigned.ToShortDateString()});
 
             ViewBag.AssignedEquipmentList = query.ToList();
 

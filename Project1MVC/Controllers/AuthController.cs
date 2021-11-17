@@ -37,7 +37,7 @@ namespace Project1MVC.Controllers
                 var userDB =  UserDAL.Instance;
                 var users = userDB.GetAll();
                 var crypto = new CryptographyProcessor(size: 10);
-                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
+                var user = users.FirstOrDefault(el => el.Email.Equals(userCredentials.Email) && (el.RoleName=="Admin" || el.RoleName == "Technician") && crypto.AreEqual(plainTextInput: userCredentials.Password, salt: el.Salt, hashInput: el.HashedPassword));
                 if (!(user is null))
                 {
                     HttpCookie UserFullName = new HttpCookie("UserFullName");

@@ -79,7 +79,7 @@ function AssignEquipment() {
 
 function ReturnEquipment(obj) {
     var parent = $(obj).parent();
-    var sibling2 = parent.siblings()[1];
+    var sibling2 = parent.siblings()[3];
     var serialNo = $(sibling2).val();
     var userId = $('#UserId').val();
     console.log('SerialNo:' + serialNo);
