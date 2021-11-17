@@ -9,7 +9,7 @@ namespace Project1MVC.Models
 {
     public class Equipment : Model<Equipment>
     {
-        public Equipment(int id = 0, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0)
+        public Equipment(int id = 0, string type = "", string brand = "", string model = "", string description = "", int currentStockCount = 0, int reStockThreshold = 0, int grandTotal = 0)
         {
             this.EquipId = id;
             this.Type = type;
@@ -18,6 +18,7 @@ namespace Project1MVC.Models
             this.Description = description;
             this.CurrentStockCount = currentStockCount;
             this.ReStockThreshold = reStockThreshold;
+            this.GrandTotal = grandTotal;            
         }
 
         [Display(Name = "Equipment Id"), Key]
@@ -35,11 +36,16 @@ namespace Project1MVC.Models
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Display(Name = "Current Stock Count")]
-        public int CurrentStockCount { get; set; }
-
         [Display(Name = "ReStock Threshold")]
         public int ReStockThreshold { get; set; }
+
+        // Is not used
+        public int CurrentStockCount { get; private set; }
+
+        [Display(Name = "Grand Total"), DirectCount(ForeignTable = "EquipmentInStock", ForeignColumn = "SerialNo", ForeignKey = "EquipId")]
+        public int GrandTotal { get; set; }
+
+
 
         public string DisplayName()
         {

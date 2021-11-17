@@ -147,7 +147,7 @@ namespace Project1MVC.DAL
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, IList<string> cols, string pageNumber, string pageSize, string sortBy, string sortOrder, IList<Filter> filters = null, bool orFilters = true)
         {
             List<Equipment> list = new List<Equipment>();
-            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols, true);
 
             if (_cols.Count == 0)
             {

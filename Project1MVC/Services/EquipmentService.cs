@@ -66,8 +66,8 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            IList<string> displayCols = new List<string>() { "Type", "Brand", "Description", "CurrentStockCount", "ReStockThreshol" };
-            IList<string> filterCols = new List<string>() { "Type", "Brand", "CurrentStockCount", "ReStockThreshold" };
+            IList<string> displayCols = new List<string>() { "Type", "Brand", "Model", "Description", "GrandTotal" };
+            IList<string> filterCols = new List<string>() { "Type", "Brand", "Model", "ReStockThreshold", "GrandTotal" };
 
             FilteringInfo<Equipment> filInfo = new FilteringInfo<Equipment>(filterCols, complexFilterString, orFilters);
             PaginatedListInfo<Equipment> pgInfo;

@@ -86,11 +86,11 @@ namespace Project1MVC.Services
             return dict;
         }
 
-        public static IList<string> SanitizeColumns<T>(IList<string> cols)
+        public static IList<string> SanitizeColumns<T>(IList<string> cols, bool tolerateCalculatedColumns = true)
         {
             IList<string> colsParam = cols == null ? new List<string>() : cols;
             IList<string> _cols = new List<string>();
-            IList<string> validCols = GetColumns<T>();
+            IList<string> validCols = GetColumns<T>(tolerateCalculatedColumns);
 
             foreach (string entry in colsParam)
             {
@@ -125,27 +125,26 @@ namespace Project1MVC.Services
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }       
 
-        public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
+        public static string StringifyColumns<T>(IList<string> cols, bool prefixWithTableName = false)
         {
-            IList<string> _cols = cols ?? GetColumns<T>();
+            if (cols == null | cols.Count == 0)
+            {
+                return "";
+            }
+
             StringBuilder sb = new StringBuilder();
 
-            if (sanitize)
+            foreach (string col in cols)
             {
-                _cols = SanitizeColumns<T>(_cols);
-            }
-               
-            _cols = _cols.Count != 0 ? _cols : GetColumns<T>();
-            
-            foreach (string col in _cols)
-            {
-                sb.Append(col + ", ");
+                string str = $"{col}, ";
+                str = prefixWithTableName ? $"{typeof(T).Name}.{str}" : str;
+                sb.Append(str);
             }
 
             return sb.ToString().Substring(0, sb.Length - 2);
         }
 
-        public static IList<string> GetColumns<T>(bool includePrimaryKey = true)
+        public static IList<string> GetColumns<T>(bool includePrimaryKey = true, bool includeCalculatedColumns = true)
         {
             IList<string> list = new List<string>();
 
@@ -157,6 +156,12 @@ namespace Project1MVC.Services
                 }
 
                 if (!includePrimaryKey && Attribute.IsDefined(property, typeof(KeyAttribute)))
+                {
+                    continue;
+                }
+
+                // TODO: Check for ICalculatedAttribute instead
+                if (!includeCalculatedColumns && Attribute.IsDefined(property, typeof(DirectCountAttribute)))
                 {
                     continue;
                 }
@@ -230,6 +235,53 @@ namespace Project1MVC.Services
             }
 
             return _cols;
+        }
+
+        private static void SeparateColumns<T>(IList<string> cols, out IList<string> cols_native, out IDictionary<string, string> cols_calc)
+        {
+            IList<string> _cols_native = new List<string>();
+            IDictionary<string, string> _cols_calc = new Dictionary<string, string>();
+
+            if (cols == null || cols.Count == 0)
+            {
+                cols_native = _cols_native;
+                cols_calc = _cols_calc;
+                return;
+            }
+
+            foreach (PropertyInfo property in typeof(T).GetProperties())
+            {
+                if (property.Name == "Item" || !cols.Contains(property.Name))
+                {
+                    continue;
+                }
+
+                // TODO: Handle other types of ICalculatedAttribute later
+                if (Attribute.IsDefined(property, typeof(DirectCountAttribute)))
+                {
+                    object[] attributes = property.GetCustomAttributes(typeof(DirectCountAttribute), false);
+
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        string c_table = typeof(T).Name;
+                        string f_table = attributes.Cast<DirectCountAttribute>().Single().ForeignTable;
+                        string f_col = attributes.Cast<DirectCountAttribute>().Single().ForeignColumn;
+                        string f_key = attributes.Cast<DirectCountAttribute>().Single().ForeignKey;
+
+                        string col = $"COUNT({f_table}.{f_col}) AS [{property.Name}]";
+                        string join = $"LEFT JOIN [{f_table}] ON [{c_table}].{f_key} = [{f_table}].{f_key}";
+
+                        _cols_calc.Add(col, join);
+                    }
+                }
+                else
+                {
+                    _cols_native.Add(property.Name);
+                }
+            }
+
+            cols_native = _cols_native;
+            cols_calc = _cols_calc;
         }
                 
         private static string GenerateWhereClauseFromFiltersList(IList<Filter> filters, bool orFilters)
@@ -332,8 +384,8 @@ namespace Project1MVC.Services
             }
 
             colsParam = colsParam.Count != 0 ? colsParam : GetColumns<T>(includePrimaryKey);
-            string _cols = StringifyColumns<T>(colsParam, false);
-            string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"), false);
+            string _cols = StringifyColumns<T>(colsParam);
+            string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"));
 
             switch (dbms)
             {
@@ -391,18 +443,40 @@ namespace Project1MVC.Services
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
-            string _cols = StringifyColumns<T>(cols);
             string _sortBy = SanitizeSortBy<T>(sortBy);
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
+            IList<string> cols_native;
+            IDictionary<string, string> cols_calc;
+            SeparateColumns<T>(cols, out cols_native, out cols_calc);
+
+            string _cols = StringifyColumns<T>(cols_native, cols_calc.Count != 0);
+            _cols = (cols_calc.Count == 0) ? _cols : _cols + ", " + StringifyColumns<T>(cols_calc.Keys.ToList(), false);
+
+            string _groupBy = StringifyColumns<T>(cols_native, true);
+
             switch (dbms)
             {
                 case DBMS.SQLServer:
-                    sb.Append($"SELECT ");
-                    sb.Append($"{_cols} ");
+                    sb.Append($"SELECT {_cols} ");
                     sb.Append($"FROM [{_table}] ");
-                    sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                    
+                    if (cols_calc.Count == 0)
+                    {
+                        sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                    }
+                    else
+                    {
+                        foreach (string join in cols_calc.Values.Distinct().ToList())
+                        {
+                            sb.Append($"{join} ");
+                        }
+
+                        sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                        sb.Append($"GROUP BY {_groupBy} ");
+                    }
+
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
@@ -412,6 +486,7 @@ namespace Project1MVC.Services
                     throw new InvalidOperationException("Invalid value for parameter 'dbms'");
             }
 
+            string test = sb.ToString();
             return sb.ToString();
         }
 
@@ -460,7 +535,7 @@ namespace Project1MVC.Services
         {
             StringBuilder sb = new StringBuilder();
             string _table = typeof(T).Name;
-            string _cols = StringifyColumns<T>(cols);
+            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string primaryColumn = GetDefaultColumn<T>();
 
             switch (dbms)
@@ -488,7 +563,7 @@ namespace Project1MVC.Services
         private static string GenerateSqlQueryForGetAll<T>(DBMS dbms, IList<string> cols)
         {
             StringBuilder sb = new StringBuilder();
-            string _cols = StringifyColumns<T>(cols);
+            string _cols = StringifyColumns<T>(SanitizeColumns<T>(cols));
             string _table = typeof(T).Name;
 
             switch (dbms)
