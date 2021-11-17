@@ -125,19 +125,16 @@ namespace Project1MVC.Services
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }       
 
-        public static string StringifyColumns<T>(IList<string> cols = null, bool sanitize = true)
+        public static string StringifyColumns<T>(IList<string> cols)
         {
-            IList<string> _cols = cols ?? GetColumns<T>();
+            if (cols == null | cols.Count == 0)
+            {
+                return "";
+            }
+
             StringBuilder sb = new StringBuilder();
 
-            if (sanitize)
-            {
-                _cols = SanitizeColumns<T>(_cols);
-            }
-               
-            _cols = _cols.Count != 0 ? _cols : GetColumns<T>();
-            
-            foreach (string col in _cols)
+            foreach (string col in cols)
             {
                 sb.Append(col + ", ");
             }
@@ -402,6 +399,13 @@ namespace Project1MVC.Services
             string _sortOrder = SanitizeSortOrder(sortOrder).ToUpper();
             string _whereClause = GenerateWhereClauseFromFiltersList(filters, orFilters);
 
+            // TODO:
+            // Modify StringifyColumns<T> to specify whether to include table name as prefix
+            // Iterate through cols to determine which columns are calculated
+            // Create one list for pure columns, and another for calculated columns names only
+            // Set _cols = stringify(pure_cols, true) + ", " + stringify(calc_cols, true);
+            // ForEach col in calc_cols, store the calculated column name, table name, foreign key name
+
             switch (dbms)
             {
                 case DBMS.SQLServer:
@@ -409,6 +413,8 @@ namespace Project1MVC.Services
                     sb.Append($"{_cols} ");
                     sb.Append($"FROM [{_table}] ");
                     sb.Append(_whereClause == "" ? "" : $"{_whereClause} ");
+                    // Append left join here
+                    // Append Group by here
                     sb.Append($"ORDER BY [{_sortBy}] {_sortOrder} ");
                     sb.Append($"OFFSET @Offset ROWS ");
                     sb.Append($"FETCH NEXT @PageSize ROWS ONLY;");
