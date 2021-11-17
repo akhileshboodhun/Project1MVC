@@ -43,75 +43,32 @@ namespace Project1MVC.DAL
             return status;
         }
 
-        public bool Delete(int id)
+        public bool Delete(Equipment obj)
         {
-            bool status = false;
-
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-            //        string sql = "DELETE FROM Equipment WHERE EquipId = @Id;";
-
-            //SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
-            //cmd.Parameters.AddWithValue("@Id", id);
-                    
-            //        try
-            //        {
-            //            if (cmd.ExecuteNonQuery() == 1)
-            //            {
-            //                status = true;
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Logger.Log($"FAILED: {opType} {modelName}");
-            //            Logger.Log($"{ex.ToString()}");
-            //        }
-                    //finally
-                    //{
-                    //    conn.Close();
-                    //}
-            //    }
-            //}
-
-            return status;
+            return false;
         }
 
-        public Equipment Get(int id)
+        public Equipment Get(Equipment obj, IList<string> cols)
         {
-            return Get(id, ServicesHelper.GetColumns<Equipment>());
-        }
-
-        public Equipment Get(int id, IList<string> cols)
-        {
-            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("Repository", "");
-            OperationType opType = OperationType.Get;
             Equipment equipment = null;
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
 
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-
-            // TODO: if stringify columns result is empty, then we don't execute the query
-            string sql = 
-                "SELECT " +
-                ServicesHelper.StringifyColumns<Equipment>(cols) + " " +
-                "FROM Equipment WHERE EquipId = @Id;";
-
-            SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            cmd.Parameters.AddWithValue("@Id", id);
+            if (_cols.Count == 0)
+            {
+                return null;
+            }
 
             try
             {
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGet<Equipment>(obj, _cols, dbProvider);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         equipment = new Equipment();
 
-                        foreach (string col in cols)
+                        foreach (string col in _cols)
                         {
                             equipment[col] = reader[col];
                         }
@@ -120,52 +77,55 @@ namespace Project1MVC.DAL
             }
             catch (Exception ex)
             {
-                Logger.Log($"FAILED: {opType} {modelName}");
+                Logger.Log($"FAILED: {MethodBase.GetCurrentMethod().Name} {this.GetType().Name.Replace(rep, "")}");
                 Logger.Log($"{ex.ToString()}");
             }
-            //        finally
-            //        {
-            //            conn.Close();
-            //        }
-            //    }
-            //}
+            finally
+            {
+                dbProvider.Connection.Close();
+            }
 
             return equipment;
         }
 
-        public IList<Equipment> GetAll()
+        public IList<Equipment> GetAll(IList<string> cols)
         {
             List<Equipment> list = new List<Equipment>();
+            IList<string> _cols = ServicesHelper.SanitizeColumns<Equipment>(cols);
 
-            //using (SqlConnection conn = dbProvider.GetConnection)
-            //{
-            //    if (conn != null)
-            //    {
-            //        string sql = "SELECT EquipId, Type, Brand, Model, Description, CurrentStockCount, ReStockThreshold FROM Equipment;";
+            if (_cols.Count == 0)
+            {
+                return list;
+            }
 
-            //SqlCommand cmd = new SqlCommand(sql, dbProvider.GetConnection);
+            try
+            {
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForGetAll<Equipment>(dbProvider, _cols);
 
-            //try
-            //        {
-            //            using (SqlDataReader reader = cmd.ExecuteReader())
-            //            {
-            //                while (reader.Read())
-            //                {
-            //                    list.Add(new Equipment(reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
-            //                }
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            Logger.Log($"FAILED: {opType} {modelName}");
-            //            Logger.Log($"{ex.ToString()}");
-            //        }
-            //        finally
-            //        {
-            //            conn.Close();
-            //        }
-            //    }
-            //}
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Equipment equipment = new Equipment();
+
+                        foreach (string col in _cols)
+                        {
+                            equipment[col] = reader[col];
+                        }
+
+                        list.Add(equipment);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"FAILED: {MethodBase.GetCurrentMethod().Name} {this.GetType().Name.Replace(rep, "")}");
+                Logger.Log($"{ex.ToString()}");
+            }
+            finally
+            {
+                dbProvider.Connection.Close();
+            }
 
             return list;
         }
