@@ -125,7 +125,7 @@ namespace Project1MVC.Services
             return (_pageSize > 0) ? _pageSize : DefaultPageSize;
         }       
 
-        public static string StringifyColumns<T>(IList<string> cols)
+        public static string StringifyColumns(IList<string> cols)
         {
             if (cols == null | cols.Count == 0)
             {
