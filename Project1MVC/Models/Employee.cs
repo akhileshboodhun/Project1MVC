@@ -30,8 +30,10 @@ namespace Project1MVC.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }
+        [MaxLength(250), MinLength(5)]
         public string Address { get; set; }
         [Display(Name = "Phone No")]
+        [MaxLength(15), MinLength(3)]
         public string PhoneNo { get; set; }
         [Display(Name = "Status")]
         public bool IsActive { get; set; }

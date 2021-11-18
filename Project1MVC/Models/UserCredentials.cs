@@ -16,8 +16,10 @@ namespace Project1MVC.Models
         }
 
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Invalid Email")]
+        [EmailAddress]
         public string Email {get; set;}
         [Required(AllowEmptyStrings = false)]
+        [MaxLength(50), MinLength(5)]
         public string Password { get; set; }
 
     }
