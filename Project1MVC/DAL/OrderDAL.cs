@@ -203,14 +203,16 @@ namespace Project1MVC.DAL
                                 orderWrapper.OrderProp = order;
                             }
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -245,13 +247,16 @@ namespace Project1MVC.DAL
                             orderWrapper.EquipmentOrderProp = equipmentOrdersList.ToArray();
                         }
 
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -288,13 +293,16 @@ namespace Project1MVC.DAL
                             }
                         }
 
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -331,14 +339,16 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -373,14 +383,17 @@ namespace Project1MVC.DAL
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
@@ -470,14 +483,16 @@ namespace Project1MVC.DAL
                         {
                             OrderComplete(conn, orderWrapper.OrderProp.Id);
                         }
-
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
+                    }
+                    finally
+                    {
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
                     }
                 }
             }
