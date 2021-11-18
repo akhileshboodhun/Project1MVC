@@ -49,7 +49,7 @@ namespace Project1MVC.Services
 
         public Equipment Get(string id)
         {
-            IList<string> cols = ServicesHelper.GetColumns<Equipment>(true, true);
+            IList<string> cols = ServicesHelper.GetColumns<Equipment>(true, false);
             return Get(id, cols);
         }
 

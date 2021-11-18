@@ -107,7 +107,8 @@ namespace Project1MVC.Controllers
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(true, false);
+                IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold"};
+                ViewBag.displayCols = cols;
                 return View(equipment);
             }
             else
