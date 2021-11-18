@@ -235,13 +235,13 @@ namespace Project1MVC.DAL
             return count;
         }
 
-        public bool Update(Equipment obj)
+        public bool Update(Equipment obj, IList<string> cols = null)
         {
             bool status = false;
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForUpdate<Equipment>(obj, dbProvider);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForUpdate<Equipment>(obj, dbProvider, cols);
 
                 if (cmd.ExecuteNonQuery() == 1)
                 {

@@ -360,7 +360,7 @@ namespace Project1MVC.Services
         private static SqlCommand GenerateSqlCommand<T>(string sql, Model<T> obj, IDBProvider dbProvider)
         {
             SqlCommand cmd = new SqlCommand(sql, dbProvider.Connection);
-            IList<string> cols = GetColumns<T>();
+            IList<string> cols = GetColumns<T>(true, false);
 
             foreach (string col in cols)
             {
@@ -417,10 +417,10 @@ namespace Project1MVC.Services
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
-        private static string GenerateSqlQueryForUpdate<T>(DBMS dbms)
+        private static string GenerateSqlQueryForUpdate<T>(DBMS dbms, IList<string> cols = null)
         {
             StringBuilder sb = new StringBuilder();
-            IList<string> cols = GetColumns<T>(false);
+            IList<string> _cols = cols ?? GetColumns<T>(false, false);
             string primaryColumn = GetDefaultColumn<T>();
 
             switch (dbms)
@@ -428,7 +428,7 @@ namespace Project1MVC.Services
                 case DBMS.SQLServer:
                     sb.Append($"UPDATE [{typeof(T).Name}] ");
                     sb.Append($"SET ");
-                    foreach (string col in cols)
+                    foreach (string col in _cols)
                     {
                         sb.Append($"[{col}] = @{col}, ");
                     }
@@ -443,9 +443,9 @@ namespace Project1MVC.Services
             return sb.ToString();
         }
 
-        public static SqlCommand GenerateSqlCommandForUpdate<T>(Model<T> obj, IDBProvider dbProvider)
+        public static SqlCommand GenerateSqlCommandForUpdate<T>(Model<T> obj, IDBProvider dbProvider, IList<string> cols = null)
         {
-            string sql = GenerateSqlQueryForUpdate<T>(dbProvider.DBMS);
+            string sql = GenerateSqlQueryForUpdate<T>(dbProvider.DBMS, cols);
             return GenerateSqlCommand(sql, obj, dbProvider);
         }
 
