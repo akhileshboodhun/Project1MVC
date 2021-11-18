@@ -29,7 +29,7 @@ namespace Project1MVC.Controllers
 
             ViewBag.paginatedListInfo = paginatedListInfo;
             ViewBag.filteringInfo = filteringInfo;
-            
+
             return View(equipments);
         }
 
@@ -40,12 +40,13 @@ namespace Project1MVC.Controllers
             // TODO: Remove this null check and digit check, put try catch instead
             if (id != null && id.All(char.IsDigit))
             {
-                var equipment = equipmentService.Get(id);
+                IList<string> cols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description" };
+                var equipment = equipmentService.Get(id, cols);
 
                 if (equipment != null)
                 {
                     ViewBag.displayPrimaryColumn = false;
-                    ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
+                    ViewBag.displayCols = cols;
                     return View(equipment);
                 }
                 else
@@ -106,7 +107,7 @@ namespace Project1MVC.Controllers
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(true, false);
                 return View(equipment);
             }
             else

@@ -49,7 +49,7 @@ namespace Project1MVC.Services
 
         public Equipment Get(string id)
         {
-            IList<string> cols = ServicesHelper.GetColumns<Equipment>();
+            IList<string> cols = ServicesHelper.GetColumns<Equipment>(true, true);
             return Get(id, cols);
         }
 
@@ -66,8 +66,8 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            IList<string> displayCols = new List<string>() { "Type", "Brand", "Model", "Description", "GrandTotal" };
-            IList<string> filterCols = new List<string>() { "Type", "Brand", "Model", "ReStockThreshold", "GrandTotal" };
+            IList<string> displayCols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description", "ReStockThreshold", "GrandTotal" };
+            IList<string> filterCols = new List<string>();// { "Type", "Brand", "Model", "ReStockThreshold", "GrandTotal" };
 
             FilteringInfo<Equipment> filInfo = new FilteringInfo<Equipment>(filterCols, complexFilterString, orFilters);
             PaginatedListInfo<Equipment> pgInfo;
@@ -75,7 +75,7 @@ namespace Project1MVC.Services
 
             paginatedListInfo = pgInfo;
             filteringInfo = filInfo;
-            return list;        
+            return list;
         }
 
         public bool Update(Equipment obj)
