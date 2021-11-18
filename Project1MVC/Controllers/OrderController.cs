@@ -44,6 +44,7 @@ namespace Project1MVC.Controllers
         // GET: Order/Create
         public ActionResult Create()
         {
+
             //EquipmentDAL equipmentDB = EquipmentDAL.Instance;
             var equipments = equipmentDB.GetAll();
             //SupplierDAL supplierDB = SupplierDAL.Instance;

@@ -18,6 +18,9 @@
             @Html.DisplayNameFor(model => model.OrderProp.OrderDate)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.OrderProp.EffectiveDate)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.OrderProp.IsOrderComplete)
         </th>
         <th>
@@ -35,13 +38,16 @@
         @Html.DisplayFor(modelItem => item.OrderProp.OrderDate)
     </td>
     <td>
+        @Html.DisplayFor(modelItem => item.OrderProp.EffectiveDate)
+    </td>
+    <td>
         @Html.CheckBoxFor(modelItem => item.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.OrderProp.SupplierName)
     </td>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id=item.OrderProp.Id  }) |
+        @Html.ActionLink("Edit", "Edit", new { id = item.OrderProp.Id }) |
         @Html.ActionLink("Details", "Details", new { id = item.OrderProp.Id }) |
         @Html.ActionLink("Delete", "Delete", new { id = item.OrderProp.Id })
     </td>

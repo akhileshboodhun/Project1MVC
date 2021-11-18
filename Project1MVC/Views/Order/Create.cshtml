@@ -33,6 +33,14 @@
     </div>
 
     <div class="form-group">
+        @Html.LabelFor(model => model.EffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
         @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.IsOrderComplete, new { @class = "form-control", @type = "checkbox" })
@@ -79,11 +87,11 @@
         </tr>
     </table>
 
-    <hr/>
+    <hr />
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input id="submitBtn" type="submit" value="Create" class="btn btn-default"/>
+            <input id="submitBtn" type="submit" value="Create" class="btn btn-default" />
         </div>
     </div>
 </div>
@@ -188,10 +196,12 @@
             e.preventDefault();
             const supplier = document.querySelector("#SupplierId").value;
             const orderDate = document.querySelector("#OrderDate").value;
+            const effectiveDate = document.querySelector("#EffectiveDate").value;
             const isOrderCompleted = document.querySelector("#IsOrderComplete").checked;
             const orderData = {
                 isOrderComplete: isOrderCompleted,
                 orderDate,
+                effectiveDate,
                 supplierId: supplier
             }
             if (equipmentsData.length < 1) {

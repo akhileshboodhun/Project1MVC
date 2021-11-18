@@ -35,13 +35,14 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sqlInsertInOrder =
-                        "INSERT INTO [Order] (OrderDate, IsOrderComplete, SupplierId) " +
-                        "VALUES (@OrderDate, @IsOrderComplete, @SupplierId);";
+                        "INSERT INTO [Order] (OrderDate, IsOrderComplete, SupplierId, EffectiveDate) " +
+                        "VALUES (@OrderDate, @IsOrderComplete, @SupplierId, @EffectiveDate);";
 
                     SqlCommand cmdInsertInOrder = new SqlCommand(sqlInsertInOrder, conn);
                     cmdInsertInOrder.Parameters.AddWithValue("@OrderDate", obj.OrderProp.OrderDate);
                     cmdInsertInOrder.Parameters.AddWithValue("@IsOrderComplete", obj.OrderProp.IsOrderComplete);
                     cmdInsertInOrder.Parameters.AddWithValue("@SupplierId", obj.OrderProp.SupplierId);
+                    cmdInsertInOrder.Parameters.AddWithValue("@EffectiveDate", obj.OrderProp.EffectiveDate);
 
                     try
                     {
@@ -183,7 +184,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.SupplierId, s.Name FROM [Order] o, [Supplier] s " +
+                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.SupplierId, o.EffectiveDate, s.Name FROM [Order] o, [Supplier] s " +
                                  "WHERE o.SupplierId = s.SupplierId " +
                                  "AND o.OrderId = @Id;";
 
@@ -198,7 +199,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             { 
-                                Order order = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString());
+                                Order order = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString(), Convert.ToDateTime(reader["EffectiveDate"].ToString()));
                                 order.SupplierId = reader["SupplierId"].ToInt();
                                 orderWrapper.OrderProp = order;
                             }
@@ -270,11 +271,13 @@ namespace Project1MVC.DAL
             string opType = "Select All";
             List<OrderWrapper> list = new List<OrderWrapper>();
 
+
+
             using (SqlConnection conn = DAL.GetConnection())
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, s.Name FROM [Order] o, [Supplier] s " +
+                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, s.SupplierId, s.Name, o.EffectiveDate FROM [Order] o, [Supplier] s " +
                                   "WHERE o.SupplierId = s.SupplierId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -288,22 +291,35 @@ namespace Project1MVC.DAL
                             while (reader.Read())
                             {
                                 OrderWrapper orderWrapper = new OrderWrapper();
-                                orderWrapper.OrderProp = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString());
+                                orderWrapper.OrderProp = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString(), Convert.ToDateTime(reader["EffectiveDate"].ToString()));
+                                orderWrapper.OrderProp.SupplierId = reader["SupplierId"].ToInt();
                                 list.Add(orderWrapper);
                             }
+
+                        }
+                        conn.Close();
+                        foreach(var orderWrapper in list)
+                        {
+                            if (orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete)
+                            {
+                                orderWrapper.OrderProp.IsOrderComplete = true;
+                                Update(orderWrapper);
+                            }
+                            
                         }
 
                     }
                     catch (Exception ex)
                     {
+                        conn.Close();
                         Logger.Log($"FAILED: {opType} {modelName}");
                         Logger.Log($"{ex.ToString()}");
                     }
-                    finally
-                    {
-                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
-                        conn.Close();
-                    }
+                    //finally
+                    //{
+                    //    Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                    //    conn.Close();
+                    //}
                 }
             }
 
@@ -454,13 +470,18 @@ namespace Project1MVC.DAL
             string opType = "Update";
             bool status = false;
 
+            if(orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete)
+            {
+                orderWrapper.OrderProp.IsOrderComplete = true;
+            }
+
             using (SqlConnection conn = DAL.GetConnection())
             {
                 if (conn != null)
                 {
                     string sql =
                         "UPDATE [Order] " +
-                        "SET OrderDate=@OrderDate, IsOrderComplete=@IsOrderComplete, SupplierId=@SupplierId " +
+                        "SET OrderDate=@OrderDate, IsOrderComplete=@IsOrderComplete, SupplierId=@SupplierId, EffectiveDate=@EffectiveDate " +
                         "WHERE OrderId = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -468,6 +489,7 @@ namespace Project1MVC.DAL
                     cmd.Parameters.AddWithValue("@OrderDate", orderWrapper.OrderProp.OrderDate);
                     cmd.Parameters.AddWithValue("@IsOrderComplete", orderWrapper.OrderProp.IsOrderComplete);
                     cmd.Parameters.AddWithValue("@SupplierId", orderWrapper.OrderProp.SupplierId);
+                    cmd.Parameters.AddWithValue("@EffectiveDate", orderWrapper.OrderProp.EffectiveDate);
 
                     try
                     {
