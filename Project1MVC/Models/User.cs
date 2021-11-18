@@ -30,10 +30,12 @@ namespace Project1MVC.Models
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "First Name is required")]
         [Display(Name = "First Name")]
+        [MaxLength(50), MinLength(3)]
         public string FName { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Last Name is required")]
         [Display(Name = "Last Name")]
+        [MaxLength(50), MinLength(3)]
         public string LName { get; set; }
 
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Invalid Email")]

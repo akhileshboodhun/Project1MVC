@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -24,8 +25,12 @@ namespace Project1MVC.Models
         }
 
         public int? SupplierId { get; set; }
+
+        [MaxLength(100), MinLength(3)]
         public string Name { get; set; }
+        [MaxLength(15), MinLength(3)]
         public string PhoneNo { get; set; }
+        [MaxLength(250), MinLength(3)]
         public string Address { get; set; }
     }
 }

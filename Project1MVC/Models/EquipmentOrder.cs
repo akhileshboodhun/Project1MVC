@@ -28,17 +28,21 @@ namespace Project1MVC.Models
         public int EquipmentId { get; set; }
 
         [Display(Name = "Quantity")]
+        [Range(1,500)]
         public int Qty { get; set; }
 
         [Display(Name = "Unit Price (Rs)")]
+        [Range(0, 100000)]
         public double UnitPrice { get; set; }
 
         public double NetPrice { get { return this.UnitPrice * this.Qty; } }
 
         [Display(Name = "Brand")]
+        [MaxLength(50), MinLength(3)]
         public string EquipmentBrand { get; set; }
 
         [Display(Name = "Model")]
+        [MaxLength(50), MinLength(3)]
         public string EquipmentModel { get; set; }
     }
 }

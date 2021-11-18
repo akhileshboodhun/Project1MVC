@@ -55,6 +55,7 @@ namespace Project1MVC.Models
 
         [Display(Name = "Supplier Name")]
         [Required]
+        [MaxLength(100), MinLength(3)]
         public string SupplierName { get; set; }
     }
 }
