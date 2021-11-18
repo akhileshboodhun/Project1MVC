@@ -117,17 +117,14 @@ namespace Project1MVC.Controllers
             {
                 try
                 {
-                    // TODO: validate fields other than primaryKey
-                    // TODO: move this into service
                     int id = fc[primaryKey].ToInt();
                     string type = fc["[Type]"];
                     string brand = fc["[Brand]"];
                     string model = fc["[Model]"];
                     string description = fc["[Description]"];
-                    int currentStockCount = fc["[CurrentStockCount]"].ToInt();
                     int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-                    var equipment = new Equipment(id, type, brand, model, description, currentStockCount, reStockThreshold);
+                    var equipment = new Equipment(id, type, brand, model, description, 0, reStockThreshold);
                     equipmentService.Update(equipment);
 
                     // TODO: check status of update and notify user instead of redirecting

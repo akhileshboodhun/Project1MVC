@@ -81,8 +81,8 @@ namespace Project1MVC.Services
 
         public bool Update(Equipment obj)
         {
-            // TODO: check if equipmentId is not zero
-            return equipmentRepo.Update(obj);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold" };
+            return equipmentRepo.Update(obj, cols);
         }
     }
 }
