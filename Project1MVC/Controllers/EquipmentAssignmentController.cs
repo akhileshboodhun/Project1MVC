@@ -102,6 +102,28 @@ namespace Project1MVC.Controllers
                 return HttpNotFound();
             }
         }
+
+        public ActionResult ViewAssignedEquipments()
+        {
+            var assignEquipmentService = AssignEquipmentService.Instance;
+            var assignedEquipments = assignEquipmentService.ViewAllAssignedEquipments();
+            var empDB = EmployeeDAL.Instance;
+            var employees = empDB.GetAll();
+            var equipDB = EquipmentDAL.Instance;
+            var equipmentsList = equipDB.GetAll();
+
+            //u.[FName], u.[LName], es.[SerialNo], eq.[Type], eq.[Brand], eq.[Model], eq.[Description]
+            var query = from assignedEquipment in assignedEquipments
+                        join employee in employees
+                        on assignedEquipment.EmployeeId equals employee.UserId
+                        join equipment in equipmentsList
+                        on assignedEquipment.EquipmentId equals equipment.EquipId
+                        select JsonConvert.SerializeObject(new { FirstName = employee.FName, LastName = employee.LName, SerialNo = assignedEquipment.SerialNo, Type = equipment.Type, Brand = equipment.Brand, Model = equipment.Model, Description = equipment.Description });
+
+            ViewBag.AssignedEquipmentList = query.ToList();
+
+            return View();
+        }
     }
 
 }

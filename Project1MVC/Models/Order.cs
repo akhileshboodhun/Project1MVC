@@ -22,12 +22,13 @@ namespace Project1MVC.Models
             this.Id = id;
         }
 
-        public Order(int? id, bool isOrderComplete, DateTime orderDate, string supplierName)
+        public Order(int? id, bool isOrderComplete, DateTime orderDate, string supplierName, DateTime effectiveDate)
         {
             this.Id = id;
             this.IsOrderComplete = isOrderComplete;
             this.OrderDate = orderDate;
             this.SupplierName = supplierName;
+            this.EffectiveDate = effectiveDate;
         }
 
         public int? Id { get; set; }
@@ -41,7 +42,13 @@ namespace Project1MVC.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime OrderDate { get; set; }
-        
+
+        [Display(Name = "Effective Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Required]
+        public DateTime EffectiveDate { get; set; }
+
         [Display(Name = "Supplier Name")]
         [Required]
         public int SupplierId { get; set; }

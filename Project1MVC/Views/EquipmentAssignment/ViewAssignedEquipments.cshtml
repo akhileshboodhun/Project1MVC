@@ -1,0 +1,119 @@
+﻿@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "ViewAssignedEquipments";
+}
+
+<h2>View Assigned Equipments</h2>
+
+<div class="search-wrapper">
+    <form class="form search">
+        <div class="form-group">
+            <label for="SearchBy">Search By</label>
+            <div class="form-input">
+                <select id="SearchBy" name="SearchBy">
+                    <option value="">Search Type</option>
+                    <option value="Equipment">Equipment</option>
+                    <option value="Employee">Employee</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="SearchValue">Search</label>
+            <div class="form-input">
+                <input id="search" type="text" for="SearchValue" name="SearchValue" placeholder="Search" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Serial No</th>
+    <th>Type</th>
+    <th>Brand</th>
+    <th>Model</th>
+    <th>Description</th>
+    </thead>
+    <tbody id="equipments-assigned">
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        const list = [];
+        const content =@Html.Raw(Json.Encode(ViewBag.AssignedEquipmentList));
+        content.forEach(c => {
+            list.push(JSON.parse(c));
+        });
+
+        const searchBy = document.querySelector("#SearchBy");
+        let filteredList = list;
+        const searchField = document.querySelector("#search");
+
+        $('#search').addClass("disabled");
+        $('#search').attr("title", "Select Type First");
+        $('#search').attr("disabled", "");
+
+        searchBy.addEventListener("change", (e) => {
+            const selectedIndex = e.target.selectedIndex;
+            if (selectedIndex == 0) {
+                $('#search').addClass("disabled");
+                $('#search').attr("title", "Select Type First");
+                $('#search').attr("disabled", "");
+            }
+            else {
+                $('#search').removeClass("disabled");
+                $('#search').removeAttr("title");
+                $('#search').removeAttr("disabled");
+            }
+            searchField.value = "";
+            filteredList = list;
+            generateTable();
+        })
+
+
+        searchField.addEventListener("keyup", (e) => {
+            const selectedIndex = searchBy.selectedIndex;
+            const searchValue = e.target.value.toLowerCase();
+            switch (selectedIndex) {
+                case 0:
+                    break;
+                case 1:
+                    filteredList = list.filter(item => item.SerialNo.toString().includes(searchValue) || item.Type.toLowerCase().includes(searchValue) || item.Model.toLowerCase().includes(searchValue) || item.Description.toLowerCase().includes(searchValue) || item.Brand.toLowerCase().includes(searchValue))
+                    break;
+                case 2:
+                    filteredList = list.filter(item => item.FirstName.toLowerCase().includes(searchValue) || item.LastName.toLowerCase().includes(searchValue))
+                    break;
+                case 3:
+                    break;
+            }
+            generateTable();
+        })
+
+        function generateTable() {
+            const tableBody = document.querySelector("#equipments-assigned");
+            tableBody.innerHTML = "";
+            if (filteredList.length == 0) {
+                tableBody.innerHTML = "<h4>No results matched your search</h4>";
+            }
+            filteredList.forEach(item => {
+                const html = `
+                    <tr>
+                        <td>${item.FirstName}</td>
+                        <td>${item.LastName}</td>
+                        <td>${item.SerialNo}</td>
+                        <td>${item.Type}</td>
+                        <td>${item.Brand}</td>
+                        <td>${item.Model}</td>
+                        <td>${item.Description}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += html;
+            })
+        }
+        generateTable();
+    </script>
+}
+

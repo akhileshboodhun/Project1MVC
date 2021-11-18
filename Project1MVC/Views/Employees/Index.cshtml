@@ -109,7 +109,10 @@
                         </td>
 
                         <td>
-                            @Html.ActionLink("\0", "Delete", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-trash", @title = "Delete" })
+                            @if (item.IsActive)
+                            {
+                                @Html.ActionLink("\0", "Terminate", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-ban", @title = "Terminate" })
+                            }
                         </td>
                     }
                 }

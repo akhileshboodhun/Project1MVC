@@ -154,5 +154,23 @@ namespace Project1MVC.Controllers
                 return View(employee);
             }
         }
+
+        [AuthorizeUser(Roles = "Admin")]
+        // GET: Employees/Terminate/5
+        public ActionResult Terminate(int id)
+        {
+            var empDB = EmployeeDAL.Instance;
+
+            try
+            {
+                // TODO: Add delete logic here
+                empDB.Terminate(id);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
     }
 }

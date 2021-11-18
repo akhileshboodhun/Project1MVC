@@ -35,6 +35,7 @@ namespace Project1MVC.Controllers
                     _tiles = temp;
                     _tiles.Add(new Tile(label: "Current Stock Report", icon: "fa-tasks", desc: "View current stock report for equipments", location: "/EquipmentsInStock"));
                     _tiles.Add(new Tile(label: "Future Stock Report", icon: "fa-hourglass-3", desc: "View future stock report for equipments", location: "/FutureStock"));
+                    _tiles.Add(new Tile(label: "Assigned Equipments Report", icon: "fa-laptop", desc: "View assigned equipments report for employees", location: "/EquipmentAssignment/ViewAssignedEquipments"));
 
                 }
             }

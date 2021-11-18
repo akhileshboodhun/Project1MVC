@@ -109,6 +109,80 @@ namespace Project1MVC.DAL
 
             return status;
         }
+        public bool Terminate(int id)
+        {
+            bool status = false;
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    try
+                    {
+                    status = this.Terminate(conn, id);
+
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                    conn.Close();
+                    }
+                }
+            }
+            return status;
+        }
+        bool Terminate(SqlConnection conn, int? id)
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Terminate";
+            bool status = false;
+
+            string sql = @"
+                            BEGIN TRANSACTION
+                                BEGIN TRY
+                                    UPDATE [Employee]
+                                    SET [IsActive] = 0
+                                    WHERE [EmpId] = @Id
+
+                                    UPDATE [EquipmentEmployee]
+                                    SET [DateReturned] = GETDATE()
+                                    WHERE [EmpId] = @Id
+                                    AND [DateReturned] is NULL
+                                        
+                                    COMMIT
+
+                                END TRY
+                                BEGIN CATCH
+                                    ROLLBACK
+                                END CATCH
+
+             ";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    try
+                    {
+                        if (cmd.ExecuteNonQuery() >= 1)
+                        {
+                            status = true;
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+
+            return status;
+        }
+
+
         public Employee Get(int id) => Get(id.ToString());
         public Employee Get(string query)
         {
@@ -169,6 +243,8 @@ namespace Project1MVC.DAL
 
             return Employee;
         }
+
+        
 
         public List<Employee> GetAll()
         {
@@ -253,9 +329,13 @@ namespace Project1MVC.DAL
 
                     try
                     {
-                        if (cmd.ExecuteNonQuery() == 1)
+                        if (cmd.ExecuteNonQuery() >= 1)
                         {
                             status = true;
+                            if(obj.IsActive == false)
+                            {
+                                status = Terminate(conn, obj.UserId);
+                            }
                             Logger.Log($"SUCCESS: {opType} {modelName}");
                         }
 
