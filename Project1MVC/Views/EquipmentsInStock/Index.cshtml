@@ -3,6 +3,26 @@
 @{
     ViewBag.Title = "Index";
 }
+@{
+    var equipmentsDB = Project1MVC.DAL.EquipmentDAL.Instance;
+    var equipmentsInStockList = equipmentsDB.GetAllEquipmentsInStock();
+
+    bool stockAlertStatus = equipmentsInStockList.Any(el => el.CurrentStockCount < el.ReStockThreshold);
+    if (stockAlertStatus)
+    {
+        <script>
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Partial Equipments Stock Outage',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        </script>
+    }
+}
+
 
 <h2>Equipments In Stock</h2>
 
@@ -33,29 +53,32 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.EquipId)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Brand)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Model)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Type)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Description)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.CurrentStockCount)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ReStockThreshold)
-    </td>
-</tr>
+        var myWarning = "";
+       if (item.CurrentStockCount < item.ReStockThreshold) { myWarning = "color: orange;"; }
+        <tr style="@myWarning">
+
+            <td>
+                @Html.DisplayFor(modelItem => item.EquipId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentStockCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReStockThreshold)
+            </td>
+        </tr>
     }
 
 </table>
