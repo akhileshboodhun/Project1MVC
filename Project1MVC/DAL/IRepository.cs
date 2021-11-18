@@ -6,7 +6,7 @@ namespace Project1MVC.DAL
 {
     public interface IRepository<T>
     {
-        bool Add(T obj);
+        bool Add(T obj, IList<string> cols = null);
 
         bool Delete(T obj);
 
@@ -18,6 +18,6 @@ namespace Project1MVC.DAL
 
         int GetCount(IList<Filter> filters = null, bool orFilters = true);
 
-        bool Update(T obj);
+        bool Update(T obj, IList<string> cols = null);
     }
 }

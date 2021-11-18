@@ -17,13 +17,13 @@ namespace Project1MVC.DAL
             dbProvider = provider;
         }
 
-        public bool Add(Equipment obj)
+        public bool Add(Equipment obj, IList<string> cols = null)
         {
             bool status = false;
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForInsert<Equipment>(obj, dbProvider);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForInsert<Equipment>(obj, dbProvider, cols);
 
                 if (cmd.ExecuteNonQuery() == 1)
                 {
@@ -235,13 +235,13 @@ namespace Project1MVC.DAL
             return count;
         }
 
-        public bool Update(Equipment obj)
+        public bool Update(Equipment obj, IList<string> cols = null)
         {
             bool status = false;
 
             try
             {
-                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForUpdate<Equipment>(obj, dbProvider);
+                SqlCommand cmd = ServicesHelper.GenerateSqlCommandForUpdate<Equipment>(obj, dbProvider, cols);
 
                 if (cmd.ExecuteNonQuery() == 1)
                 {

@@ -17,12 +17,13 @@ namespace Project1MVC.Services
 
         public bool Add(Equipment obj)
         {
-            return equipmentRepo.Add(obj);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold" };
+            return equipmentRepo.Add(obj, cols);
         }
 
         public bool TakeFromEmployee(string equipId, string empId)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool AssignToEmployee(string equipId, string empId, string assignorId)
@@ -49,7 +50,7 @@ namespace Project1MVC.Services
 
         public Equipment Get(string id)
         {
-            IList<string> cols = ServicesHelper.GetColumns<Equipment>();
+            IList<string> cols = ServicesHelper.GetColumns<Equipment>(true, false);
             return Get(id, cols);
         }
 
@@ -66,8 +67,8 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            IList<string> displayCols = new List<string>() { "Type", "Brand", "Model", "Description", "GrandTotal" };
-            IList<string> filterCols = new List<string>() { "Type", "Brand", "Model", "ReStockThreshold", "GrandTotal" };
+            IList<string> displayCols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description", "ReStockThreshold", "GrandTotal" };
+            IList<string> filterCols = new List<string>();// { "Type", "Brand", "Model", "ReStockThreshold" };
 
             FilteringInfo<Equipment> filInfo = new FilteringInfo<Equipment>(filterCols, complexFilterString, orFilters);
             PaginatedListInfo<Equipment> pgInfo;
@@ -75,13 +76,13 @@ namespace Project1MVC.Services
 
             paginatedListInfo = pgInfo;
             filteringInfo = filInfo;
-            return list;        
+            return list;
         }
 
         public bool Update(Equipment obj)
         {
-            // TODO: check if equipmentId is not zero
-            return equipmentRepo.Update(obj);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold" };
+            return equipmentRepo.Update(obj, cols);
         }
     }
 }

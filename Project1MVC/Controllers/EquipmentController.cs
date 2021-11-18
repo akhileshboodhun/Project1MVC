@@ -29,7 +29,7 @@ namespace Project1MVC.Controllers
 
             ViewBag.paginatedListInfo = paginatedListInfo;
             ViewBag.filteringInfo = filteringInfo;
-            
+
             return View(equipments);
         }
 
@@ -37,25 +37,18 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Details(string id)
         {
-            // TODO: Remove this null check and digit check, put try catch instead
-            if (id != null && id.All(char.IsDigit))
-            {
-                var equipment = equipmentService.Get(id);
+            IList<string> cols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description" };
+            var equipment = equipmentService.Get(id, cols);
 
-                if (equipment != null)
-                {
-                    ViewBag.displayPrimaryColumn = false;
-                    ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>();
-                    return View(equipment);
-                }
-                else
-                {
-                    // TODO: show error message
-                    return RedirectToAction("Index");
-                }
+            if (equipment != null)
+            {
+                ViewBag.displayPrimaryColumn = false;
+                ViewBag.displayCols = cols;
+                return View(equipment);
             }
             else
             {
+                // TODO: show error message
                 return RedirectToAction("Index");
             }
         }
@@ -63,7 +56,8 @@ namespace Project1MVC.Controllers
         //GET: Equipment/Add
         public ActionResult Add()
         {
-            ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold"};
+            ViewBag.displayCols = cols;
             return View(new Equipment(type: " ", brand: " ", model: " ", description: " "));
         }
 
@@ -71,18 +65,15 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Add(FormCollection fc)
         {
-            // TODO: pass in fc directly to service
             try
             {
-                // TODO: validate fields inside service
                 string type = fc["[Type]"];
                 string brand = fc["[Brand]"];
                 string model = fc["[Model]"];
                 string description = fc["[Description]"];
-                int currentStockCount = fc["[CurrentStockCount]"].ToInt();
                 int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-                var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
+                var equipment = new Equipment(0, type, brand, model, description, 0, reStockThreshold);
                 equipmentService.Add(equipment);
 
                 // TODO: check status of update and notify user instead of redirecting
@@ -106,7 +97,8 @@ namespace Project1MVC.Controllers
 
                 // TODO: if equipment is null, we need to display "not found" error in view
 
-                ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+                IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold"};
+                ViewBag.displayCols = cols;
                 return View(equipment);
             }
             else
@@ -125,17 +117,14 @@ namespace Project1MVC.Controllers
             {
                 try
                 {
-                    // TODO: validate fields other than primaryKey
-                    // TODO: move this into service
                     int id = fc[primaryKey].ToInt();
                     string type = fc["[Type]"];
                     string brand = fc["[Brand]"];
                     string model = fc["[Model]"];
                     string description = fc["[Description]"];
-                    int currentStockCount = fc["[CurrentStockCount]"].ToInt();
                     int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-                    var equipment = new Equipment(id, type, brand, model, description, currentStockCount, reStockThreshold);
+                    var equipment = new Equipment(id, type, brand, model, description, 0, reStockThreshold);
                     equipmentService.Update(equipment);
 
                     // TODO: check status of update and notify user instead of redirecting
