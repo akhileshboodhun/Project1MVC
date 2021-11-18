@@ -110,11 +110,14 @@
             const equipmentQty = +equipmentQuantityEl.value;
             const unitPrice = +unitPriceEl.value;
             if (equipmentSelectEl.value == "") {
-                alert("Please select an equipment");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select an equipment',
+                });
                 
             }
             else if (equipmentQty <= 0) {
-                //alert("Please enter a valid quantity");
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -122,10 +125,18 @@
                 });
             }
             else if (unitPrice <= 0) {
-                alert("Please enter a valid unit price");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a valid unit price',
+                });
             }
             else if (equipmentsData.some(equipment => equipment.equipmentId == +equipmentSelectEl.value)) {
-                alert("This equipment has already been added. Add another one");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'This equipment has already been added. Add another one',
+                });
                 clearFields();
             }
             else
@@ -184,7 +195,11 @@
                 supplierId: supplier
             }
             if (equipmentsData.length < 1) {
-                alert("Please add at least one equipment");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please add at least one equipment',
+                });
             }
             else
             {
