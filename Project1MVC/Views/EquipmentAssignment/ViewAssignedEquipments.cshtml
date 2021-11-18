@@ -52,7 +52,22 @@
         let filteredList = list;
         const searchField = document.querySelector("#search");
 
+        $('#search').addClass("disabled");
+        $('#search').attr("title", "Select Type First");
+        $('#search').attr("disabled", "");
+
         searchBy.addEventListener("change", (e) => {
+            const selectedIndex = e.target.selectedIndex;
+            if (selectedIndex == 0) {
+                $('#search').addClass("disabled");
+                $('#search').attr("title", "Select Type First");
+                $('#search').attr("disabled", "");
+            }
+            else {
+                $('#search').removeClass("disabled");
+                $('#search').removeAttr("title");
+                $('#search').removeAttr("disabled");
+            }
             searchField.value = "";
             filteredList = list;
             generateTable();
