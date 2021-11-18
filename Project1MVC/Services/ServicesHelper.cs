@@ -378,7 +378,7 @@ namespace Project1MVC.Services
         private static string GenerateSqlQueryForInsert<T>(DBMS dbms, IList<string> cols = null, bool includePrimaryKey = false)
         {
             StringBuilder sb = new StringBuilder();
-            IList<string> colsParam = cols ?? GetColumns<T>(includePrimaryKey);
+            IList<string> colsParam = cols ?? GetColumns<T>(includePrimaryKey, false);
             string primaryColumn = GetDefaultColumn<T>();
 
             if (!includePrimaryKey)
@@ -393,7 +393,7 @@ namespace Project1MVC.Services
                 }
             }
 
-            colsParam = colsParam.Count != 0 ? colsParam : GetColumns<T>(includePrimaryKey);
+            colsParam = colsParam.Count != 0 ? colsParam : GetColumns<T>(includePrimaryKey, false);
             string _cols = StringifyColumns<T>(colsParam);
             string _colsParameterized = StringifyColumns<T>(FormatList(colsParam, "@"));
 
