@@ -37,26 +37,18 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Details(string id)
         {
-            // TODO: Remove this null check and digit check, put try catch instead
-            if (id != null && id.All(char.IsDigit))
-            {
-                IList<string> cols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description" };
-                var equipment = equipmentService.Get(id, cols);
+            IList<string> cols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description" };
+            var equipment = equipmentService.Get(id, cols);
 
-                if (equipment != null)
-                {
-                    ViewBag.displayPrimaryColumn = false;
-                    ViewBag.displayCols = cols;
-                    return View(equipment);
-                }
-                else
-                {
-                    // TODO: show error message
-                    return RedirectToAction("Index");
-                }
+            if (equipment != null)
+            {
+                ViewBag.displayPrimaryColumn = false;
+                ViewBag.displayCols = cols;
+                return View(equipment);
             }
             else
             {
+                // TODO: show error message
                 return RedirectToAction("Index");
             }
         }
