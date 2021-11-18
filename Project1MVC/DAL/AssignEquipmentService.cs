@@ -176,5 +176,49 @@ namespace Project1MVC.DAL
 
             return list;
         }
+
+        public List<AssignedEquipment> ViewAllAssignedEquipments()
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "View Assigned";
+            List<AssignedEquipment> list = new List<AssignedEquipment>();
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+
+                    string sql = @"SELECT [EmpId], [EquipId], [DateAssigned], [AssignorId], [SerialNo]
+                                   FROM [EquipmentEmployee]
+                                   WHERE [DateReturned] is NULL";
+                    
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                list.Add(new AssignedEquipment(employeeId: reader["EmpId"].ToInt(), equipmentId: reader["EquipId"].ToInt(), dateAssigned: reader["DateAssigned"].ToDateTime(), assignorId: reader["AssignorId"].ToInt(), serialNo: reader["SerialNo"].ToInt()));
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return list;
+        }
     }
 }

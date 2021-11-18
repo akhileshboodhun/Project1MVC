@@ -269,6 +269,7 @@
     <Content Include="Views\Supplier\Details.cshtml" />
     <Content Include="Views\Supplier\Edit.cshtml" />
     <Content Include="Views\Supplier\Index.cshtml" />
+    <Content Include="Views\EquipmentAssignment\ViewAssignedEquipments.cshtml" />
     <TypeScriptCompile Include="Scripts\CustomWidgets\Dashboard.ts" />
     <Content Include="Scripts\AddDeleteList.js" />
     <Content Include="Scripts\bootstrap-toggle.js" />
