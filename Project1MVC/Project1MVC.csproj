@@ -218,6 +218,7 @@
     <Compile Include="Services\ServicesHelper.cs" />
     <Compile Include="Services\UserRoleProvider.cs" />
     <Compile Include="Services\Utilities.cs" />
+    <Compile Include="Tests\Tests.cs" />
     <Compile Include="Unit_of_Work\IUnitOfWork.cs" />
     <Compile Include="Unit_of_Work\UnitOfWork.cs" />
   </ItemGroup>
