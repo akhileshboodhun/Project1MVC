@@ -56,7 +56,8 @@ namespace Project1MVC.Controllers
         //GET: Equipment/Add
         public ActionResult Add()
         {
-            ViewBag.displayCols = ServicesHelper.GetColumns<Equipment>(false);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold"};
+            ViewBag.displayCols = cols;
             return View(new Equipment(type: " ", brand: " ", model: " ", description: " "));
         }
 
@@ -64,18 +65,15 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Add(FormCollection fc)
         {
-            // TODO: pass in fc directly to service
             try
             {
-                // TODO: validate fields inside service
                 string type = fc["[Type]"];
                 string brand = fc["[Brand]"];
                 string model = fc["[Model]"];
                 string description = fc["[Description]"];
-                int currentStockCount = fc["[CurrentStockCount]"].ToInt();
                 int reStockThreshold = fc["[ReStockThreshold]"].ToInt();
 
-                var equipment = new Equipment(0, type, brand, model, description, currentStockCount, reStockThreshold);
+                var equipment = new Equipment(0, type, brand, model, description, 0, reStockThreshold);
                 equipmentService.Add(equipment);
 
                 // TODO: check status of update and notify user instead of redirecting
