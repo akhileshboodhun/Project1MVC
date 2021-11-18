@@ -17,12 +17,13 @@ namespace Project1MVC.Services
 
         public bool Add(Equipment obj)
         {
-            return equipmentRepo.Add(obj);
+            IList<string> cols = new List<string>() { "Type", "Brand", "Model", "Description", "ReStockThreshold" };
+            return equipmentRepo.Add(obj, cols);
         }
 
         public bool TakeFromEmployee(string equipId, string empId)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool AssignToEmployee(string equipId, string empId, string assignorId)
@@ -66,8 +67,8 @@ namespace Project1MVC.Services
 
         public IList<Equipment> GetPaginatedList(out PaginatedListInfo<Equipment> paginatedListInfo, out FilteringInfo<Equipment> filteringInfo, string pageNumber, string pageSize, string sortBy, string sortOrder, string complexFilterString, string orFilters)
         {
-            IList<string> displayCols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description", "ReStockThreshold", "GrandTotal" };
-            IList<string> filterCols = new List<string>();// { "Type", "Brand", "Model", "ReStockThreshold", "GrandTotal" };
+            IList<string> displayCols = new List<string>() { "EquipId", "Type", "Brand", "Model", "Description", "ReStockThreshold" };
+            IList<string> filterCols = new List<string>();// { "Type", "Brand", "Model", "ReStockThreshold" };
 
             FilteringInfo<Equipment> filInfo = new FilteringInfo<Equipment>(filterCols, complexFilterString, orFilters);
             PaginatedListInfo<Equipment> pgInfo;

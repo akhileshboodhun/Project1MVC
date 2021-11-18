@@ -6,7 +6,7 @@ namespace Project1MVC.DAL
 {
     public interface IRepository<T>
     {
-        bool Add(T obj);
+        bool Add(T obj, IList<string> cols = null);
 
         bool Delete(T obj);
 
