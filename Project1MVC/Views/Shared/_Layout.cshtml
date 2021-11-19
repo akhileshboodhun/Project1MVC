@@ -62,7 +62,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(BL.ApplicationTitle, "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink(BL.ApplicationTitle, "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "navHome" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -70,37 +70,37 @@
                     {
                         if (User.IsInRole("Admin"))
                         {
-                            <li>@Html.ActionLink("Equipment", "Index", "Equipment")</li>
+                            <li>@Html.ActionLink("Equipment", "Index", "Equipment", new {@id="navEquipment"})</li>
                         }
                         if (User.IsInRole("Admin") || User.IsInRole("Technician"))
                         {
                             <li class="user-management dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <a id="navUserManagement" class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     User Management
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <li>@Html.ActionLink("Roles", "Index", "UserRoles")</li>
-                                        <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                                        <li>@Html.ActionLink("Roles", "Index", "UserRoles", new { @id= "navUserRoles" })</li>
+                                        <li>@Html.ActionLink("Users", "Index", "Users", new { @id = "navUsers" })</li>
                                     }
 
-                                    <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                                    <li>@Html.ActionLink("Employees", "Index", "Employees", new {@id="navEmployees"})</li>
                                 </ul>
                             </li>
                         }
                         if (User.IsInRole("Admin"))
                         {
                             <li class="order-management dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <a id="navOrderManagement" class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     Order Management
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
 
-                                    <li>@Html.ActionLink("Supplier", "Index", "Supplier")</li>
-                                    <li>@Html.ActionLink("Order", "Index", "Order")</li>
+                                    <li>@Html.ActionLink("Supplier", "Index", "Supplier", new { @id = "navSupplier" })</li>
+                                    <li>@Html.ActionLink("Order", "Index", "Order", new { @id = "navOrder" })</li>
                                 </ul>
                             </li>
                         }
@@ -112,16 +112,16 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>@Html.ActionLink("Current Stock", "Index", "EquipmentsInStock")</li>
-                                    <li>@Html.ActionLink("Future Stock", "Index", "FutureStock")</li>
-                                    <li>@Html.ActionLink("Assigned Equipments", "ViewAssignedEquipments", "EquipmentAssignment")</li>
+                                    <li>@Html.ActionLink("Current Stock", "Index", "EquipmentsInStock", new { @id = "navCurrentStock" })</li>
+                                    <li>@Html.ActionLink("Future Stock", "Index", "FutureStock", new { @id = "navFutureStock" })</li>
+                                    <li>@Html.ActionLink("Assigned Equipments", "ViewAssignedEquipments", "EquipmentAssignment", new {@id="navAssignedEquipment"})</li>
                                 </ul>
                             </li>
                         }
 
                         @*<li><a href="/Users/Details/@{@Request.Cookies["UserIdCookie"].Value;}">@HttpContext.Current.User.Identity.Name</a></li>*@
                         <li>
-                            <a href="#" onclick="       Swal.fire({
+                            <a id="navLogout" href="#" onclick="       Swal.fire({
                                icon: 'success' ,
                                title: 'Logged Out' ,
                                showConfirmButton: false,
@@ -136,7 +136,7 @@
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Login", "Login", "Auth")</li>
+                        <li>@Html.ActionLink("Login", "Login", "Auth", new {@id="navLogin"})</li>
 
                     }
                 </ul>

@@ -19,7 +19,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control", @id="inputSupplier" })
             @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -27,7 +27,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control", @id = "inputOrderDate" } })
             @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -35,7 +35,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.EffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.EffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.EffectiveDate, new { htmlAttributes = new { @class = "form-control", @id = "inputEffectiveDate" } })
             @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -43,7 +43,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.IsOrderComplete, new { @class = "form-control", @type = "checkbox" })
+            @Html.EditorFor(model => model.IsOrderComplete, new { @class = "form-control", @type = "checkbox", @id = "inputIsOrderComplete" })
             @Html.ValidationMessageFor(model => model.IsOrderComplete, "", new { @class = "text-danger" })
         </div>
     </div>

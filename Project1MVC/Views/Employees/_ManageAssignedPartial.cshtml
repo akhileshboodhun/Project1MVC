@@ -25,7 +25,7 @@
                     @*<td>@Model[i].Type</td>
         <td>@Model[i].Brand</td>
         <td>@Model[i].Model</td>*@
-                    <td><input type="button" name="delete-button" class="btn btn-danger" value="Return" onclick="ReturnEquipment(this)" /></td>
+                    <td><input type="button" id="returnEquipmentButton" name="delete-button" class="btn btn-danger" value="Return" onclick="ReturnEquipment(this)" /></td>
                     <input type="hidden" name="SerialNo" value="@JsonConvert.DeserializeObject(assignedEquipment).SerialNo">
                 </tr>
                 }

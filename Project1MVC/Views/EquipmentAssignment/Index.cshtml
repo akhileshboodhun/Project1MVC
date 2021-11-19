@@ -40,7 +40,7 @@
                         @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "EquipId", "DisplayName"), "Select Equipment", new { @class = "form-control equipment-form", @id = "equipment-form", @onchange = "DisableButton(this)" })
                     </div>
                     <div class="col-md-2">
-                        <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Assign" onclick="AssignEquipment()" title="Select Equipment First" disabled="disabled" />
+                        <input type="button" id="assignEquipmentButton" name="add-button" class="btn btn-success add-button disabled" value="Assign" onclick="AssignEquipment()" title="Select Equipment First" disabled="disabled" />
                     </div>
                 </div>
             </div>

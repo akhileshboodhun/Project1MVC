@@ -21,7 +21,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.FName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.FName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.FName, new { htmlAttributes = new { @class = "form-control", @id="inputEmployeeFirstName" } })
             @Html.ValidationMessageFor(model => model.FName, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -29,7 +29,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.LName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.LName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.LName, new { htmlAttributes = new { @class = "form-control", @id="inputEmployeeLastName" } })
             @Html.ValidationMessageFor(model => model.LName, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -37,7 +37,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id="inputEmployeeEmail" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -45,7 +45,7 @@
     <div class="form-group">
         @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.PasswordFor(model => model.HashedPassword, new { @class = "form-control", @placeholder = "unchanged" })
+            @Html.PasswordFor(model => model.HashedPassword, new { @class = "form-control", @placeholder = "unchanged", @id="inputEmployeePassword" })
             @Html.ValidationMessageFor(model => model.HashedPassword, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -53,7 +53,7 @@
     <div class="form-group">
         @Html.Label("Role", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.UserRoleId, ViewBag.SelectListRoles as SelectList, "Select Role", new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.UserRoleId, ViewBag.SelectListRoles as SelectList, "Select Role", new { @class = "form-control", @id="inputEmployeeDropdownRoles" })
             @Html.ValidationMessageFor(model => model.UserRoleId, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -61,7 +61,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control", @type = "date", @id="inputEmployeeDOB" } })
             @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -69,7 +69,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @id="inputEmployeeAddress" } })
             @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -77,7 +77,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control"} })
+            @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control", @id="inputEmployeePhoneNo"} })
             @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -86,7 +86,7 @@
         @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <div class="checkbox">
-                @Html.CheckBoxFor(model => model.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning"})
+                @Html.CheckBoxFor(model => model.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning", @id="inputEmployeeStatus"})
 
                 @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
             </div>
@@ -95,7 +95,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
+            <input type="submit" value="Save" class="btn btn-default" id="submitEmployee"/>
         </div>
     </div>
 </div>

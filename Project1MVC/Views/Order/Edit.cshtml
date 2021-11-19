@@ -18,7 +18,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.OrderProp.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name", Model.OrderProp.SupplierId), new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.OrderProp.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name", Model.OrderProp.SupplierId), new { @class = "form-control", @id = "inputSupplier" })
             @Html.ValidationMessageFor(model => model.OrderProp.SupplierId, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderProp.OrderDate, new { htmlAttributes = new { @class = "form-control datepicker", @Value = Model.OrderProp.OrderDate.ToString("yyyy-MM-dd") } })
+            @Html.EditorFor(model => model.OrderProp.OrderDate, new { htmlAttributes = new { @class = "form-control datepicker", @Value = Model.OrderProp.OrderDate.ToString("yyyy-MM-dd"), , @id = "inputOrderDate" } })
             @Html.ValidationMessageFor(model => model.OrderProp.OrderDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.EffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderProp.EffectiveDate, new { htmlAttributes = new { @class = "form-control datepicker", @Value = Model.OrderProp.EffectiveDate.ToString("yyyy-MM-dd") } })
+            @Html.EditorFor(model => model.OrderProp.EffectiveDate, new { htmlAttributes = new { @class = "form-control datepicker", @Value = Model.OrderProp.EffectiveDate.ToString("yyyy-MM-dd"), @id = "inputEffectiveDate" } })
             @Html.ValidationMessageFor(model => model.OrderProp.EffectiveDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -42,7 +42,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.CheckBoxFor(model => model.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", })
+            @Html.CheckBoxFor(model => model.OrderProp.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", @id = "inputIsOrderComplete" })
             @Html.ValidationMessageFor(model => model.OrderProp.IsOrderComplete, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -93,7 +93,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
+            <input type="submit" value="Save" class="btn btn-default" id="orderSubmit" />
         </div>
     </div>
 </div>
