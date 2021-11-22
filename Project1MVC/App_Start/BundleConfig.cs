@@ -31,19 +31,24 @@ namespace Project1MVC
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/bootstrap4-toggle.js"
+                      "~/Scripts/BootstrapToggle/bootstrap4-toggle.js"
                       ));
 
             bundles.Add(new ScriptBundle("~/bundles/sweetalert2").Include(
-                      "~/Scripts/sweetalert2.all.js",
-                      "~/Scripts/sweetalert2.js"
+                      "~/Scripts/SweetAlert2/sweetalert2.all.js",
+                      "~/Scripts/SweetAlert2/sweetalert2.js"
+                      ));
+
+            bundles.Add(new ScriptBundle("~/bundles/select2").Include(
+                      "~/Scripts/Select2/select2.js"
                       ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/sweetalert2.css",
-                      "~/Content/font-awesome.css",
-                      "~/Content/bootstrap4-toggle.css",
+                      "~/Content/SweetAlert2/sweetalert2.css",
+                      "~/Content/Select2/select2.css",
+                      "~/Content/FontAwesome5/font-awesome.css",
+                      "~/Content/BootstrapToggle/bootstrap4-toggle.css",
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/Error").Include(

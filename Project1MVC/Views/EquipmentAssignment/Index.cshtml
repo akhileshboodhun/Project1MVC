@@ -4,31 +4,31 @@
 }
 
 <h2>Assign Equipments</h2>
-@using (Html.BeginForm("Assign","EquipmentAssignment",FormMethod.Post, new { }))
+@using (Html.BeginForm("Assign", "EquipmentAssignment", FormMethod.Post, new { }))
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayName("First Name")
-        </dt>
+    <div class="form-horizontal">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayName("First Name")
+            </dt>
 
-        <dd>
-            @ViewBag.FName
-        </dd>
+            <dd>
+                @ViewBag.FName
+            </dd>
 
-        <dt>
-            @Html.DisplayName("Last Name")
-        </dt>
+            <dt>
+                @Html.DisplayName("Last Name")
+            </dt>
 
-        <dd>
-            @ViewBag.LName
-        </dd>
-     </dl>
+            <dd>
+                @ViewBag.LName
+            </dd>
+        </dl>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" id="UserId" name="UserId" value="@ViewBag.UserId"/>
+        <input type="hidden" id="UserId" name="UserId" value="@ViewBag.UserId" />
 
         <div class="form-group">
             @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -47,7 +47,7 @@
         </div>
 
         @Html.Partial("../Employees/_ManageAssignedPartial", Model)
-</div>
+    </div>
 }
 
 <div>
@@ -55,7 +55,11 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/userscripts")
+    @*@Scripts.Render("~/bundles/select2")
+    <script>
+        $(document).ready(function () {
+            $('#equipment-form').select2();
+        });
+    </script>*@
 }
