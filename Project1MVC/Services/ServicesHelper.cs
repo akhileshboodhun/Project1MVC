@@ -309,7 +309,8 @@ namespace Project1MVC.Services
 
                     if (operand == "HAVING" && aliases != null)
                     {
-                        filterCol = aliases[filter.ColumnName];
+                        filterCol = aliases.ContainsKey(filter.ColumnName) ?
+                            aliases[filter.ColumnName] : filter.ColumnName;
                     }
 
                     if (filter.FilterType == FilterType.Contains)
