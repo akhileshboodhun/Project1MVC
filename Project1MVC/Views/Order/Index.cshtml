@@ -47,10 +47,18 @@
         @Html.DisplayFor(modelItem => item.OrderProp.SupplierName)
     </td>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.OrderProp.Id }) |
-        @Html.ActionLink("Details", "Details", new { id = item.OrderProp.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.OrderProp.Id })
-    </td>
+        @if (!item.OrderProp.IsOrderComplete)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = item.OrderProp.Id }) <span>|</span>
+        }
+
+        @Html.ActionLink("Details", "Details", new { id = item.OrderProp.Id })
+
+        @if (!item.OrderProp.IsOrderComplete)
+        {
+            <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.OrderProp.Id })
+        }
+        </td>
 </tr>
 }
 
