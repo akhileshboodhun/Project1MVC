@@ -258,7 +258,8 @@ namespace Project1MVC.DAL
                 {
                     string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
                                     FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
-                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId";
+                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId
+                                    ORDER BY u.[FName], u.[LName] ASC";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
