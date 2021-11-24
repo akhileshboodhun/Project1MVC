@@ -506,7 +506,7 @@ namespace Project1MVC.DAL
                         }
 
                         //TODO: Insert into EquipmentInStock if order complete is true
-                        if (orderWrapper.OrderProp.IsOrderComplete == true && orderWrapper.OrderProp.AutomaticDispatch == true)
+                        if (orderWrapper.OrderProp.IsOrderComplete == true)
                         {
                             OrderComplete(conn, orderWrapper.OrderProp.Id);
                         }

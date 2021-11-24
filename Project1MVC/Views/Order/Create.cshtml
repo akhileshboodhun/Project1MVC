@@ -7,54 +7,54 @@
 <h2>Create Order</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Order</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
-        </div>
-    </div>
+    <div class="form-horizontal">
+        <h4>Order</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.SupplierName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.EffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.EffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.CheckBoxFor(model => model.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", id= "IsOrderComplete" })
-            @Html.ValidationMessageFor(model => model.IsOrderComplete, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.EffectiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EffectiveDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EffectiveDate, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.AutomaticDispatch, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.CheckBoxFor(model => model.AutomaticDispatch, new { data_toggle = "toggle", data_on = "Yes", data_off = "No", data_onstyle = "success", data_offstyle = "warning", id= "AutomaticDispatch" })
-            @Html.ValidationMessageFor(model => model.AutomaticDispatch, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsOrderComplete, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.IsOrderComplete, new { data_toggle = "toggle", data_on = "Yes", data_off = "Not Yet", data_onstyle = "success", data_offstyle = "warning", id = "IsOrderComplete" })
+                @Html.ValidationMessageFor(model => model.IsOrderComplete, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AutomaticDispatch, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.AutomaticDispatch, new { data_toggle = "toggle", data_on = "Yes", data_off = "No", data_onstyle = "success", data_offstyle = "warning", id = "AutomaticDispatch" })
+                @Html.ValidationMessageFor(model => model.AutomaticDispatch, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
     <div class="form-group">
         @Html.Label("Equipments", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -68,29 +68,29 @@
     }
 
 
-    <table id="addedEquipments" class="table">
-        <tr>
-            <th>
-                @Html.DisplayName("Equipment")
-            </th>
-            <th>
-                @Html.DisplayName("Quantity")
-            </th>
-            <th>
-                @Html.DisplayName("Unit Price (Rs)")
-            </th>
-            <th></th>
-        </tr>
-    </table>
+        <table id="addedEquipments" class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Equipment")
+                </th>
+                <th>
+                    @Html.DisplayName("Quantity")
+                </th>
+                <th>
+                    @Html.DisplayName("Unit Price (Rs)")
+                </th>
+                <th></th>
+            </tr>
+        </table>
 
-    <hr />
+        <hr />
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input id="submitBtn" type="submit" value="Create" class="btn btn-default" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="submitBtn" type="submit" value="Create" class="btn btn-default" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div>
@@ -98,9 +98,11 @@
 </div>
 
 @section Scripts {
+    
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
-<script>
+    <script>
         const addEquipBtn = document.querySelector("#addEquipmentBtn");
         const addedEquipmentsSection = document.querySelector("#addedEquipments");
         const equipmentSelectEl = document.querySelector("#equipmentSelect");
@@ -119,7 +121,7 @@
                     title: 'Oops...',
                     text: 'Please select an equipment',
                 });
-                
+
             }
             else if (equipmentQty <= 0) {
                 Swal.fire({
@@ -143,24 +145,23 @@
                 });
                 clearFields();
             }
-            else
-            {
+            else {
                 addedEquipmentsSection.innerHTML += `
-                                                        <tr>
-                                                            <td>
-                                                               ${equipmentSelectedText}
-                                                            </td>
-                                                            <td>
-                                                               ${equipmentQty}
-                                                            </td>
-                                                            <td>
-                                                                ${unitPrice}
-                                                            </td>
-                                                            <td>
-                                                                <button data-id="${equipmentSelectEl.value}" class="btn btn-danger remove-btn" type="button">Remove</button>
-                                                            </td>
-                                                        </tr>
-                                                `;
+                                                                <tr>
+                                                                    <td>
+                                                                       ${equipmentSelectedText}
+                                                                    </td>
+                                                                    <td>
+                                                                       ${equipmentQty}
+                                                                    </td>
+                                                                    <td>
+                                                                        ${unitPrice}
+                                                                    </td>
+                                                                    <td>
+                                                                        <button data-id="${equipmentSelectEl.value}" class="btn btn-danger remove-btn" type="button">Remove</button>
+                                                                    </td>
+                                                                </tr>
+                                                        `;
                 equipmentsData.push({
                     equipmentId: +equipmentSelectEl.value,
                     qty: equipmentQty,
@@ -208,15 +209,15 @@
                     title: 'Oops...',
                     text: 'Please add at least one equipment',
                 });
-            } else if (effectiveDate < orderDate) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Effective date cannot be less than order date',
-                });
             }
-            else
-            {
+            //else if (effectiveDate < orderDate) {
+            //    Swal.fire({
+            //        icon: 'error',
+            //        title: 'Oops...',
+            //        text: 'Effective date cannot be less than order date',
+            //    });
+            //}
+            else {
                 console.log(JSON.stringify({ order: orderData, equipmentOrder: equipmentsData }));
                 $.ajax({
                     type: "POST",
@@ -234,7 +235,7 @@
                         }).then((result) => {
                             window.location.href = '/Order/Index';
                         });
-                        
+
                     },
                     error: function (response) {
                         Swal.fire({
@@ -252,5 +253,5 @@
             }
         })
 
-</script>
+    </script>
 }

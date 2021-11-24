@@ -168,7 +168,9 @@
     <Compile Include="DAL\EmployeeDAL.cs" />
     <Compile Include="DAL\OrderDAL.cs" />
     <Compile Include="Models\AssignedEquipment.cs" />
+    <Compile Include="Models\DateGreaterThanAttribute.cs" />
     <Compile Include="Models\DirectCountAttribute.cs" />
+    <Compile Include="Models\EquipmentInStock.cs" />
     <Compile Include="Models\EquipmentOrder.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\ICalculatedAttribute.cs" />

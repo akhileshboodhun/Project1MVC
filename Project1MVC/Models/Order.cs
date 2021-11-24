@@ -10,17 +10,17 @@ namespace Project1MVC.Models
     {
         public Order() { }
 
-        public Order(bool isOrderComplete, DateTime orderDate, int supplierId)
-        {
-            this.IsOrderComplete = isOrderComplete;
-            this.OrderDate = orderDate;
-            this.SupplierId = supplierId;
-        }
+        //public Order(bool isOrderComplete, DateTime orderDate, int supplierId)
+        //{
+        //    this.IsOrderComplete = isOrderComplete;
+        //    this.OrderDate = orderDate;
+        //    this.SupplierId = supplierId;
+        //}
 
-        public Order(int? id, bool isOrderComplete, DateTime orderDate, int supplierId) : this(isOrderComplete, orderDate, supplierId)
-        {
-            this.Id = id;
-        }
+        //public Order(int? id, bool isOrderComplete, DateTime orderDate, int supplierId) : this(isOrderComplete, orderDate, supplierId)
+        //{
+        //    this.Id = id;
+        //}
 
         public Order(int? id, bool isOrderComplete, DateTime orderDate, string supplierName, DateTime effectiveDate)
         {
@@ -48,6 +48,7 @@ namespace Project1MVC.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
+        [DateGreaterThan("OrderDate")]
         public DateTime EffectiveDate { get; set; }
 
         [Required]

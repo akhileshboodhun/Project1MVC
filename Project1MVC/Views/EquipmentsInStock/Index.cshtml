@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Project1MVC.Models.Equipment>
+﻿@model IEnumerable<Project1MVC.Models.EquipmentInStock>
 
 @{
     ViewBag.Title = "Index";
@@ -44,10 +44,16 @@
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CurrentStockCount)
+            Number unassigned
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ReStockThreshold)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NoAssigned)
+        </th>
+        <th>
+            Total
         </th>
     </tr>
 
@@ -55,30 +61,36 @@
     {
         var myWarning = "";
        if (item.CurrentStockCount < item.ReStockThreshold) { myWarning = "color: orange;"; }
-        <tr style="@myWarning">
+<tr style="@myWarning">
 
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentStockCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReStockThreshold)
-            </td>
-        </tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.EquipId)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Brand)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Model)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Type)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CurrentStockCount)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReStockThreshold)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.NoAssigned)
+    </td>
+    <td>
+        @(item.CurrentStockCount + item.NoAssigned)
+    </td>
+</tr>
     }
 
 </table>
