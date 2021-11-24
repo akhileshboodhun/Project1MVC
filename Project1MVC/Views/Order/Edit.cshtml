@@ -47,7 +47,14 @@
         </div>
     </div>
 
-
+    <div class="form-group">
+        @Html.LabelFor(model => model.OrderProp.AutomaticDispatch, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.CheckBoxFor(model => model.OrderProp.AutomaticDispatch, new { data_toggle = "toggle", data_on = "Yes", data_off = "No", data_onstyle = "success", data_offstyle = "warning", })
+            @Html.ValidationMessageFor(model => model.OrderProp.AutomaticDispatch, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    
     <table class="table">
         <tr>
             <th>
@@ -82,8 +89,8 @@
                     @Html.DisplayFor(modelItem => item.UnitPrice)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i }) |
-                    @Html.ActionLink("Delete", "DeleteEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i })
+                    @Html.ActionLink("Edit", "EditEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i }) 
+                    @*@Html.ActionLink("Delete", "DeleteEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i })*@
                 </td>
             </tr>
         }

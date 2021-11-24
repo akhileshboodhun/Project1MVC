@@ -34,6 +34,7 @@ namespace Project1MVC.Models
         public string Address { get; set; }
         [Display(Name = "Phone No")]
         [MaxLength(15), MinLength(3)]
+        [RegularExpression(@"[0-9]{3,15}", ErrorMessage = "Invalid phone number")]
         public string PhoneNo { get; set; }
         [Display(Name = "Status")]
         public bool IsActive { get; set; }

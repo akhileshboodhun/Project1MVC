@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>User</h4>
         <hr />
@@ -43,7 +43,7 @@
         <div class="form-group">
             @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(model => model.HashedPassword, new { @class = "form-control", @placeholder ="unchanged"} )
+                @Html.PasswordFor(model => model.HashedPassword, new { @class = "form-control", @placeholder = "unchanged" })
                 @Html.ValidationMessageFor(model => model.HashedPassword, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -67,3 +67,7 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

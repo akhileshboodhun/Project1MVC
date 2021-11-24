@@ -35,12 +35,13 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sqlInsertInOrder =
-                        "INSERT INTO [Order] (OrderDate, IsOrderComplete, SupplierId, EffectiveDate) " +
-                        "VALUES (@OrderDate, @IsOrderComplete, @SupplierId, @EffectiveDate);";
+                        "INSERT INTO [Order] (OrderDate, IsOrderComplete, AutomaticDispatch, SupplierId, EffectiveDate) " +
+                        "VALUES (@OrderDate, @IsOrderComplete, @AutomaticDispatch, @SupplierId, @EffectiveDate);";
 
                     SqlCommand cmdInsertInOrder = new SqlCommand(sqlInsertInOrder, conn);
                     cmdInsertInOrder.Parameters.AddWithValue("@OrderDate", obj.OrderProp.OrderDate);
                     cmdInsertInOrder.Parameters.AddWithValue("@IsOrderComplete", obj.OrderProp.IsOrderComplete);
+                    cmdInsertInOrder.Parameters.AddWithValue("@AutomaticDispatch", obj.OrderProp.AutomaticDispatch);
                     cmdInsertInOrder.Parameters.AddWithValue("@SupplierId", obj.OrderProp.SupplierId);
                     cmdInsertInOrder.Parameters.AddWithValue("@EffectiveDate", obj.OrderProp.EffectiveDate);
 
@@ -184,7 +185,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.SupplierId, o.EffectiveDate, s.Name FROM [Order] o, [Supplier] s " +
+                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.AutomaticDispatch, o.SupplierId, o.EffectiveDate, s.Name FROM [Order] o, [Supplier] s " +
                                  "WHERE o.SupplierId = s.SupplierId " +
                                  "AND o.OrderId = @Id;";
 
@@ -201,6 +202,8 @@ namespace Project1MVC.DAL
                             { 
                                 Order order = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString(), Convert.ToDateTime(reader["EffectiveDate"].ToString()));
                                 order.SupplierId = reader["SupplierId"].ToInt();
+                                order.AutomaticDispatch = reader["AutomaticDispatch"].ToBoolean();
+                              
                                 orderWrapper.OrderProp = order;
                             }
                         }
@@ -277,7 +280,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, s.SupplierId, s.Name, o.EffectiveDate FROM [Order] o, [Supplier] s " +
+                    string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.AutomaticDispatch, s.SupplierId, s.Name, o.EffectiveDate FROM [Order] o, [Supplier] s " +
                                   "WHERE o.SupplierId = s.SupplierId;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -293,6 +296,7 @@ namespace Project1MVC.DAL
                                 OrderWrapper orderWrapper = new OrderWrapper();
                                 orderWrapper.OrderProp = new Order(reader["OrderId"].ToInt(), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDateTime(reader["OrderDate"].ToString()), reader["Name"].ToString(), Convert.ToDateTime(reader["EffectiveDate"].ToString()));
                                 orderWrapper.OrderProp.SupplierId = reader["SupplierId"].ToInt();
+                                orderWrapper.OrderProp.AutomaticDispatch = reader["AutomaticDispatch"].ToBoolean();
                                 list.Add(orderWrapper);
                             }
 
@@ -300,7 +304,7 @@ namespace Project1MVC.DAL
                         conn.Close();
                         foreach(var orderWrapper in list)
                         {
-                            if (orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete)
+                            if (orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete && orderWrapper.OrderProp.AutomaticDispatch)
                             {
                                 orderWrapper.OrderProp.IsOrderComplete = true;
                                 Update(orderWrapper);
@@ -470,7 +474,7 @@ namespace Project1MVC.DAL
             string opType = "Update";
             bool status = false;
 
-            if(orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete)
+            if(orderWrapper.OrderProp.EffectiveDate < DateTime.Now && !orderWrapper.OrderProp.IsOrderComplete && orderWrapper.OrderProp.AutomaticDispatch)
             {
                 orderWrapper.OrderProp.IsOrderComplete = true;
             }
@@ -481,13 +485,14 @@ namespace Project1MVC.DAL
                 {
                     string sql =
                         "UPDATE [Order] " +
-                        "SET OrderDate=@OrderDate, IsOrderComplete=@IsOrderComplete, SupplierId=@SupplierId, EffectiveDate=@EffectiveDate " +
+                        "SET OrderDate=@OrderDate, IsOrderComplete=@IsOrderComplete, AutomaticDispatch=@AutomaticDispatch, SupplierId=@SupplierId, EffectiveDate=@EffectiveDate " +
                         "WHERE OrderId = @Id;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", orderWrapper.OrderProp.Id);
                     cmd.Parameters.AddWithValue("@OrderDate", orderWrapper.OrderProp.OrderDate);
                     cmd.Parameters.AddWithValue("@IsOrderComplete", orderWrapper.OrderProp.IsOrderComplete);
+                    cmd.Parameters.AddWithValue("@AutomaticDispatch", orderWrapper.OrderProp.AutomaticDispatch);
                     cmd.Parameters.AddWithValue("@SupplierId", orderWrapper.OrderProp.SupplierId);
                     cmd.Parameters.AddWithValue("@EffectiveDate", orderWrapper.OrderProp.EffectiveDate);
 
@@ -501,7 +506,7 @@ namespace Project1MVC.DAL
                         }
 
                         //TODO: Insert into EquipmentInStock if order complete is true
-                        if (orderWrapper.OrderProp.IsOrderComplete == true)
+                        if (orderWrapper.OrderProp.IsOrderComplete == true && orderWrapper.OrderProp.AutomaticDispatch == true)
                         {
                             OrderComplete(conn, orderWrapper.OrderProp.Id);
                         }

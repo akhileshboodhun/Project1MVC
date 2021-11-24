@@ -41,6 +41,7 @@ namespace Project1MVC.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
+
         public DateTime OrderDate { get; set; }
 
         [Display(Name = "Effective Date")]
@@ -49,7 +50,6 @@ namespace Project1MVC.Models
         [Required]
         public DateTime EffectiveDate { get; set; }
 
-        [Display(Name = "Supplier Name")]
         [Required]
         public int SupplierId { get; set; }
 
@@ -57,5 +57,8 @@ namespace Project1MVC.Models
         [Required]
         [MaxLength(100), MinLength(3)]
         public string SupplierName { get; set; }
+
+        [Display(Name = "Automatic Dispatch")]
+        public bool AutomaticDispatch { get; set; }
     }
 }
