@@ -39,6 +39,9 @@
                     <div class="col-md-4">
                         @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "EquipId", "DisplayName"), "Select Equipment", new { @class = "form-control equipment-form", @id = "equipment-form", @onchange = "DisableButton(this)" })
                     </div>
+                    <div class="col-md-4">
+                        @Html.DropDownList("SerialNo", new SelectList(new List<object>(), "EquipId", "DisplayName"), "Select Serial No", new { @class = "form-control equipment-form", @id = "dropdown-serial", @onchange = "DisableButton(this)" })
+                    </div>
                     <div class="col-md-2">
                         <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Assign" onclick="AssignEquipment()" title="Select Equipment First" disabled="disabled" />
                     </div>
@@ -60,6 +63,7 @@
     <script>
         $(document).ready(function () {
             $('#equipment-form').select2();
+            $('#dropdown-serial').select2();
         });
     </script>
 }

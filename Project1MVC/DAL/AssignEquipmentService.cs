@@ -23,7 +23,53 @@ namespace Project1MVC.DAL
             internal static readonly AssignEquipmentService instance = new AssignEquipmentService();
         }
 
-        public bool Assign(AssignedEquipment obj) => Assign(new List<AssignedEquipment>() { obj });
+        public bool Assign(AssignedEquipment obj){
+            
+            if(obj.SerialNo == null) return Assign(new List<AssignedEquipment>() { obj });
+            else
+            {
+                string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+                string opType = "Insert";
+                bool status = false;
+
+                using (SqlConnection conn = DAL.GetConnection())
+                {
+                    if (conn != null)
+                    {
+                        string sql =
+                            @"
+                        INSERT INTO [dbo].[EquipmentEmployee]([EquipId],[EmpId],[DateAssigned],[AssignorId],[SerialNo])
+                        VALUES (@equipmentId,@employeeId,GETDATE(),@assignorId, @serialNo)
+                        ";
+
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+
+                        try
+                        {
+                                cmd.Parameters.AddWithValue("@employeeId", obj.EmployeeId);
+                                cmd.Parameters.AddWithValue("@equipmentId", obj.EquipmentId);
+                                cmd.Parameters.AddWithValue("@assignorId", obj.AssignorId);
+                                cmd.Parameters.AddWithValue("@serialNo", obj.SerialNo);
+                            if (cmd.ExecuteNonQuery() >= 1)
+                            {
+                                status = true;
+                                Logger.Log($"SUCCESS: {opType} {modelName}");
+                            }
+
+                            Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                            conn.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log($"FAILED: {opType} {modelName}");
+                            Logger.Log($"{ex.ToString()}");
+                        }
+                    }
+                }
+
+                return status;
+            }
+        }
 
         public bool Assign(List<AssignedEquipment> obj)
         {
@@ -219,6 +265,59 @@ namespace Project1MVC.DAL
             }
 
             return list;
+        }
+        public List<int> GetAvailableSerialNo(int equipId)
+        {
+            List<int> serialNos = new List<int>();
+
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Get Available Serial Nos";
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+
+                    string sql = @"
+                        SELECT es.[SerialNo]
+                        FROM [EquipmentInStock] es
+                        WHERE es.[EquipId] = @equipId
+                        AND es.[SerialNo] NOT IN (
+                            SELECT [SerialNo]
+                            FROM [EquipmentEmployee]
+                            WHERE [DateReturned] IS NULL
+                        )
+                        ";
+
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@equipId", equipId);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                serialNos.Add(reader["SerialNo"].ToInt());
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return serialNos;
+
         }
     }
 }

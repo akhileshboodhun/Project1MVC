@@ -103,6 +103,27 @@ namespace Project1MVC.Controllers
             }
         }
 
+        // POST: EquipmentAssignment/GetAvailableSerialNos
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
+        public ActionResult GetAvailableSerialNos(int EquipmentId = 5)
+        {
+            try
+            {
+                // TODO: Add insert logic here
+
+
+                var assignEquipmentService = AssignEquipmentService.Instance;
+                List<int> serialNos = assignEquipmentService.GetAvailableSerialNo(EquipmentId);
+
+
+                if (serialNos.Count > 0) return Json(serialNos, JsonRequestBehavior.AllowGet);
+                return HttpNotFound();            }
+            catch
+            {
+                return HttpNotFound();
+            }
+        }
+
         public ActionResult ViewAssignedEquipments()
         {
             var assignEquipmentService = AssignEquipmentService.Instance;
