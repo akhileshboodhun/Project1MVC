@@ -14,15 +14,16 @@ namespace Project1MVC.Models
         {
         }
 
-        public Employee(string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive) : base(fName, lName, email, salt, hashedPassword, userRoleId, roleName)
+        public Employee(string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive, [Optional] int? mgrId) : base(fName, lName, email, salt, hashedPassword, userRoleId, roleName)
         {
             this.DateOfBirth = dateOfBirth;
             this.Address = address;
             this.PhoneNo = phoneNo;
             this.IsActive = isActive;
+            this.MgrId = mgrId;
         }
 
-        public Employee(int? userId, string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive) : this( fName,  lName,  email,  salt,  hashedPassword,  userRoleId, roleName, dateOfBirth,  address,  phoneNo,  isActive)
+        public Employee(int? userId, string fName, string lName, string email, string salt, string hashedPassword, int userRoleId, string roleName, DateTime dateOfBirth, string address, string phoneNo, bool isActive, [Optional] int? mgrId) : this( fName,  lName,  email,  salt,  hashedPassword,  userRoleId, roleName, dateOfBirth,  address,  phoneNo,  isActive, mgrId)
         {
             this.UserId = userId;
         }
@@ -38,6 +39,9 @@ namespace Project1MVC.Models
         public string PhoneNo { get; set; }
         [Display(Name = "Status")]
         public bool IsActive { get; set; }
+
+        public int? MgrId { get; set; }
+
         public int Age { get => Convert.ToInt32(DateTime.Now.Subtract(this.DateOfBirth).TotalDays / 365.2425); }
 
     }

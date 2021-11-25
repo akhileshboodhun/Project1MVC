@@ -48,6 +48,8 @@ namespace Project1MVC.Models
         [StringLength(44)]
         public string HashedPassword { get; set; }
 
+        public string FullName { get => (FName + " " + LName); }
+
 
     }
 }

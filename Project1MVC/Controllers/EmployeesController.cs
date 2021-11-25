@@ -40,11 +40,12 @@ namespace Project1MVC.Controllers
         public ActionResult Create()
         {
             var userRoleDB = UserRoleDAL.Instance;
-
+            var empDB = EmployeeDAL.Instance;
             var userRoles = userRoleDB.GetAll();
             List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
             var selectList = new SelectList(selectListItems, "Value", "Text");
             ViewBag.SelectListRoles = selectList;
+            ViewBag.Managers = empDB.GetAllManagers();
             return View();
         }
         [AuthorizeUser(Roles = "Admin")]
@@ -85,7 +86,7 @@ namespace Project1MVC.Controllers
             List<SelectListItem> selectListItems = userRoles.Select(el => new SelectListItem() { Value = el.UserRoleId.ToString(), Text = el.RoleName }).ToList();
             var selectList = new SelectList(selectListItems, "Value", "Text");
             ViewBag.SelectListRoles = selectList;
-
+            ViewBag.Managers = empDB.GetAllManagers(id);
             var employee = empDB.Get(id);
             return View(employee);
         }
