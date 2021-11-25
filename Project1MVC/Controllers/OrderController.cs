@@ -49,8 +49,8 @@ namespace Project1MVC.Controllers
             var equipments = equipmentDB.GetAll();
             //SupplierDAL supplierDB = SupplierDAL.Instance;
             var suppliers = supplierDB.GetAll();
-            ViewBag.EquipmentsList = equipments.Select( el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
-            ViewBag.SuppliersList = suppliers;
+            ViewBag.EquipmentsList = equipments.OrderBy(e1 => e1.DisplayName()).Select( el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
+            ViewBag.SuppliersList = suppliers.OrderBy(s => s.Name);
             return View();
         }
 
@@ -85,8 +85,9 @@ namespace Project1MVC.Controllers
             var equipments = equipmentDB.GetAll();
             //SupplierDAL supplierDB = SupplierDAL.Instance;
             var suppliers = supplierDB.GetAll();
-            ViewBag.EquipmentsList = equipments.Select(el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
-            ViewBag.SuppliersList = suppliers;
+            ViewBag.EquipmentsList = equipments.OrderBy(e1 => e1.DisplayName()).Select(el => new { EquipId = el.EquipId, DisplayName = el.DisplayName() });
+            ViewBag.SuppliersList = suppliers.OrderBy(s => s.Name);
+            ViewBag.OrderId = id;
             return View(orderWrapper);
         }
 
@@ -144,16 +145,18 @@ namespace Project1MVC.Controllers
         [HttpPost]
         public ActionResult Edit(int id, OrderWrapper orderWrapper)
         {
+            bool state = false;
             try
             {
                 // TODO: Add update logic here
-                orderWrapper.OrderProp.Id = id;
-                orderDB.Update(orderWrapper);
-                return RedirectToAction("Index");
+               // orderWrapper.OrderProp.Id = id;
+                state = orderDB.Update(orderWrapper);
+                if (state) return Json(orderWrapper);
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
             catch
             {
-                return View();
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
         }
 

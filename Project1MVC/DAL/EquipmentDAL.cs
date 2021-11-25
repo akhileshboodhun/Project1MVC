@@ -315,6 +315,7 @@ namespace Project1MVC.DAL
                                 FROM #EquipmentInCurrentStock eics
                                 LEFT JOIN #AssignedEquipments ae ON eics.EquipId = ae.EquipId
                                 GROUP BY eics.[EquipID], eics.[Type], eics.[Brand], eics.[Model], eics.[Description], eics.[ReStockThreshold], ae.NoAssigned
+                                ORDER BY eics.[Type], eics.[Brand], eics.[Model]
                                ";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);

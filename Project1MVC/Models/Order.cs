@@ -48,7 +48,7 @@ namespace Project1MVC.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
-        [DateGreaterThan("OrderDate")]
+        //[DateGreaterThan("OrderDate")]
         public DateTime EffectiveDate { get; set; }
 
         [Required]

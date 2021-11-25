@@ -92,6 +92,10 @@
 
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderProp.Id }) |
+    @if (!Model.OrderProp.IsOrderComplete)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.OrderProp.Id }) <span>|</span>
+}
+
     @Html.ActionLink("Back to List", "Index")
 </p>

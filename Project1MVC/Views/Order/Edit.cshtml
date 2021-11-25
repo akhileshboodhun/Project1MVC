@@ -10,15 +10,16 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
 <div class="form-horizontal">
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(o => o.OrderProp.Id)
 
     <div class="form-group">
         @Html.LabelFor(model => model.OrderProp.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.OrderProp.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name", Model.OrderProp.SupplierId), new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.OrderProp.SupplierId, new SelectList(ViewBag.SuppliersList, "SupplierId", "Name", Model.OrderProp.SupplierId), "Select a supplier", new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.OrderProp.SupplierId, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -54,7 +55,7 @@
             @Html.ValidationMessageFor(model => model.OrderProp.AutomaticDispatch, "", new { @class = "text-danger" })
         </div>
     </div>
-    
+
     <table class="table">
         <tr>
             <th>
@@ -89,7 +90,7 @@
                     @Html.DisplayFor(modelItem => item.UnitPrice)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i }) 
+                    @Html.ActionLink("Edit", "EditEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i })
                     @*@Html.ActionLink("Delete", "DeleteEquipment", new { id = Model.OrderProp.Id, equipmentIndex = i })*@
                 </td>
             </tr>
@@ -111,5 +112,106 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/select2")
+
+    <script>
+        $("#OrderProp_SupplierId").select2();
+        const formEl = document.querySelector("form");
+        const orderDateEl = document.querySelector("#OrderProp_OrderDate");
+        const effectiveDateEl = document.querySelector("#OrderProp_EffectiveDate");
+        const isOrderCompleteEl = document.querySelector("#OrderProp_IsOrderComplete");
+        const automaticDispatchEl = document.querySelector("#OrderProp_AutomaticDispatch");
+        const supplierEl = document.querySelector("#OrderProp_SupplierId");
+
+        orderDateEl.addEventListener("change", (e) => {
+            const today = new Date();
+            const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            if (e.target.value > date) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Order date cannot be in the future',
+                });
+            }
+        });
+
+        effectiveDateEl.addEventListener("change", (e) => {
+            const orderDate = orderDateEl.value;
+            if (e.target.value < orderDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Effective date cannot be less than order date',
+                });
+            }
+        });
+
+        formEl.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const orderDate = orderDateEl.value;
+            const effectiveDate = effectiveDateEl.value;
+            const today = new Date();
+            const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            const supplier = supplierEl.value;
+            if (supplier == "" || supplier == null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a supplier',
+                });
+            }
+            else if (orderDate > date) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Order date cannot be in the future',
+                });
+            }
+            else if (effectiveDate < orderDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Effective date cannot be less than order date',
+                });
+            } else {
+                const orderId = +document.querySelector("#OrderProp_Id").value;
+                const editedData = { EquipmentOrderProp: null, OrderProp: { AutomaticDispatch: automaticDispatchEl.checked, EffectiveDate: effectiveDateEl.value, IsOrderComplete: isOrderCompleteEl.checked, OrderDate: orderDateEl.value, SupplierId: supplierEl.value, Id: orderId } }
+                console.log(JSON.stringify({ id: orderId, orderWrapper: editedData }));
+                $.ajax({
+                    type: "POST",
+                    url: "/Order/Edit",
+                    data: JSON.stringify({ id: orderId, orderWrapper: editedData }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
+
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Your work could not be saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '/Order/Index';
+                        });
+                    },
+                })
+            }
+        });
+
+        
+    </script>
 }

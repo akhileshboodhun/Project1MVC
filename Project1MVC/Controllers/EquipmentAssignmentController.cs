@@ -141,6 +141,7 @@ namespace Project1MVC.Controllers
                         on assignedEquipment.EmployeeId equals employee.UserId
                         join equipment in equipmentsList
                         on assignedEquipment.EquipmentId equals equipment.EquipId
+                        orderby employee.FName, employee.LName
                         select JsonConvert.SerializeObject(new { FirstName = employee.FName, LastName = employee.LName, SerialNo = assignedEquipment.SerialNo, Type = equipment.Type, Brand = equipment.Brand, Model = equipment.Model, Description = equipment.Description });
 
             ViewBag.AssignedEquipmentList = query.ToList();

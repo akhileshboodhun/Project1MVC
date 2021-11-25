@@ -281,7 +281,8 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql = "SELECT o.OrderId, o.OrderDate, o.IsOrderComplete, o.AutomaticDispatch, s.SupplierId, s.Name, o.EffectiveDate FROM [Order] o, [Supplier] s " +
-                                  "WHERE o.SupplierId = s.SupplierId;";
+                                  "WHERE o.SupplierId = s.SupplierId" +
+                                  " ORDER BY o.OrderDate;";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -498,7 +499,7 @@ namespace Project1MVC.DAL
 
                     try
                     {
-                        if (cmd.ExecuteNonQuery() == 1)
+                        if (cmd.ExecuteNonQuery() >= 1)
                         {
                             status = true;
                             Logger.Log($"SUCCESS: {opType} {modelName}");
