@@ -39,7 +39,7 @@
     <tbody id="equipments-assigned">
     </tbody>
 </table>
-
+<input type="button" class="btn btn-primary" onclick="generate()" value="Export To PDF" />
 @section Scripts {
     <script>
         const list = [];
@@ -113,7 +113,13 @@
                 tableBody.innerHTML += html;
             })
         }
+        function generate() {
+            var doc = new jsPDF('p', 'pt', 'letter');
+            doc.autoTable({
+                html: '.table'
+            });
+            doc.save('AssignedEquipments.pdf');
+        }
         generateTable();
     </script>
 }
-

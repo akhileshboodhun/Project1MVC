@@ -14,7 +14,7 @@
         <th>
             @Html.DisplayNameFor(model => model.RoleName)
         </th>
-        <th></th>
+        <th>Actions</th>
     </tr>
 
 @foreach (var item in Model) {
@@ -22,10 +22,23 @@
     <td>
         @Html.DisplayFor(modelItem => item.RoleName)
     </td>
+
     <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.UserRoleId }) |
-        @Html.ActionLink("Details", "Details", new { id = item.UserRoleId }) 
-        @*@Html.ActionLink("Delete", "Delete", new { id = item.UserRoleId })*@
+        <div class="dropdown">
+            <i class="text-muted fa fa-ellipsis-v btn dropdown-toggle" id="dropdownMenuButton" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <ul class="dropdown-menu" style="margin-left:1.5em; top:0;">
+                    <li>
+                        <a href="@Url.Action("Edit", new { id = item.UserRoleId })" class="btn btn-default">
+                            <p></p><p><i class="text-warning fa fas fa-edit"></i>Edit</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Details", new { id = item.UserRoleId })" class="btn btn-default">
+                            <p></p><p><i class="text-info fa fas fa-info-circle"></i>Details</p>
+                        </a>
+                    </li>
+            </ul>
+        </div>
     </td>
 </tr>
 }
