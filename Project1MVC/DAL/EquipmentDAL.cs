@@ -285,5 +285,71 @@ namespace Project1MVC.DAL
             return list;
         }
 
+        public List<EquipmentInStock> GenerateEquipmentReport()
+        {
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select All";
+            List<EquipmentInStock> list = new List<EquipmentInStock>();
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = @"
+                                  SELECT es.[SerialNo], eq.[EquipID], eq.[Type], eq.[Brand], eq.[Model], eq.[Description], eq.[ReStockThreshold]
+                                  INTO #EquipmentInCurrentStock
+                                FROM [EquipmentInStock] es JOIN [Equipment] eq ON es.[EquipID] = eq.[EquipID]
+                                WHERE es.[SerialNo] NOT IN (
+                                    SELECT [SerialNo]
+                                    FROM [EquipmentEmployee]
+                                    WHERE [DateReturned] IS NULL
+                                )
+
+                                SELECT [EquipId], COUNT([SerialNo]) AS NoAssigned
+                                INTO #AssignedEquipments
+                                FROM [EquipmentEmployee]
+                                WHERE [DateReturned] IS NULL
+                                GROUP BY [EquipId]
+
+                                SELECT DISTINCT eics.[EquipID], eics.[Type], eics.[Brand], eics.[Model], eics.[Description], eics.[ReStockThreshold], COUNT(eics.[SerialNo]) AS CurrentStockCount, ae.NoAssigned
+                                FROM #EquipmentInCurrentStock eics
+                                LEFT JOIN #AssignedEquipments ae ON eics.EquipId = ae.EquipId
+                                GROUP BY eics.[EquipID], eics.[Type], eics.[Brand], eics.[Model], eics.[Description], eics.[ReStockThreshold], ae.NoAssigned
+                                ORDER BY eics.[Type], eics.[Brand], eics.[Model]
+                               ";
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                bool success = int.TryParse(reader["NoAssigned"].ToString(), out int noAssigned);
+                                if (!success)
+                                {
+                                    noAssigned = 0;
+                                }
+                                list.Add(new EquipmentInStock(noAssigned, reader["EquipId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), reader["Description"].ToString(), reader["CurrentStockCount"].ToInt(), reader["ReStockThreshold"].ToInt()));
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return list;
+        }
+
     }
 }

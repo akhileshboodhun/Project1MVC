@@ -26,9 +26,6 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
@@ -38,20 +35,10 @@
                 @Html.DisplayNameFor(model => model.IsActive)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Age)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.RoleName)
             </th>
         }
-        <th></th>
-        @{ if (User.IsInRole("Admin"))
-            {
-                <th></th>
-                <th>Actions</th>
-                <th></th>
-            }
-        }
+            <th>Actions</th>
     </tr>
 
     @foreach (var item in Model)
@@ -73,9 +60,6 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DateOfBirth)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Address)
                     </td>
                     <td>
@@ -85,37 +69,44 @@
                         @Html.CheckBoxFor(modelItem => item.IsActive, new { data_toggle = "toggle", data_on = "Active", data_off = "Inactive", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Age)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.RoleName)
                     </td>
                 }
-                <td>
-                    @if (item.IsActive)
-                    {
-                        @Html.ActionLink("Assign Equipments", "Index", "EquipmentAssignment", new { id = item.UserId }, new { @class = "btn btn-primary" })
-                    }
-                </td>
-                @{
-                    if (User.IsInRole("Admin"))
-                    {
-                        <td>
-                            @Html.ActionLink("\0", "Edit", new { id = item.UserId }, new { @class = "btn btn-warning fa far fa-edit", @title = "Edit" })
-                        </td>
 
-                        <td>
-                            @Html.ActionLink("\0", "Details", new { id = item.UserId }, new { @class = "btn btn-info fa fas fa-info-circle", @title = "Details" })
-                        </td>
+                    <td>
+                        <div class="dropdown">
+                            <i class="text-muted fa fa-ellipsis-v btn dropdown-toggle" id="dropdownMenuButton" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                            <ul class="dropdown-menu" style="margin-left:1.5em; top:0;">
 
-                        <td>
-                            @if (item.IsActive)
-                            {
-                                @Html.ActionLink("\0", "Terminate", new { id = item.UserId }, new { @class = "btn btn-danger fa fas fa-ban", @title = "Terminate" })
-                            }
-                        </td>
-                    }
-                }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Edit", new { id = item.UserId })" class="btn btn-default">
+                                            <p></p><p><i class="text-warning fa fas fa-edit"></i>Edit</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Details", new { id = item.UserId })" class="btn btn-default">
+                                            <p></p><p><i class="text-info fa fas fa-info-circle"></i>Details</p>
+                                        </a>
+                                    </li>
+                                }
+                                @if (item.IsActive)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "EquipmentAssignment", new { id = item.UserId })" class="btn btn-default">
+                                            <p></p><p><i class="fa fas fa-suitcase"></i>Assign Equipments</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Terminate", new { id = item.UserId })" class="btn btn-default">
+                                            <p></p><p class="text-danger"><i class="text-danger fa fas fa-ban"></i>Terminate</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </td>
             </tr>
         }
 

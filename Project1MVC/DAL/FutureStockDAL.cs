@@ -33,7 +33,13 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT [Id], [Brand], [Model], [OrderDate], [IsOrderComplete], [UnitPrice], [Qty], [NetPrice], [SupplierName] FROM [FutureStockView];";
+                    string sql = @"SELECT o.OrderId, e.Type, e.Brand, e.Model, o.OrderDate, o.IsOrderComplete, eo.UnitPrice, eo.Qty, (eo.UnitPrice * eo.Qty) as NetPrice, s.Name as SupplierName
+                                   FROM Equipment e, [Order] o, EquipmentOrder eo, Supplier s
+                                   WHERE eo.EquipId = e.EquipId
+                                   AND eo.OrderId = o.OrderId
+                                   AND o.SupplierId = s.SupplierId
+                                   AND o.IsOrderComplete = 0
+                                   ORDER BY e.Type, e.Brand, e.Model ASC; ";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -45,7 +51,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new FutureStock(reader["Id"].ToInt(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
+                                list.Add(new FutureStock(reader["OrderId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
                             }
                         }
 

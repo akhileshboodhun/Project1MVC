@@ -35,10 +35,25 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "AddEmployee";
+                        @"	
+                            BEGIN TRY
+                            BEGIN TRANSACTION
+                                INSERT INTO [dbo].[User](Fname, LName, Email, Salt, HashedPassword, UserRoleId) VALUES (@FName, @LName, @Email, @Salt,
+																					      @HashedPassword, @UserRoleId);
+	                            DECLARE @EmpId int;
+	                            SET @EmpId = @@IDENTITY;
+	                            INSERT INTO [dbo].[Employee](EmpId, DOB, Address, PhoneNo, IsActive) VALUES (@EmpId, @DOB, @Address, @PhoneNo, @IsActive);
+                                INSERT INTO [dbo].[Manager]([EmpId], [MgrId]) VALUES(@EmpId, @MgrId)
+                            
+                                COMMIT;
+                            END TRY
+
+                            BEGIN CATCH
+                                ROLLBACK;
+                            END CATCH";
+
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@FName", obj.FName);
                     cmd.Parameters.AddWithValue("@LName", obj.LName);
                     cmd.Parameters.AddWithValue("@Email", obj.Email);
@@ -49,6 +64,7 @@ namespace Project1MVC.DAL
                     cmd.Parameters.AddWithValue("@Address", obj.Address);
                     cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
                     cmd.Parameters.AddWithValue("@IsActive", obj.IsActive);
+                    cmd.Parameters.AddWithValue("@MgrId", obj.MgrId);
 
                     try
                     {
@@ -159,6 +175,7 @@ namespace Project1MVC.DAL
                                 END CATCH
 
              ";
+            /* DELETE Employee Details on Manager Relationship table*/
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@Id", id);
@@ -198,9 +215,10 @@ namespace Project1MVC.DAL
                     var byEmail = "[Email] = @Email";
                     int id;
                     var byCondition = (int.TryParse(query, out id)) ? byId : byEmail;
-                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
+                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive], mgr.[MgrId]
                                     FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
                                     INNER JOIN [Employee] emp ON u.UserId = emp.EmpId
+                                    LEFT JOIN [Manager] mgr ON mgr.[EmpId] = emp.[EmpId]
                                     WHERE " + byCondition;
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
@@ -226,7 +244,8 @@ namespace Project1MVC.DAL
                                                         reader["DOB"].ToDateTime(),
                                                         reader["Address"].ToString(),
                                                         reader["PhoneNo"].ToString(),
-                                                        reader["IsActive"].ToBoolean());
+                                                        reader["IsActive"].ToBoolean(),
+                                                        reader["MgrId"] as Nullable<int>);
                             }
                         }
 
@@ -256,9 +275,11 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
-                                    FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
-                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId";
+                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive], mgr.[MgrId]
+                                    FROM ([User] u LEFT JOIN [UserRole] ur ON  u.[UserRoleId] = ur.[UserRoleId]) 
+                                    INNER JOIN [Employee] emp ON u.[UserId] = emp.[EmpId]
+                                    LEFT JOIN [Manager] mgr ON mgr.[EmpId] = emp.[EmpId]
+                                    ORDER BY u.[FName], u.[LName] ASC";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -282,7 +303,8 @@ namespace Project1MVC.DAL
                                                         reader["DOB"].ToDateTime(),
                                                         reader["Address"].ToString(),
                                                         reader["PhoneNo"].ToString(),
-                                                        reader["IsActive"].ToBoolean())
+                                                        reader["IsActive"].ToBoolean(),
+                                                        reader["MgrId"] as Nullable<int>)
                                     );  }
                         }
 
@@ -311,10 +333,49 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     string sql =
-                        "UpdateEmployee";
+                        @"
+                            BEGIN TRY
+
+                                BEGIN TRANSACTION
+                                UPDATE [User]
+	                                SET [FName] = @FName,
+		                                [LName] = @LName,
+		                                [Email] = @Email,
+		                                [Salt]= @Salt,
+		                                [HashedPassword] = @HashedPassword,
+		                                [UserRoleId] = @UserRoleId
+	                                WHERE [UserId] = @UserId
+
+	                                UPDATE [Employee]
+	                                SET [DOB] = @DOB,
+		                                [Address] = @Address,
+		                                [PhoneNo] = @PhoneNo,
+		                                [IsActive] = @IsActive
+	                                WHERE [EmpId] = @UserId
+
+                                    IF NOT EXISTS (SELECT * FROM [Manager]
+                                    WHERE [EmpId] = @UserId)
+                                    BEGIN
+	                                    INSERT INTO [Manager] ([EmpId],[MgrId]) VALUES (@UserId,@MgrId)
+                                    END
+                                    ELSE
+                                    BEGIN
+	                                    UPDATE [Manager]
+                                        SET [EmpId] = @UserId, 
+                                        [MgrId] = @MgrId
+                                    END
+
+                                COMMIT;
+                            END TRY
+
+                            BEGIN CATCH
+                                ROLLBACK;
+                            END CATCH
+                            ";
+
+
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@UserId", obj.UserId);
                     cmd.Parameters.AddWithValue("@FName", obj.FName);
                     cmd.Parameters.AddWithValue("@LName", obj.LName);
@@ -326,6 +387,7 @@ namespace Project1MVC.DAL
                     cmd.Parameters.AddWithValue("@Address", obj.Address);
                     cmd.Parameters.AddWithValue("@PhoneNo", obj.PhoneNo);
                     cmd.Parameters.AddWithValue("@IsActive", obj.IsActive);
+                    cmd.Parameters.AddWithValue("@MgrId", obj.MgrId);
 
                     try
                     {
@@ -351,6 +413,70 @@ namespace Project1MVC.DAL
             }
 
             return status;
+        }
+
+        public List<Employee> GetAllManagers(int? id = null)
+        {
+            string query = "";
+            if(id != null)
+            {
+                query = "AND emp.[EmpId] != " + id;
+            }
+
+            string modelName = MethodBase.GetCurrentMethod().DeclaringType.Name.Replace("DAL", "");
+            string opType = "Select All";
+            List<Employee> list = new List<Employee>();
+
+            using (SqlConnection conn = DAL.GetConnection())
+            {
+                if (conn != null)
+                {
+                    string sql = @" SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName], emp.[DOB], emp.[Address], emp.[PhoneNo], emp.[IsActive] 
+                                    FROM ([User] u LEFT JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId) 
+                                    INNER JOIN [Employee] emp ON u.UserId = emp.EmpId
+                                    WHERE ur.[RoleName] = 'Manager'" + query + @"
+                                    ORDER BY u.[FName], u.[LName] ASC";
+
+                    System.Diagnostics.Debug.WriteLine(sql);
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            Logger.Log($"SUCCESS: {opType} {modelName}");
+
+                            while (reader.Read())
+                            {
+                                list.Add(
+                                    new Employee(reader["UserId"].ToInt(),
+                                                        reader["FName"].ToString(),
+                                                        reader["LName"].ToString(),
+                                                        reader["Email"].ToString(),
+                                                        reader["Salt"].ToString(),
+                                                        reader["HashedPassword"].ToString(),
+                                                        reader["UserRoleId"].ToInt(),
+                                                        reader["RoleName"].ToString(),
+                                                        reader["DOB"].ToDateTime(),
+                                                        reader["Address"].ToString(),
+                                                        reader["PhoneNo"].ToString(),
+                                                        reader["IsActive"].ToBoolean())
+                                    );
+                            }
+                        }
+
+                        Logger.Log("Closing the SqlConnection" + Environment.NewLine);
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"FAILED: {opType} {modelName}");
+                        Logger.Log($"{ex.ToString()}");
+                    }
+                }
+            }
+
+            return list;
         }
     }
 }

@@ -39,8 +39,11 @@
                     <div class="col-md-4">
                         @Html.DropDownList("Equipments", new SelectList(ViewBag.EquipmentsList, "EquipId", "DisplayName"), "Select Equipment", new { @class = "form-control equipment-form", @id = "equipment-form", @onchange = "DisableButton(this)" })
                     </div>
+                    <div class="col-md-4">
+                        @Html.DropDownList("SerialNo", new SelectList(new List<object>(), "SerialNo", "SerialNo"), "Select Serial No", new { @class = "form-control equipment-form", @id = "dropdown-serial", @onchange = "DisableButton(this)" })
+                    </div>
                     <div class="col-md-2">
-                        <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Assign" onclick="AssignEquipment()" title="Select Equipment First" disabled="disabled" />
+                        <input type="button" name="add-button" class="btn btn-success add-button disabled" value="Assign" onclick="AssignEquipment()" title="Select Equipment and Serial No First" disabled="disabled" />
                     </div>
                 </div>
             </div>
@@ -57,9 +60,41 @@
 @section Scripts {
     @Scripts.Render("~/bundles/userscripts")
     @Scripts.Render("~/bundles/select2")
-    <script>
+<script>
         $(document).ready(function () {
-            $('#equipment-form').select2();
+            var equipment_dropdown = $('#equipment-form');
+            var serial_dropdown = $('#dropdown-serial');
+            $(equipment_dropdown).select2();
+            serial_dropdown.select2();
+
+            equipment_dropdown.change(function () {
+                console.log($(this).val());
+                var equipmentId = $(this).val();
+                    serial_dropdown.empty();
+                    serial_dropdown.append($("<option />", { text: "Select Serial No" }));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetAvailableSerialNos","EquipmentAssignment", null, Request.Url.Scheme)',
+                data: JSON.stringify({EquipmentId: equipmentId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data) {
+                    $(data).each(function () {
+                        serial_dropdown.append($("<option />", { value: this, text: this }));
+                    });
+                }
+
+            });
         });
-    </script>
+
+
+
+        });
+
+
+
+
+
+
+</script>
 }

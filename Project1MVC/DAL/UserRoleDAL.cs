@@ -192,7 +192,9 @@ namespace Project1MVC.DAL
                 if (conn != null)
                 {
                     
-                    string sql = "SELECT [UserRoleId], [RoleName] FROM [UserRole];";
+                    string sql = @" SELECT [UserRoleId], [RoleName]
+                                    FROM [UserRole]
+                                    ORDER BY [RoleName] ASC";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 

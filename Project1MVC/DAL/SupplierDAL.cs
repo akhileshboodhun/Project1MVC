@@ -153,7 +153,7 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT * FROM [Supplier];";
+                    string sql = "SELECT [SupplierId], [Name], [PhoneNo], [Address] FROM [Supplier] ORDER BY [Name];";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 

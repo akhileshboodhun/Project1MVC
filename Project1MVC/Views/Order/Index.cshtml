@@ -26,7 +26,7 @@
         <th>
             @Html.DisplayNameFor(model => model.OrderProp.SupplierName)
         </th>
-        <th></th>
+        <th>Actions</th>
     </tr>
 
 @foreach (var item in Model) {
@@ -46,7 +46,36 @@
     <td>
         @Html.DisplayFor(modelItem => item.OrderProp.SupplierName)
     </td>
+
     <td>
+        <div class="dropdown">
+            <i class="text-muted fa fa-ellipsis-v btn dropdown-toggle" id="dropdownMenuButton" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <ul class="dropdown-menu" style="margin-left:1.5em; top:0;">
+                @if (!item.OrderProp.IsOrderComplete)
+                {
+                    <li>
+                        <a href="@Url.Action("Edit", new { id = item.OrderProp.Id })" class="btn btn-default">
+                            <p></p><p><i class="text-warning fa fas fa-edit"></i>Edit</p>
+                        </a>
+                    </li>
+                }
+                <li>
+                    <a href="@Url.Action("Details", new { id = item.OrderProp.Id })" class="btn btn-default">
+                        <p></p><p><i class="text-info fa fas fa-info-circle"></i>Details</p>
+                    </a>
+                </li>
+                @if (!item.OrderProp.IsOrderComplete)
+                {
+                    <li>
+                        <a href="@Url.Action("Delete", new { id = item.OrderProp.Id })" class="btn btn-default">
+                            <p></p><p class="text-danger"><i class="text-danger fa fas fa-trash"></i>Delete</p>
+                        </a>
+                    </li>
+                }
+                </ul>
+        </div>
+    </td>
+    @*<td>
         @if (!item.OrderProp.IsOrderComplete)
         {
             @Html.ActionLink("Edit", "Edit", new { id = item.OrderProp.Id }) <span>|</span>
@@ -58,7 +87,7 @@
         {
             <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.OrderProp.Id })
         }
-        </td>
+    </td>*@
 </tr>
 }
 

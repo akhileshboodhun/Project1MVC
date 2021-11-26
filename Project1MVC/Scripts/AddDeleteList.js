@@ -33,12 +33,13 @@ function AssignEquipment() {
     var obj = $('.equipment-form option:selected');
     var equipmentId = obj.val();
     var userId = $('#UserId').val();
+    var serialNo = $('#dropdown-serial option:selected').val();
     console.log('EquipmentId:' + equipmentId);
     console.log('UserID:' + userId);
     $.ajax({
         type: "POST",
         url: "/EquipmentAssignment/Assign",
-        data: JSON.stringify({ UserId: userId, EquipmentId: equipmentId }),
+        data: JSON.stringify({ UserId: userId, EquipmentId: equipmentId, SerialNo: serialNo }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -127,9 +128,9 @@ function ReturnEquipment(obj) {
 }
 
 function DisableButton(obj) {
-    if ($(obj)[0].selectedIndex == 0) {
+    if (($('#equipment-form')[0].selectedIndex == 0) || ($('#dropdown-serial')[0].selectedIndex == 0)) {
         $('.add-button').addClass("disabled");
-        $('.add-button').attr("title", "Select Equipment First");
+        $('.add-button').attr("title", "Select Equipment and Serial No First");
         $('.add-button').attr("disabled","");
     }
     else {

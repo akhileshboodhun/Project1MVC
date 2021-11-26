@@ -15,7 +15,7 @@ namespace Project1MVC.Controllers
         public ActionResult Index()
         {
             var equipmentsDB = EquipmentDAL.Instance;
-            var equipmentsInStockList = equipmentsDB.GetAllEquipmentsInStock();
+            var equipmentsInStockList = equipmentsDB.GenerateEquipmentReport();
 
             return View(equipmentsInStockList);
         }

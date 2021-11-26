@@ -17,7 +17,7 @@
         <dd>
             @Html.DisplayFor(model => model.OrderProp.OrderDate)
         </dd>
-
+        <br>
         <dt>
             @Html.DisplayNameFor(model => model.OrderProp.EffectiveDate)
         </dt>
@@ -25,7 +25,7 @@
         <dd>
             @Html.DisplayFor(model => model.OrderProp.EffectiveDate)
         </dd>
-
+        <br>
         <dt>
             @Html.DisplayNameFor(model => model.OrderProp.IsOrderComplete)
         </dt>
@@ -35,11 +35,16 @@
 
         </dd>
 
+        <br>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderProp.AutomaticDispatch)
+        </dt>
+
         <dd>
             @Html.CheckBoxFor(model => model.OrderProp.AutomaticDispatch, new { data_toggle = "toggle", data_on = "Yes", data_off = "No", data_onstyle = "success", data_offstyle = "warning", disabled = "disabled" })
 
         </dd>
-
+        <br>
         <dt>
             @Html.DisplayNameFor(model => model.OrderProp.SupplierName)
         </dt>
@@ -47,6 +52,7 @@
         <dd>
             @Html.DisplayFor(model => model.OrderProp.SupplierName)
         </dd>
+        <br>
     </dl>
     <h4>Equipments</h4>
     <table class="table">
@@ -87,6 +93,10 @@
 
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderProp.Id }) |
+    @if (!Model.OrderProp.IsOrderComplete)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.OrderProp.Id }) <span>|</span>
+}
+
     @Html.ActionLink("Back to List", "Index")
 </p>

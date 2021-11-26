@@ -14,7 +14,7 @@ namespace Project1MVC.Controllers
     public class EquipmentAssignmentController : Controller
     {
         // GET: EquipmentAssignment
-        public ActionResult Index(int Id = 10)
+        public ActionResult Index(int Id)
         {
             var assignEquipmentService = AssignEquipmentService.Instance;
             var assignedEquipments = assignEquipmentService.ViewAssigned(Id);
@@ -23,12 +23,13 @@ namespace Project1MVC.Controllers
 
             var equipDB = EquipmentDAL.Instance;
             var equipmentsList = equipDB.GetAllEquipmentsInStock();
-            ViewBag.EquipmentsList = equipmentsList.Select(element => new { EquipId = element.EquipId, DisplayName = element.DisplayName() });
+            ViewBag.EquipmentsList = equipmentsList.Select(element => new { EquipId = element.EquipId, DisplayName = element.DisplayName() }).OrderBy(element => element.DisplayName);
             //List<Equipment> equipments = equipmentsList.Where(el1 => assignedEquipmentsIds.Contains(el1.EquipId)).ToList();
 
             var query = from assignedEquipment in assignedEquipments
                         join equipment in equipmentsList
                         on assignedEquipment.EquipmentId equals equipment.EquipId
+                        orderby equipment.DisplayName()
                         select JsonConvert.SerializeObject(new { SerialNo = assignedEquipment.SerialNo, DisplayName = equipment.DisplayName(), DateAssigned = assignedEquipment.DateAssigned.ToShortDateString()});
 
             ViewBag.AssignedEquipmentList = query.ToList();
@@ -46,7 +47,7 @@ namespace Project1MVC.Controllers
 
         // POST: EquipmentAssignment/Assign
         [HttpPost]
-        public ActionResult Assign(int UserId, int EquipmentId)
+        public ActionResult Assign(int UserId, int EquipmentId, int SerialNo)
         {
             bool state = false;
             try
@@ -61,6 +62,7 @@ namespace Project1MVC.Controllers
                 var assignEquipmentService = AssignEquipmentService.Instance;
                 var assignedEquipment = new AssignedEquipment(employeeId: UserId,
                                           equipmentId: EquipmentId,
+                                          serialNo: SerialNo,
                                           assignorId: assignorId);
                 state = assignEquipmentService.Assign(assignedEquipment);
 
@@ -103,6 +105,27 @@ namespace Project1MVC.Controllers
             }
         }
 
+        // POST: EquipmentAssignment/GetAvailableSerialNos
+        [HttpPost]
+        public ActionResult GetAvailableSerialNos(int EquipmentId)
+        {
+            try
+            {
+                // TODO: Add insert logic here
+
+
+                var assignEquipmentService = AssignEquipmentService.Instance;
+                List<int> serialNos = assignEquipmentService.GetAvailableSerialNo(EquipmentId);
+
+
+                if (serialNos.Count > 0) return Json(serialNos, JsonRequestBehavior.AllowGet);
+                return HttpNotFound();            }
+            catch
+            {
+                return HttpNotFound();
+            }
+        }
+
         public ActionResult ViewAssignedEquipments()
         {
             var assignEquipmentService = AssignEquipmentService.Instance;
@@ -118,6 +141,7 @@ namespace Project1MVC.Controllers
                         on assignedEquipment.EmployeeId equals employee.UserId
                         join equipment in equipmentsList
                         on assignedEquipment.EquipmentId equals equipment.EquipId
+                        orderby employee.FName, employee.LName
                         select JsonConvert.SerializeObject(new { FirstName = employee.FName, LastName = employee.LName, SerialNo = assignedEquipment.SerialNo, Type = equipment.Type, Brand = equipment.Brand, Model = equipment.Model, Description = equipment.Description });
 
             ViewBag.AssignedEquipmentList = query.ToList();
