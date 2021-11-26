@@ -82,6 +82,18 @@
             @Html.DisplayFor(model => model.RoleName)
         </dd>
 
+        <dt>
+            @Html.DisplayName("Manager")
+        </dt>
+
+        <dd>
+            @{
+                var empDB = Project1MVC.DAL.EmployeeDAL.Instance;
+                var manager = empDB.Get(Model.MgrId.Value);
+                @manager.FullName
+            }
+        </dd>
+
     </dl>
 </div>
 <p>
