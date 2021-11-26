@@ -39,7 +39,7 @@ namespace Project1MVC.DAL
                                    AND eo.OrderId = o.OrderId
                                    AND o.SupplierId = s.SupplierId
                                    AND o.IsOrderComplete = 0
-                                   ORDER BY e.Type, e.Brand, e.Model; ";
+                                   ORDER BY e.Type, e.Brand, e.Model ASC; ";
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -51,7 +51,7 @@ namespace Project1MVC.DAL
 
                             while (reader.Read())
                             {
-                                list.Add(new FutureStock(reader["OrderId"].ToInt(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
+                                list.Add(new FutureStock(reader["OrderId"].ToInt(), reader["Type"].ToString(), reader["Brand"].ToString(), reader["Model"].ToString(), Convert.ToDateTime(reader["OrderDate"].ToString()), Convert.ToBoolean(reader["IsOrderComplete"].ToString()), Convert.ToDouble(reader["UnitPrice"]), Convert.ToInt32(reader["Qty"]), Convert.ToDouble(reader["NetPrice"]), reader["SupplierName"].ToString()));
                             }
                         }
 
