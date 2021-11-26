@@ -7,7 +7,7 @@
 <h2>Future Stocks</h2>
 
 <table class="table">
-    <tr>
+    <thead>
         <th>
             @Html.DisplayNameFor(model => model.Type)
         </th>
@@ -32,9 +32,7 @@
         <th>
             @Html.DisplayNameFor(model => model.SupplierName)
         </th>
-        <th></th>
-    </tr>
-
+    </thead>
     @foreach (var item in Model)
     {
 <tr>
@@ -65,7 +63,7 @@
 </tr>
     }
 
-<tr><td colspan="8"><b>Grand Total: Rs @string.Format("{0:#,##0.00}", Convert.ToDecimal(ViewBag.GrandTotal))</b></td></tr>
+<tfoot><td colspan="8"><b>Grand Total: Rs @string.Format("{0:#,##0.00}", Convert.ToDecimal(ViewBag.GrandTotal))</b></td></tfoot>
 </table>
 
 
@@ -77,7 +75,13 @@
     function generate() {
         var doc = new jsPDF('p', 'pt', 'letter');
         doc.autoTable({
-            html: '.table'
+            html: '.table',
+            theme: 'grid',
+            foot: [
+                [{ styles: { fillColor: [255, 0, 0] } }],
+            ],
+            footStyles: { textColor: [229, 115, 115], fillColor: [240, 240, 240] }
+
         });
         doc.save('FutureStock.pdf');
     }

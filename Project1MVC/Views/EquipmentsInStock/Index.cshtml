@@ -27,7 +27,7 @@
 <h2>Equipments In Stock</h2>
 
 <table class="table" id="simpleTable">
-    <tr>
+    <thead>
         <th>
             @Html.DisplayNameFor(model => model.EquipId)
         </th>
@@ -55,7 +55,7 @@
         <th>
             Total
         </th>
-    </tr>
+    </thead>
 
     @foreach (var item in Model)
     {
@@ -100,7 +100,9 @@
     function generate() {
         var doc = new jsPDF('p', 'pt', 'letter');
         doc.autoTable({
-            html: '.table'
+            html: '.table',
+            theme: 'grid',
+
         });
         doc.save('CurrentStock.pdf');
     }
