@@ -24,7 +24,7 @@ namespace Project1MVC.Models
 
         public int? UserRoleId { get; set; }
 
-        [Display(Name="Role Name")]
+        [Display(Name="Role")]
         [MaxLength(25), MinLength(2)]
         public string RoleName { get; set; }
     }

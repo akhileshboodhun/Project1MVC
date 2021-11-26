@@ -87,7 +87,8 @@
         </dt>
 
         <dd>
-            @{
+            @if(Model.MgrId != null)
+            {
                 var empDB = Project1MVC.DAL.EmployeeDAL.Instance;
                 var manager = empDB.Get(Model.MgrId.Value);
                 @manager.FullName
