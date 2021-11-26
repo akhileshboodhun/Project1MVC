@@ -163,7 +163,10 @@ namespace Project1MVC.DAL
             {
                 if (conn != null)
                 {
-                    string sql = "SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName] FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId;";
+                    string sql = @"SELECT u.[UserId], u.[FName], u.[LName], u.[Email], u.[Salt], u.[HashedPassword], ur.[UserRoleId], ur.[RoleName]
+                                   FROM [User] u JOIN [UserRole] ur ON  u.UserRoleId = ur.UserRoleId
+                                   ORDER BY u.[FName], u.[LName] ASC";
+
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
